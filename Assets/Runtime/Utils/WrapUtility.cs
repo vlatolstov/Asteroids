@@ -4,14 +4,14 @@ namespace Runtime.Utils
 {
     public static class WrapUtility
     {
-        public static Vector2 Wrap(Vector2 p, Vector2 world)
+        public static Vector2 Wrap(Vector2 p, Rect worldRect)
         {
-            p.x = Mod(p.x, world.x);
-            p.y = Mod(p.y, world.y);
+            p.x = Mod(p.x - worldRect.xMin, worldRect.width)  + worldRect.xMin;
+            p.y = Mod(p.y - worldRect.yMin, worldRect.height) + worldRect.yMin;
             return p;
         }
 
-        public static float Mod(float v, float m)
+        private static float Mod(float v, float m)
         {
             if (m <= 0f)
             {

@@ -48,7 +48,6 @@ namespace Runtime.Abstract.Movement
             Rb = GetComponent<Rigidbody2D>();
             Rb.bodyType = RigidbodyType2D.Kinematic;
             Rb.gravityScale = 0f;
-            Rb.interpolation = RigidbodyInterpolation2D.Interpolate;
             Rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         }
 
@@ -89,7 +88,7 @@ namespace Runtime.Abstract.Movement
             }
 
             Vector2 newPos = Position + Vel * dt;
-            //TODO newPos = WrapUtility.Wrap(newPos, World.WorldSize);
+            newPos = WrapUtility.Wrap(newPos, World.WorldRect);
 
             Rb.MovePosition(newPos);
             Rb.MoveRotation(AngRad * Mathf.Rad2Deg);

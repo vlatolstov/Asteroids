@@ -1,6 +1,8 @@
+using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
 using Runtime.Models;
 using Runtime.Movement;
+using Runtime.Settings;
 using Runtime.Views;
 using UnityEngine;
 using Zenject;
@@ -17,6 +19,11 @@ namespace Runtime.Contexts.Game
 
         public override void InstallBindings()
         {
+            Container
+                .Bind<IWorldConfig>()
+                .To<CameraWorldConfig>()
+                .AsSingle();
+            
             Container
                 .Bind<BaseView>()
                 .FromComponentsInHierarchy()

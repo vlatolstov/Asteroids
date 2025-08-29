@@ -1,6 +1,7 @@
 using Runtime.Abstract.Configs;
 using Runtime.Settings;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Runtime.Contexts.Global
@@ -12,7 +13,7 @@ namespace Runtime.Contexts.Global
         private ShipConfig _shipConfig;
 
         [SerializeField]
-        private WorldConfig _worldConfig;
+        private CustomWorldConfig _customWorldConfig;
 
         public override void InstallBindings()
         {
@@ -21,9 +22,9 @@ namespace Runtime.Contexts.Global
                 .FromInstance(_shipConfig)
                 .AsSingle();
             
-            Container.Bind<IWorldConfig>()
-                .FromInstance(_worldConfig)
-                .AsSingle();
+            // Container.Bind<IWorldConfig>()
+            //     .FromInstance(_customWorldConfig)
+            //     .AsSingle();
         }
     }
 }
