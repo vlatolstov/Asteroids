@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
 
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public interface IViewsContainer
     {
@@ -9,5 +10,8 @@ namespace Runtime.MVP
         
         public void AddView(BaseView view);
         public void RemoveView(BaseView view);
+
+        event Action<BaseView> ViewAdded;
+        event Action<BaseView> ViewRemoved;
     }
 }

@@ -1,13 +1,10 @@
-using System;
-using Zenject;
-
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public abstract class BasePresenter<TModel> where TModel : IModel
     {
         protected readonly TModel Model;
         protected readonly IViewsContainer ViewsContainer;
-
+        
         protected BasePresenter(TModel model, IViewsContainer viewsContainer)
         {
             Model = model;

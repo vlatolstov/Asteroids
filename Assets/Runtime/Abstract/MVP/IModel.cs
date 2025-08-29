@@ -1,6 +1,6 @@
 using System;
 
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public interface IModel
     {

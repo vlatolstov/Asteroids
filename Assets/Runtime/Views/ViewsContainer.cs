@@ -1,16 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Runtime.Abstract.MVP;
+using UnityEngine;
 
-namespace Runtime.MVP
+namespace Runtime.Views
 {
     public class ViewsContainer : IViewsContainer
     {
+        public event Action<BaseView> ViewAdded;
+        public event Action<BaseView> ViewRemoved;
+        
         private readonly Dictionary<Type, List<BaseView>> _views;
 
         public ViewsContainer(List<BaseView> views)
         {
             _views = views.GroupBy(v => v.GetType()).ToDictionary(g => g.Key, g => g.ToList());
+            Debug.Log($"ViewsContainer initialized");
+            foreach (var list in _views.Values)
+            {
+                foreach (var v in list)
+                {
+                    Debug.Log($"{v} in views container");
+                }
+            }
         }
 
         public TView GetView<TView>() where TView : BaseView
@@ -38,6 +51,8 @@ namespace Runtime.MVP
 
             if (!list.Contains(view))
             {
+                Debug.Log($"{view} added in container");
+                ViewAdded?.Invoke(view);
                 list.Add(view);
             }
         }
@@ -54,6 +69,8 @@ namespace Runtime.MVP
             {
                 if (list.Count == 0)
                 {
+                    Debug.Log($"{view} removed from container");
+                    ViewRemoved?.Invoke(view);
                     _views.Remove(type);
                 }
             }

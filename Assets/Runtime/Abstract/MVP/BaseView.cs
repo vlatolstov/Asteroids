@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public class BaseView : MonoBehaviour
     {

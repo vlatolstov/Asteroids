@@ -1,10 +1,9 @@
-using System;
+using Runtime.Abstract.MVP;
 using Runtime.Data;
-using Runtime.MVP;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Runtime.Ship
+namespace Runtime.Views
 {
     //TODO separate movement and view logic
     public class ShipView : BaseView, GameControls.IGameplayActions
@@ -45,6 +44,7 @@ namespace Runtime.Ship
             {
                 var v = context.ReadValue<float>();
                 if (v < 0) v = 0;
+                Debug.Log($"Emitting thrust: Yaxis {v}");
                 Emit(new ThrustInput(v));
             }
         }
@@ -54,6 +54,7 @@ namespace Runtime.Ship
             if (context.performed || context.canceled)
             {
                 var v = Mathf.Clamp(context.ReadValue<float>(), -1f, 1f);
+                Debug.Log($"Emitting turn: Xaxis {v}");
                 Emit(new TurnInput(v));
             }
         }
@@ -72,6 +73,12 @@ namespace Runtime.Ship
             {
                 Emit(new FireLaserPressed());
             }
+        }
+
+        public class Pool : ViewPool<ShipView>
+        {
+            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            { }
         }
     }
 }

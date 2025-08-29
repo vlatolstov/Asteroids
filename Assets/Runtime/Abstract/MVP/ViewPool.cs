@@ -1,6 +1,6 @@
 using Zenject;
 
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public abstract class ViewPool<TView> : MemoryPool<TView> where TView : BaseView
     {

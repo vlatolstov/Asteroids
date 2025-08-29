@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public abstract class BaseModel : IModel
     {
@@ -70,7 +70,7 @@ namespace Runtime.MVP
             {
                 return;
             }
-            
+            OnDataChange(newValue);
             _dataContainer[type] = newValue;
             Notify(type);
         }
@@ -96,8 +96,19 @@ namespace Runtime.MVP
             var copy = listeners.ToArray();
             for (var i = 0; i < copy.Length; i++)
             {
+                OnNotify(copy[i]);
                 copy[i]?.Invoke();
             }
+        }
+
+        protected virtual void OnDataChange(IData newValue)
+        {
+            
+        }
+        
+        protected virtual void OnNotify(Action action)
+        {
+            
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Runtime.MVP
+namespace Runtime.Abstract.MVP
 {
     public interface IData
     { }
