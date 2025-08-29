@@ -57,7 +57,7 @@ namespace Runtime.Abstract.Movement
             {
                 pos = transform.position;
                 vel = Vector2.zero;
-                aRad = transform.eulerAngles.z * Mathf.Deg2Rad;
+                aRad = transform.eulerAngles.z * Mathf.Rad2Deg;
                 WritePoseToModel(pos, vel, aRad);
             }
 
