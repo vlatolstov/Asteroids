@@ -1,4 +1,5 @@
 using Runtime.Abstract.MVP;
+using Runtime.Abstract.Weapons;
 using Runtime.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace Runtime.Views
 {
     //TODO separate movement and view logic
-    public class ShipView : BaseView, GameControls.IGameplayActions
+    public class ShipView : BaseView, GameControls.IGameplayActions, IPlayerTarget
     {
         private GameControls _controls;
 
@@ -17,9 +18,9 @@ namespace Runtime.Views
                 _controls = new GameControls();
                 _controls.Gameplay.SetCallbacks(this);
             }
-            
+
             _controls.Gameplay.Enable();
-            
+
             Emit(new ThrustInput(0));
             Emit(new TurnInput(0));
         }
@@ -28,7 +29,7 @@ namespace Runtime.Views
         {
             _controls?.Gameplay.Disable();
         }
-        
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
@@ -43,8 +44,11 @@ namespace Runtime.Views
             if (context.performed || context.canceled)
             {
                 var v = context.ReadValue<float>();
-                if (v < 0) v = 0;
-                Debug.Log($"Emitting thrust: Yaxis {v}");
+                if (v < 0)
+                {
+                    v = 0;
+                }
+
                 Emit(new ThrustInput(v));
             }
         }
@@ -54,7 +58,6 @@ namespace Runtime.Views
             if (context.performed || context.canceled)
             {
                 var v = Mathf.Clamp(context.ReadValue<float>(), -1f, 1f);
-                Debug.Log($"Emitting turn: Xaxis {v}");
                 Emit(new TurnInput(v));
             }
         }

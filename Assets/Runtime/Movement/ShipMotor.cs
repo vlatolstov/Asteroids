@@ -41,7 +41,7 @@ namespace Runtime.Movement
 
         protected override void WritePoseToModel(Vector2 pos, Vector2 vel, float angleRad)
         {
-            Model.ChangeData<ShipPose>(_ => new ShipPose(pos, vel, angleRad));
+            Model.ChangeData(new ShipPose(pos, vel, angleRad));
         }
     }
 }

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: SettingsInstaller
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Contexts.Global.SettingsInstaller
   _shipConfig: {fileID: 11400000, guid: 60dd05d0b0ae48146b8fc9de5fe48e15, type: 2}
-  _worldConfig: {fileID: 11400000, guid: a1cc2f384a857704a9811d06bc4ff0a4, type: 2}
+  _scoreConfig: {fileID: 0}

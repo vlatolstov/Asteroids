@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcbb251dc5a4f1cb0eabbd0413b8ed0, type: 3}
   m_Name: ShipConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ShipConfig
-  _acceleration: 6
-  _maxSpeed: 10
+  _acceleration: 3
+  _maxSpeed: 12
   _turnSpeed: 2
   _linearDamping: 0.3
-  BulletLife: 1
-  BulletSpeed: 15
-  BulletCooldown: 1
+  _bulletSpeed: 15
+  _bulletCooldown: 1
+  _bulletLife: 1
+  _muzzleOffset: 0
   MaxLaserCharges: 3
   LaserRechargeRate: 8
   LaserCooldown: 3

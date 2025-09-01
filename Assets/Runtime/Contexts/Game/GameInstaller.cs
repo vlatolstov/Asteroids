@@ -4,6 +4,7 @@ using Runtime.Models;
 using Runtime.Movement;
 using Runtime.Settings;
 using Runtime.Views;
+using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
@@ -45,7 +46,12 @@ namespace Runtime.Contexts.Game
                 .AsSingle();
 
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
+                .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
+
+            Container
+                .BindInterfacesAndSelfTo<ProjectileHitResolver>()
+                .AsSingle();
 
             if (_autoSpawnShip)
             {

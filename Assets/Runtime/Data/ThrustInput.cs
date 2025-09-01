@@ -6,7 +6,7 @@ namespace Runtime.Data
     public struct ThrustInput : IData
     {
         public float Value;
-        
+
         public ThrustInput(float value)
         {
             Value = value;
@@ -77,4 +77,28 @@ namespace Runtime.Data
 
     public struct ShipDestroyed : IData
     { }
+
+    public struct ScoreAdded : IData
+    {
+        public int Amount;
+
+        public ScoreAdded(int amount)
+        {
+            Amount = amount;
+        }
+    }
+
+    public struct ProjectileHit : IData
+    {
+        public Faction Source;
+        public GameObject Target;
+        public Vector2 Point;
+
+        public ProjectileHit(Faction source, GameObject target, Vector2 point)
+        {
+            Source = source;
+            Target = target;
+            Point = point;
+        }
+    }
 }

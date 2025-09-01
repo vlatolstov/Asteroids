@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2d790a1f44d45b89f5b27395c07463e, type: 3}
-  m_Name: WorldConfig
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.WorldConfig
-  _worldSize: {x: 1024, y: 768}
+  m_Script: {fileID: 11500000, guid: 0ad25768c5f44691b42d144a09f56b13, type: 3}
+  m_Name: ScoreConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ScoreConfig
+  _bigAsteroidScore: 60
+  _smallAsteroidScore: 20
+  _ufoScore: 100
