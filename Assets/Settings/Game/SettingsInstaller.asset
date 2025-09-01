@@ -13,4 +13,7 @@ MonoBehaviour:
   m_Name: SettingsInstaller
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Contexts.Global.SettingsInstaller
   _shipConfig: {fileID: 11400000, guid: 60dd05d0b0ae48146b8fc9de5fe48e15, type: 2}
-  _scoreConfig: {fileID: 0}
+  _asteroidConfig: {fileID: 11400000, guid: 658e4e9b2befbec45bc300551c69e11f, type: 2}
+  _ufoConfig: {fileID: 11400000, guid: 5437bc3d26a26fa44b7390e7978f3953, type: 2}
+  _asteroidsSpawnConfig: {fileID: 11400000, guid: efe598da038e46e4fa78090d4c31e36a, type: 2}
+  _scoreConfig: {fileID: 11400000, guid: f068a982eb4603d40826818999956a8a, type: 2}

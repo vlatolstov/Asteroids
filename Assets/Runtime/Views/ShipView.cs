@@ -1,12 +1,9 @@
-using System;
-using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
 using Runtime.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Zenject;
 
 namespace Runtime.Views
 {

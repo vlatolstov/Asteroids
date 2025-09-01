@@ -49,12 +49,14 @@ namespace Runtime.Abstract.MVP
             var after = mutate(before);
 
             if (Equals(before, after)) return;
-
+            
+            
             if (after is null)
                 _dataContainer.Remove(type);
             else
                 _dataContainer[type] = after;
 
+            OnDataChange(after);
             Notify(type);
         }
 
@@ -93,11 +95,10 @@ namespace Runtime.Abstract.MVP
                 return;
             }
 
-            var copy = listeners.ToArray();
-            for (var i = 0; i < copy.Length; i++)
+            foreach (var action in listeners)
             {
-                OnNotify(copy[i]);
-                copy[i]?.Invoke();
+                OnNotify(action);
+                action?.Invoke();
             }
         }
 

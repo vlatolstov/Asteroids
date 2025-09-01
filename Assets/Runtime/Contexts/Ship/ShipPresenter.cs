@@ -1,14 +1,12 @@
 using System;
-using System.Collections.Generic;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
-using Runtime.Models;
 using Runtime.Views;
 using UnityEngine;
 using Zenject;
 
-namespace Runtime.Contexts.Game
+namespace Runtime.Contexts.Ship
 {
     public class ShipPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {

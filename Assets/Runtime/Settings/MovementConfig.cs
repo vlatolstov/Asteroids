@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "ShipConfig", menuName = "Settings/ShipConfig", order = 0)]
-    public class ShipConfig : ScriptableObject, IMovementConfig
+    [CreateAssetMenu(fileName = "MovementConfig", menuName = "Settings/MovementConfig", order = 0)]
+    public class MovementConfig : ScriptableObject, IMovementConfig
     {
         [SerializeField]
         private float _acceleration = 1f;
@@ -21,12 +21,6 @@ namespace Runtime.Settings
         [SerializeField]
         private bool _isWrappedByWorldBounds = false;
 
-        [Header("Laser")]
-        public int MaxLaserCharges = 3;
-
-        public float LaserRechargeRate = 8f;
-        public float LaserCooldown = 3f;
-        public float LaserRange = 6f;
         public float Acceleration => _acceleration;
         public float MaxSpeed => _maxSpeed;
         public float TurnSpeed => _turnSpeed;

@@ -2,7 +2,7 @@ using Zenject;
 
 namespace Runtime.Abstract.MVP
 {
-    public abstract class ViewPool<TView> : MemoryPool<TView> where TView : BaseView
+    public abstract class ViewPool<TView> : MonoMemoryPool<TView> where TView : BaseView
     {
         private readonly IViewsContainer _viewsContainer;
 

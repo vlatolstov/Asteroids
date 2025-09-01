@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6758704470349783515}
   - component: {fileID: 8574529214572415325}
-  - component: {fileID: 3837115616988274673}
   - component: {fileID: 1074268564404137070}
   - component: {fileID: 5626302874393680537}
+  - component: {fileID: 3837115616988274673}
   - component: {fileID: 8340432549732760033}
+  - component: {fileID: 2201318662658391807}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -94,19 +95,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3837115616988274673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2529211537695395251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 599f870b5cdc4105b732116076d08d40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Ship.ShipView
-  _isPlayer: 1
 --- !u!50 &1074268564404137070
 Rigidbody2D:
   serializedVersion: 5
@@ -184,6 +172,19 @@ PolygonCollider2D:
       - {x: -0.5, y: -0.28866667}
       - {x: 0.5, y: -0.28866667}
   m_UseDelaunayMesh: 0
+--- !u!114 &3837115616988274673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2529211537695395251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 599f870b5cdc4105b732116076d08d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Ship.ShipView
+  _isPlayer: 1
 --- !u!114 &8340432549732760033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,3 +197,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8aae5f526a543f2ac5625b4c75efb30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Movement.ShipMotor
+--- !u!114 &2201318662658391807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2529211537695395251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
+  _scriptableObjectInstallers: []
+  _monoInstallers: []
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}

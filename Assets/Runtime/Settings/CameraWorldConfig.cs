@@ -12,7 +12,7 @@ namespace Runtime.Settings
         {
             _camera = Camera.main;
 
-            if (_camera == null)
+            if (!_camera)
             {
                 throw new Exception("CameraWorldConfig: no Camera found in scene.");
             }
