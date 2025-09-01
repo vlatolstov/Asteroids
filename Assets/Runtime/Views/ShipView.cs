@@ -1,4 +1,6 @@
 using System;
+using Runtime.Abstract.Configs;
+using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
 using Runtime.Data;
@@ -8,11 +10,10 @@ using Zenject;
 
 namespace Runtime.Views
 {
-    [RequireComponent(typeof(Rigidbody2D))]
     public class ShipView : BaseView, GameControls.IGameplayActions, IPlayerTarget
     {
         private GameControls _controls;
-        private Rigidbody2D _rb;
+        private IMove _movementData;
 
         [SerializeField]
         private bool _isPlayer;
@@ -21,7 +22,7 @@ namespace Runtime.Views
 
         public void FixedUpdate()
         {
-            Emit(new ShipPose(_rb.transform.position, _rb.linearVelocity, _rb.rotation));
+            Emit(new ShipPose(_movementData.Position, _movementData.Velocity, _movementData.AngleRadians));
         }
 
         private void OnEnable()
@@ -32,7 +33,7 @@ namespace Runtime.Views
                 _controls.Gameplay.SetCallbacks(this);
             }
 
-            _rb = TryGetComponent(out _rb) ? _rb : null;
+            _movementData = TryGetComponent(out _movementData) ? _movementData : null;
 
             _controls.Gameplay.Enable();
 

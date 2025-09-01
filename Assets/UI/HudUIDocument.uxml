@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
+    <ui:VisualElement name="ShipDataContainer" style="flex-grow: 1;">
+        <ui:Label text="Pos" name="Pos" class="dataText" />
+        <ui:Label text="Speed" name="Speed" class="dataText" />
+        <ui:Label text="Angle" name="Angle" class="dataText" />
+    </ui:VisualElement>
+</ui:UXML>

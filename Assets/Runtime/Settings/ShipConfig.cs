@@ -18,7 +18,8 @@ namespace Runtime.Settings
         [SerializeField]
         private float _linearDamping = 0.2f;
 
-        
+        [SerializeField]
+        private bool _isWrappedByWorldBounds = false;
 
         [Header("Laser")]
         public int MaxLaserCharges = 3;
@@ -30,5 +31,6 @@ namespace Runtime.Settings
         public float MaxSpeed => _maxSpeed;
         public float TurnSpeed => _turnSpeed;
         public float LinearDamping => _linearDamping;
+        public bool IsWrappedByWorldBounds => _isWrappedByWorldBounds;
     }
 }

@@ -1,5 +1,4 @@
 using Runtime.Abstract.Configs;
-using Runtime.Abstract.MVP;
 using Runtime.Utils;
 using UnityEngine;
 using Zenject;
@@ -74,7 +73,11 @@ namespace Runtime.Abstract.Movement
             }
 
             Vector2 newPos = Position + _vel * dt;
-            newPos = WrapUtility.Wrap(newPos, World.WorldRect);
+
+            if (Config.IsWrappedByWorldBounds)
+            {
+                newPos = WrapUtility.Wrap(newPos, World.WorldRect);
+            }
 
             _rb.MovePosition(newPos);
             _rb.MoveRotation(_angRad * Mathf.Rad2Deg);

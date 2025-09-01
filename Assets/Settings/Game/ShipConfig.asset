@@ -16,10 +16,7 @@ MonoBehaviour:
   _maxSpeed: 12
   _turnSpeed: 2
   _linearDamping: 0.3
-  _bulletSpeed: 15
-  _bulletCooldown: 1
-  _bulletLife: 1
-  _muzzleOffset: 0
+  _isWrappedByWorldBounds: 1
   MaxLaserCharges: 3
   LaserRechargeRate: 8
   LaserCooldown: 3

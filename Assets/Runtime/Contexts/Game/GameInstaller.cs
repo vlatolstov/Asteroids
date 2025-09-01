@@ -47,6 +47,10 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<ProjectileHitResolver>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<HudPresenter>()
+                .AsSingle();
         }
 
         private void ShipBindings()
