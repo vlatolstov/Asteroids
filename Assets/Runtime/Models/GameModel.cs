@@ -9,21 +9,12 @@ namespace Runtime.Models
     public class GameModel : BaseModel, ITickable
     {
         protected override void OnDataChange(IData newValue)
-        {
-            Debug.Log($"GameModel.OnDataChange: {newValue.GetType()}");
-        }
+        { }
 
         protected override void OnNotify(Action action)
-        {
-            Debug.Log($"GameModel.OnNotify: {action}");
-        }
+        { }
 
         public void Tick()
-        {
-            if (TryGet<ShipPose>(out var shipPose))
-            {
-                Debug.Log($"GameModel.Tick: {shipPose}");
-            }
-        }
+        { }
     }
 }

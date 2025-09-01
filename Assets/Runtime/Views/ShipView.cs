@@ -1,15 +1,28 @@
+using System;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
 using Runtime.Data;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 namespace Runtime.Views
 {
-    //TODO separate movement and view logic
+    [RequireComponent(typeof(Rigidbody2D))]
     public class ShipView : BaseView, GameControls.IGameplayActions, IPlayerTarget
     {
         private GameControls _controls;
+        private Rigidbody2D _rb;
+
+        [SerializeField]
+        private bool _isPlayer;
+
+        public bool IsPlayer => _isPlayer;
+
+        public void FixedUpdate()
+        {
+            Emit(new ShipPose(_rb.transform.position, _rb.linearVelocity, _rb.rotation));
+        }
 
         private void OnEnable()
         {
@@ -18,6 +31,8 @@ namespace Runtime.Views
                 _controls = new GameControls();
                 _controls.Gameplay.SetCallbacks(this);
             }
+
+            _rb = TryGetComponent(out _rb) ? _rb : null;
 
             _controls.Gameplay.Enable();
 

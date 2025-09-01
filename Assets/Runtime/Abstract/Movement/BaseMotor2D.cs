@@ -7,7 +7,7 @@ using Zenject;
 namespace Runtime.Abstract.Movement
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public abstract class BaseMotor2D<TConfig> : MonoBehaviour, IMove
+    public abstract class BaseMotor2D<TConfig> : MonoBehaviour, IMove, IMotorInput
         where TConfig : class, IMovementConfig
     {
         [Inject]
@@ -16,26 +16,26 @@ namespace Runtime.Abstract.Movement
         [Inject]
         protected IWorldConfig World;
 
-        [Inject]
-        protected IModel Model;
+        private Rigidbody2D _rb;
+        private Vector2 _vel;
+        private float _angRad;
 
-        protected Rigidbody2D Rb;
-        protected Vector2 Vel;
-        protected float AngRad;
+        private float _thrust = 0f;
+        private float _turnAxis = 0f;
 
-        public Vector2 Position => Rb ? Rb.position : transform.position;
-        public Vector2 Velocity => Vel;
-        public float AngleRadians => AngRad;
+        public Vector2 Position => _rb ? _rb.position : transform.position;
+        public Vector2 Velocity => _vel;
+        public float AngleRadians => _angRad;
 
         public virtual void SetPose(Vector2 pos, Vector2 vel, float aRad)
         {
-            Vel = vel;
-            AngRad = aRad;
+            _vel = vel;
+            _angRad = aRad;
             float angDegrees = aRad * Mathf.Rad2Deg;
-            if (Rb)
+            if (_rb)
             {
-                Rb.position = pos;
-                Rb.MoveRotation(angDegrees);
+                _rb.position = pos;
+                _rb.MoveRotation(angDegrees);
             }
             else
             {
@@ -45,59 +45,48 @@ namespace Runtime.Abstract.Movement
 
         protected virtual void Awake()
         {
-            Rb = GetComponent<Rigidbody2D>();
-            Rb.bodyType = RigidbodyType2D.Kinematic;
-            Rb.gravityScale = 0f;
-            Rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
-        }
-
-        protected virtual void Start()
-        {
-            if (!TryReadPoseFromModel(out var pos, out var vel, out var aRad))
-            {
-                pos = transform.position;
-                vel = Vector2.zero;
-                aRad = transform.eulerAngles.z * Mathf.Rad2Deg;
-                WritePoseToModel(pos, vel, aRad);
-            }
-
-            SetPose(pos, vel, aRad);
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.gravityScale = 0f;
+            _rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         }
 
         protected virtual void FixedUpdate()
         {
             float dt = Time.fixedDeltaTime;
+            UpdateControls(dt);
 
-            var (thrust, turnAxis) = ReadControlAxes();
+            Vector2 fwd = new(-Mathf.Sin(_angRad), Mathf.Cos(_angRad));
+            _vel += fwd * (Config.Acceleration * Mathf.Clamp01(_thrust) * dt);
 
-            Vector2 fwd = new(-Mathf.Sin(AngRad), Mathf.Cos(AngRad));
-            Vel += fwd * (Config.Acceleration * Mathf.Clamp01(thrust) * dt);
+            float spd = _vel.magnitude;
 
-            float spd = Vel.magnitude;
-            
             if (spd > Config.MaxSpeed)
             {
-                Vel *= (Config.MaxSpeed / spd);
+                _vel *= (Config.MaxSpeed / spd);
             }
 
-            AngRad -= Config.TurnSpeed * Mathf.Clamp(turnAxis, -1f, 1f) * dt;
+            _angRad -= Config.TurnSpeed * Mathf.Clamp(_turnAxis, -1f, 1f) * dt;
 
             if (Config.LinearDamping > 0f)
             {
-                Vel = Vector2.MoveTowards(Vel, Vector2.zero, Config.LinearDamping * dt);
+                _vel = Vector2.MoveTowards(_vel, Vector2.zero, Config.LinearDamping * dt);
             }
 
-            Vector2 newPos = Position + Vel * dt;
+            Vector2 newPos = Position + _vel * dt;
             newPos = WrapUtility.Wrap(newPos, World.WorldRect);
 
-            Rb.MovePosition(newPos);
-            Rb.MoveRotation(AngRad * Mathf.Rad2Deg);
-
-            WritePoseToModel(newPos, Vel, AngRad);
+            _rb.MovePosition(newPos);
+            _rb.MoveRotation(_angRad * Mathf.Rad2Deg);
         }
 
-        protected abstract (float thrust, float turnAxis) ReadControlAxes();
-        protected abstract bool TryReadPoseFromModel(out Vector2 pos, out Vector2 vel, out float angleRad);
-        protected abstract void WritePoseToModel(Vector2 pos, Vector2 vel, float angleRad);
+        public void SetControls(float thrust, float turnAxis)
+        {
+            _thrust = thrust;
+            _turnAxis = turnAxis;
+        }
+
+        protected virtual void UpdateControls(float dt)
+        { }
     }
 }

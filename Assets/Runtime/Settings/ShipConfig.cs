@@ -4,9 +4,8 @@ using UnityEngine;
 namespace Runtime.Settings
 {
     [CreateAssetMenu(fileName = "ShipConfig", menuName = "Settings/ShipConfig", order = 0)]
-    public class ShipConfig : ScriptableObject, IMovementConfig, IGunConfig
+    public class ShipConfig : ScriptableObject, IMovementConfig
     {
-        [Header("Ship")]
         [SerializeField]
         private float _acceleration = 1f;
 
@@ -19,18 +18,7 @@ namespace Runtime.Settings
         [SerializeField]
         private float _linearDamping = 0.2f;
 
-        [Header("Bullets")]
-        [SerializeField]
-        private float _bulletSpeed = 15f;
-
-        [SerializeField]
-        private float _bulletCooldown = 1f;
-
-        [SerializeField]
-        private float _bulletLife = 1f;
-
-        [SerializeField]
-        private float _muzzleOffset = 0f;
+        
 
         [Header("Laser")]
         public int MaxLaserCharges = 3;
@@ -42,9 +30,5 @@ namespace Runtime.Settings
         public float MaxSpeed => _maxSpeed;
         public float TurnSpeed => _turnSpeed;
         public float LinearDamping => _linearDamping;
-        public float BulletSpeed => _bulletSpeed;
-        public float BulletCooldown => _bulletCooldown;
-        public float BulletLife => _bulletLife;
-        public float MuzzleOffset => _muzzleOffset;
     }
 }

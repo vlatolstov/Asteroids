@@ -1,10 +1,10 @@
 namespace Runtime.Abstract.Configs
 {
-    public interface IGunConfig
+    public interface IGunConfig : IWeaponConfig
     {
         public float BulletSpeed { get; }
-        public float BulletCooldown { get; }
         public float BulletLife { get; }
-        public float MuzzleOffset { get; }
+        public int BulletsPerShot { get; }
+        public float BulletsInterval { get; }
     }
 }

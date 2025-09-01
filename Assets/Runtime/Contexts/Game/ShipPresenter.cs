@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
+using Runtime.Data;
 using Runtime.Models;
 using Runtime.Views;
 using UnityEngine;
@@ -10,73 +12,89 @@ namespace Runtime.Contexts.Game
 {
     public class ShipPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {
-        private readonly HashSet<ShipView> _attached = new();
+        private ShipView _playerView;
+        private IMotorInput _motor;
 
-        public ShipPresenter(IModel model, IViewsContainer viewsContainer) : base(model, viewsContainer)
+        public ShipPresenter(IModel model, IViewsContainer viewsContainer) : base(model,
+            viewsContainer)
         { }
 
         public void Initialize()
         {
-            Debug.Log($"ShipPresenter.Initialized");
             foreach (var shipView in ViewsContainer.GetViews<ShipView>())
             {
-                Debug.Log($"{shipView} attached");
-                Attach(shipView);
+                TryAttachPlayer(shipView);
             }
-            
-            ViewsContainer.ViewAdded += ViewAdded;
-            ViewsContainer.ViewRemoved += ViewRemoved;
+
+            ViewsContainer.ViewAdded += OnViewAdded;
+            ViewsContainer.ViewRemoved += OnViewRemoved;
+            Model.Subscribe<TurnInput>(OnControlChanged);
+            Model.Subscribe<ThrustInput>(OnControlChanged);
         }
 
         public void Dispose()
         {
-            foreach (var shipView in _attached)
-            {
-                shipView.Emitted -= OnViewEmitted;
-            }
+            ViewsContainer.ViewAdded -= OnViewAdded;
+            ViewsContainer.ViewRemoved -= OnViewRemoved;
+            Model.Unsubscribe<TurnInput>(OnControlChanged);
+            Model.Unsubscribe<ThrustInput>(OnControlChanged);
 
-            _attached.Clear();
+            DetachPlayer();
         }
 
-        private void Attach(ShipView shipView)
+        private void TryAttachPlayer(ShipView shipView)
         {
-            if (!_attached.Add(shipView))
-            {
-                return;
-            }
+            if (!shipView.IsPlayer) return;
 
-            shipView.Emitted += OnViewEmitted;
+            _playerView = shipView;
+            _playerView.Emitted += OnViewEmitted;
+
+            if (shipView.TryGetComponent<IMotorInput>(out var motor))
+            {
+                _motor = motor;
+            }
+            else
+            {
+                Debug.LogWarning($"Motor not found on {shipView.gameObject.name}.");
+            }
         }
 
-        private void Detach(ShipView shipView)
+        private void DetachPlayer()
         {
-            if (_attached.Remove(shipView))
+            if (!_playerView)
             {
-                shipView.Emitted -= OnViewEmitted;
+                _playerView.Emitted -= OnViewEmitted;
             }
+
+            _playerView = null;
+            _motor = null;
         }
 
-        private void ViewAdded(BaseView view)
+        private void OnViewAdded(BaseView view)
         {
             if (view is ShipView sv)
             {
-                Attach(sv);
+                TryAttachPlayer(sv);
             }
         }
 
-        private void ViewRemoved(BaseView view)
+        private void OnViewRemoved(BaseView view)
         {
-            if (view is ShipView sv)
+            if (view is ShipView sv && sv == _playerView)
             {
-                Detach(sv);
+                DetachPlayer();
             }
         }
-
 
         private void OnViewEmitted(IData data)
         {
             Model.ChangeData(data);
-            Debug.Log("ShipPresenter.ViewEmitted");
+        }
+
+        private void OnControlChanged()
+        {
+            if (Model.TryGet(out TurnInput turn) && Model.TryGet(out ThrustInput thrust))
+                _motor.SetControls(thrust.Value, turn.Value);
         }
     }
 }

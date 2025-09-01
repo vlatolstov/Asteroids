@@ -106,6 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 599f870b5cdc4105b732116076d08d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Ship.ShipView
+  _isPlayer: 1
 --- !u!50 &1074268564404137070
 Rigidbody2D:
   serializedVersion: 5

@@ -1,4 +1,5 @@
 using Runtime.Abstract.Configs;
+using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Models;
 using Runtime.Movement;
@@ -20,6 +21,8 @@ namespace Runtime.Contexts.Game
 
         public override void InstallBindings()
         {
+            ShipBindings();
+            
             Container
                 .Bind<IWorldConfig>()
                 .To<CameraWorldConfig>()
@@ -42,17 +45,20 @@ namespace Runtime.Contexts.Game
                 .AsSingle();
 
             Container
+                .BindInterfacesAndSelfTo<ProjectileHitResolver>()
+                .AsSingle();
+        }
+
+        private void ShipBindings()
+        {
+            Container
                 .BindInterfacesAndSelfTo<ShipPresenter>()
                 .AsSingle();
 
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
                 .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
-
-            Container
-                .BindInterfacesAndSelfTo<ProjectileHitResolver>()
-                .AsSingle();
-
+            
             if (_autoSpawnShip)
             {
                 Container

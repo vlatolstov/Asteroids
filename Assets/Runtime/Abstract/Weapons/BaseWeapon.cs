@@ -9,18 +9,16 @@ using Zenject;
 
 namespace Runtime.Abstract.Weapons
 {
-    public abstract class BaseWeapon : IInitializable, IFixedTickable, IDisposable
+    public abstract class BaseWeapon<TWeaponConfig> : IInitializable, IFixedTickable, IDisposable where TWeaponConfig : IWeaponConfig
     {
         private readonly ProjectileHitResolver _resolver;
-        protected readonly IGunConfig Config;
-        protected readonly BulletView.Pool BulletPool;
+        protected readonly TWeaponConfig Config;
 
-        private float _cooldown;
+        protected float Cooldown;
 
-        protected BaseWeapon(IGunConfig config, BulletView.Pool bulletPool, ProjectileHitResolver resolver)
+        protected BaseWeapon(TWeaponConfig config, ProjectileHitResolver resolver)
         {
             Config = config;
-            BulletPool = bulletPool;
             _resolver = resolver;
         }
 
@@ -32,9 +30,9 @@ namespace Runtime.Abstract.Weapons
 
         public void FixedTick()
         {
-            if (_cooldown > 0f)
+            if (Cooldown > 0f)
             {
-                _cooldown = Mathf.Max(0f, _cooldown - Time.fixedDeltaTime);
+                Cooldown = Mathf.Max(0f, Cooldown - Time.fixedDeltaTime);
             }
 
             OnFixedTick();
@@ -42,24 +40,10 @@ namespace Runtime.Abstract.Weapons
 
         protected virtual void OnFixedTick()
         { }
+
+        public abstract bool TryFire();
         
-        public bool TryFire()
-        {
-            if (_cooldown > 0f) return false;
-
-            if (!GetFireParams(out var origin, out var dir, out var inheritVel, out var faction))
-                return false;
-
-            var vel = inheritVel + dir.normalized * Config.BulletSpeed;
-
-            var bullet = BulletPool.Spawn(origin, vel, Config.BulletLife, faction);
-            bullet.Emitted += OnHitEvent;
-
-            _cooldown = Config.BulletCooldown;
-            return true;
-        }
-
-        private void OnHitEvent(IData data)
+        protected void OnHitEvent(IData data)
         {
             if (data is ProjectileHit hit)
             {

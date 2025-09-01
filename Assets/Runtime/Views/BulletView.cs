@@ -27,7 +27,6 @@ namespace Runtime.Views
             col.isTrigger = true;
         }
 
-        // пул «переинициализирует» пулю
         public void Reinit(Pool pool, Vector2 pos, Vector2 velocity, float lifeTime, Faction faction)
         {
             _pool = pool;
