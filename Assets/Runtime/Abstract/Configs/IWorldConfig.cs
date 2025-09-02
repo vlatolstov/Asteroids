@@ -7,12 +7,15 @@ namespace Runtime.Abstract.Configs
         Rect WorldRect { get; }
         float WrapOffset { get; }
         Vector2 OffscreenPosition { get; }
+
         Rect ExpandedRect(float? customOffset = null)
         {
             float o = customOffset ?? WrapOffset;
             var r = WorldRect;
-            r.xMin -= o; r.xMax += o;
-            r.yMin -= o; r.yMax += o;
+            r.xMin -= o;
+            r.xMax += o;
+            r.yMin -= o;
+            r.yMax += o;
             return r;
         }
     }

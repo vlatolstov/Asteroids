@@ -110,11 +110,11 @@ namespace Runtime.Abstract.MVP
 
         protected void UntrackAll()
         {
-            foreach (var kv in _subsByView)
+            foreach (var list in _subsByView.Values)
             {
-                foreach (var d in kv.Value)
+                foreach (var disposable in list)
                 {
-                    d?.Dispose();
+                    disposable?.Dispose();
                 }
             }
 
@@ -127,6 +127,18 @@ namespace Runtime.Abstract.MVP
         public virtual void Dispose()
         {
             UntrackAll();
+        }
+    }
+
+    public sealed class AnonDisposable : IDisposable
+    {
+        private Action _disposeAction;
+        public AnonDisposable(Action disposeActionAction) => _disposeAction = disposeActionAction;
+
+        public void Dispose()
+        {
+            _disposeAction?.Invoke();
+            _disposeAction = null;
         }
     }
 }

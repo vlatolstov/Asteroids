@@ -12,6 +12,11 @@ namespace Runtime.Abstract.MVP
             _viewsContainer = viewsContainer;
         }
 
+        protected override void Reinitialize(TView item)
+        {
+            base.Reinitialize(item);
+        }
+
         protected override void OnSpawned(TView item)
         {
             base.OnSpawned(item);

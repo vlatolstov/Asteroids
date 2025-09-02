@@ -101,9 +101,9 @@ namespace Runtime.Abstract.MVP
             }
         }
 
-        public void Publish<TEvent>(TEvent ev) where TEvent : IData
+        public void Publish<TEvent>(TEvent eventData) where TEvent : IData
         {
-            Publish((IData)ev);
+            Publish((IData)eventData);
         }
 
         public bool TryGet<TData>(out TData data) where TData : IData
@@ -135,7 +135,7 @@ namespace Runtime.Abstract.MVP
         protected virtual void OnDataChange(IData newValue)
         { }
 
-        protected virtual void OnEventPublished(IData ev)
+        protected virtual void OnEventPublished(IData eventData)
         { }
 
         protected virtual void OnNotify(Action action)

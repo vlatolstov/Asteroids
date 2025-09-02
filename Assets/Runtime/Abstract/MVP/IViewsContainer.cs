@@ -11,8 +11,5 @@ namespace Runtime.Abstract.MVP
 
         public void AddView(BaseView view);
         public void RemoveView(BaseView view);
-
-        event Action<BaseView> ViewAdded;
-        event Action<BaseView> ViewRemoved;
     }
 }
