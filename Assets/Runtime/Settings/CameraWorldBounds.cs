@@ -34,6 +34,6 @@ namespace Runtime.Settings
         }
 
         public float WrapOffset => Mathf.Max(0f, _wrapOffset);
-        public Vector2 OffscreenPosition => new(WorldRect.min.x - 5f, WorldRect.min.y - 5f);
+        public Vector2 OffscreenPosition => new(WorldRect.min.x - 10f, WorldRect.min.y - 10f);
     }
 }

@@ -16,10 +16,7 @@ namespace Runtime.Contexts.Game
         private GameObject _shipPrefab;
 
         [SerializeField]
-        private GameObject _smallAsteroidPrefab;
-
-        [SerializeField]
-        private GameObject _largeAsteroidPrefab;
+        private GameObject _asteroidPrefab;
 
         public override void InstallBindings()
         {
@@ -70,15 +67,9 @@ namespace Runtime.Contexts.Game
 
         private void AsteroidBindings()
         {
-            Container.BindMemoryPool<AsteroidLargeView, AsteroidLargeView.Pool>()
-                .WithInitialSize(15)
-                .FromComponentInNewPrefab(_largeAsteroidPrefab)
-                .UnderTransformGroup("Asteroids")
-                .NonLazy();
-
-            Container.BindMemoryPool<AsteroidSmallView, AsteroidSmallView.Pool>()
+            Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
                 .WithInitialSize(50)
-                .FromComponentInNewPrefab(_smallAsteroidPrefab)
+                .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
 

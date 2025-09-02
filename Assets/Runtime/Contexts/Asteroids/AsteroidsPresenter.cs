@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Views;
@@ -11,19 +12,16 @@ namespace Runtime.Contexts.Asteroids
     //TODO зарефакторить
     public class AsteroidPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {
-        private readonly AsteroidLargeView.Pool _largePool;
-        private readonly AsteroidSmallView.Pool _smallPool;
-
-        private readonly Dictionary<uint, BaseView> _live = new();
-        private readonly Dictionary<BaseView, Action<IData>> _handlers = new();
+        private readonly AsteroidView.Pool _pool;
+        private readonly HashSet<BaseView> _attached;
 
         public AsteroidPresenter(
             IModel model, IViewsContainer views,
-            AsteroidLargeView.Pool largePool, AsteroidSmallView.Pool smallPool)
+            AsteroidView.Pool pool)
             : base(model, views)
         {
-            _largePool = largePool;
-            _smallPool = smallPool;
+            _pool = pool;
+            _attached = new HashSet<BaseView>();
         }
 
         public void Initialize()
@@ -31,123 +29,65 @@ namespace Runtime.Contexts.Asteroids
             Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest);
             Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest);
 
-            foreach (var v in ViewsContainer.GetViews<AsteroidLargeView>())
+            foreach (var v in ViewsContainer.GetViews<AsteroidView>())
             {
                 Attach(v);
             }
-
-            foreach (var v in ViewsContainer.GetViews<AsteroidSmallView>())
-            {
-                Attach(v);
-            }
-
-            ViewsContainer.ViewAdded += OnViewAdded;
-            ViewsContainer.ViewRemoved += OnViewRemoved;
         }
 
         public void Dispose()
         {
-            ViewsContainer.ViewAdded -= OnViewAdded;
-            ViewsContainer.ViewRemoved -= OnViewRemoved;
             Model.Unsubscribe<AsteroidSpawnRequest>(OnSpawnRequest);
             Model.Unsubscribe<AsteroidDespawnRequest>(OnDespawnRequest);
 
-            foreach (var kv in _handlers)
+            foreach (var view in _attached.ToArray())
             {
-                kv.Key.Emitted -= kv.Value;
+                Detach(view);
             }
-
-            _handlers.Clear();
-            _live.Clear();
         }
 
         private void OnSpawnRequest()
         {
-            if (!Model.TryGet(out AsteroidSpawnRequest cmd))
+            if (!Model.TryGet(out AsteroidSpawnRequest request))
             {
                 return;
             }
-
-            if (cmd.Size == AsteroidSize.Large)
-            {
-                var v = _largePool.Spawn();
-                SetupSpawned(v, cmd);
-            }
-            else
-            {
-                var v = _smallPool.Spawn();
-                SetupSpawned(v, cmd);
-            }
-        }
-
-        private void SetupSpawned(BaseAsteroidView view, AsteroidSpawnRequest cmd)
-        {
-            view.GetComponent<IMove>()?.SetPose(cmd.Pos, cmd.Vel, cmd.AngleRad);
-            view.GetComponent<IMotorInput>()?.SetControls(1f, 0f);
-
-            _live[view.ViewId] = view;
+        
+            var view = _pool.Spawn(request);
             Attach(view);
         }
-
+        
         private void OnDespawnRequest()
         {
-            if (!Model.TryGet(out AsteroidDespawnRequest cmd))
+            if (!Model.TryGet(out AsteroidDespawnRequest request))
             {
                 return;
             }
+            
+            var view = ViewsContainer.GetViewById(request.ViewId);
 
-            if (!_live.Remove(cmd.ViewId, out var view))
+            if (!view || view is not AsteroidView asteroidView)
             {
                 return;
             }
-
-            Detach(view);
-
-            if (view is AsteroidLargeView lv)
-            {
-                _largePool.Despawn(lv);
-            }
-            else if (view is AsteroidSmallView sv)
-            {
-                _smallPool.Despawn(sv);
-            }
-            else
-            {
-                throw new InvalidOperationException($"Invalid view type {view.GetType()}");
-            }
+            
+            Detach(asteroidView);
+            _pool.Despawn(asteroidView);
         }
 
-        private void OnViewAdded(BaseView view)
+        private void Attach(BaseView view)
         {
-            switch (view)
+            if (_attached.Add(view))
             {
-                case AsteroidLargeView lv:
-                    Attach(lv);
-                    break;
-                case AsteroidSmallView sv:
-                    Attach(sv);
-                    break;
+                view.Emitted += OnEmitted;
             }
-        }
-
-        private void OnViewRemoved(BaseView view) => Detach(view);
-
-        private void Attach(BaseView v)
-        {
-            if (_handlers.ContainsKey(v))
-            {
-                return;
-            }
-            void Handler(IData d) => Model.ChangeData(d); 
-            _handlers.Add(v, Handler);
-            v.Emitted += Handler;
         }
 
         private void Detach(BaseView v)
         {
-            if (_handlers.Remove(v, out var h))
+            if (_attached.Remove(v))
             {
-                v.Emitted -= h;
+                v.Emitted -= OnEmitted;
             }
         }
     }

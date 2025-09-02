@@ -1,3 +1,4 @@
+using Runtime.Data;
 using Zenject;
 
 namespace Runtime.Abstract.MVP
@@ -10,16 +11,71 @@ namespace Runtime.Abstract.MVP
         {
             _viewsContainer = viewsContainer;
         }
-        
+
         protected override void OnSpawned(TView item)
         {
             base.OnSpawned(item);
-            _viewsContainer.AddView(item);       
+            _viewsContainer.AddView(item);
         }
 
         protected override void OnDespawned(TView item)
         {
-            _viewsContainer.RemoveView(item);   
+            _viewsContainer.RemoveView(item);
+            base.OnDespawned(item);
+        }
+    }
+
+    public abstract class ViewPool<TParam1, TView> : MonoMemoryPool<TParam1, TView> where TView : BaseView
+    {
+        private readonly IViewsContainer _viewsContainer;
+
+        protected ViewPool(IViewsContainer viewsContainer)
+        {
+            _viewsContainer = viewsContainer;
+        }
+
+        protected override void Reinitialize(TParam1 p1, TView item)
+        {
+            base.Reinitialize(p1, item);
+        }
+
+        protected override void OnSpawned(TView item)
+        {
+            base.OnSpawned(item);
+            _viewsContainer.AddView(item);
+        }
+
+        protected override void OnDespawned(TView item)
+        {
+            _viewsContainer.RemoveView(item);
+            base.OnDespawned(item);
+        }
+    }
+
+    public abstract class ViewPool<TParam1, TParam2, TView> : MonoMemoryPool<TParam1, TParam2, TView>
+        where TView : BaseView
+    {
+        private readonly IViewsContainer _viewsContainer;
+
+        protected ViewPool(IViewsContainer viewsContainer)
+        {
+            _viewsContainer = viewsContainer;
+        }
+
+        protected override void Reinitialize(TParam1 p1, TParam2 p2, TView item)
+        {
+            base.Reinitialize(p1, p2, item);
+        }
+
+        protected override void OnSpawned(TView item)
+        {
+            base.OnSpawned(item);
+            _viewsContainer.AddView(item);
+        }
+
+        protected override void OnDespawned(TView item)
+        {
+            _viewsContainer.RemoveView(item);
             base.OnDespawned(item);
         }
     }

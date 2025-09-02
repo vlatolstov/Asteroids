@@ -55,8 +55,8 @@ namespace Runtime.Contexts.Asteroids
             float spd = Random.Range(_config.EntrySpeedMin, _config.EntrySpeedMax);
             Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
             float nose = Mathf.Atan2(-vel.x, vel.y);
-
-            _model.ChangeData(new AsteroidSpawnRequest(AsteroidSize.Large, pos, vel, nose));
+            
+            _model.ChangeData(new AsteroidSpawnRequest(AsteroidSize.Large, _config.LargeScale, pos, vel, nose));
         }
     }
 }
