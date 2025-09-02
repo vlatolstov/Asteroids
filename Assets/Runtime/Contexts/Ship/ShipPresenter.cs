@@ -68,8 +68,12 @@ namespace Runtime.Contexts.Ship
 
         private void OnControlChanged()
         {
-            if (Model.TryGet(out TurnInput turn) && Model.TryGet(out ThrustInput thrust))
+            if (Model.TryGet(out TurnInput turn) &&
+                Model.TryGet(out ThrustInput thrust) &&
+                _player)
+            {
                 _motor.SetControls(thrust.Value, turn.Value);
+            }
         }
 
         private void OnShipSpawnRequest()
@@ -81,7 +85,7 @@ namespace Runtime.Contexts.Ship
                 player.GetComponent<IMove>()?.SetPose(spawn.Position, Vector2.zero, 0f);
             }
         }
-        
+
         private void OnShipDespawnRequest()
         {
             if (!_player)

@@ -51,6 +51,10 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<HudPresenter>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<InputPresenter>()
+                .AsSingle();
         }
 
 
