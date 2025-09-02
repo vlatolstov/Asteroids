@@ -7,15 +7,16 @@ using Zenject;
 
 namespace Runtime.Contexts.Game
 {
-    public class HudPresenter : BasePresenter<IModel>, IInitializable, IDisposable
+    public class HudPresenter : BasePresenter<IModel>
     {
         private HudView _hud;
 
         public HudPresenter(IModel model, IViewsContainer views) : base(model, views)
         { }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             _hud = ViewsContainer.GetView<HudView>();
             
             if (!_hud)
@@ -23,15 +24,14 @@ namespace Runtime.Contexts.Game
                 Debug.LogError("HudView not found in container");
             }
 
-            _hud.Emitted += OnEmitted;
+            ForwardAllFrom(_hud);
             Model.Subscribe<ShipPose>(OnPoseChanged);
-            OnPoseChanged();
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             Model.Unsubscribe<ShipPose>(OnPoseChanged);
-            _hud.Emitted -= OnEmitted;
             _hud = null;
         }
 

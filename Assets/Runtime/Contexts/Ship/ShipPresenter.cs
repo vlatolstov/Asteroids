@@ -4,11 +4,10 @@ using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Views;
 using UnityEngine;
-using Zenject;
 
 namespace Runtime.Contexts.Ship
 {
-    public class ShipPresenter : BasePresenter<IModel>, IInitializable, IDisposable
+    public class ShipPresenter : BasePresenter<IModel>
     {
         private readonly ShipView.Pool _pool;
         private ShipView _player;
@@ -19,16 +18,18 @@ namespace Runtime.Contexts.Ship
             _pool = pool;
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             Model.Subscribe<TurnInput>(OnControlChanged);
             Model.Subscribe<ThrustInput>(OnControlChanged);
             Model.Subscribe<ShipSpawnRequest>(OnShipSpawnRequest);
             Model.Subscribe<ShipDespawnRequest>(OnShipDespawnRequest);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             Model.Unsubscribe<TurnInput>(OnControlChanged);
             Model.Unsubscribe<ThrustInput>(OnControlChanged);
             Model.Unsubscribe<ShipSpawnRequest>(OnShipSpawnRequest);
@@ -45,16 +46,12 @@ namespace Runtime.Contexts.Ship
             }
 
             _player = shipView;
-            _player.Emitted += OnEmitted;
+            ForwardAllFrom(_player);
         }
 
         private void DetachPlayer()
         {
-            if (_player)
-            {
-                _player.Emitted -= OnEmitted;
-            }
-
+            Untrack(_player);
             _player = null;
         }
 

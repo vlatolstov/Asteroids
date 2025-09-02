@@ -6,23 +6,22 @@ using Zenject;
 
 namespace Runtime.Contexts.Game
 {
-    public class InputPresenter : BasePresenter<IModel>, IInitializable, IDisposable
+    public class InputPresenter : BasePresenter<IModel>
     {
         private InputReceiverView _inputView;
         public InputPresenter(IModel model, IViewsContainer viewsContainer) : base(model, viewsContainer)
         { }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             _inputView = ViewsContainer.GetView<InputReceiverView>();
-            _inputView.Emitted += OnEmitted;
-            OnEmitted(new ThrustInput(0f));
-            OnEmitted(new TurnInput(0f));
+            ForwardAllFrom(_inputView);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
-            _inputView.Emitted -= OnEmitted;
+            base.Dispose();
             _inputView = null;
         }
     }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Data
 {
-    public readonly struct ShipSpawnRequest : IData
+    public readonly struct ShipSpawnRequest : IEventData
     {
         public readonly Vector2 Position;
 
@@ -13,12 +13,12 @@ namespace Runtime.Data
         }
     }
     
-    public readonly struct ShipDespawnRequest : IData
+    public readonly struct ShipDespawnRequest : IEventData
     {
         
     }
 
-    public readonly struct ShipSpawned : IData
+    public readonly struct ShipSpawned : IEventData
     {
         public readonly Vector2 Position;
 
@@ -28,6 +28,6 @@ namespace Runtime.Data
         }
     }
 
-    public struct ShipDestroyed : IData
+    public struct ShipDestroyed : IEventData
     { }
 }

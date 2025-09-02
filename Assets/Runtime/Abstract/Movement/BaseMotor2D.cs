@@ -25,14 +25,14 @@ namespace Runtime.Abstract.Movement
         public Vector2 Position => _pos;
         public Vector2 Velocity => _vel;
         public float AngleRadians => _angRad;
-        
+
         public virtual void SetPose(Vector2 pos, Vector2 vel, float aRad)
         {
             _pos = pos;
             _vel = vel;
             _angRad = aRad;
         }
-        
+
         public void MoveRigidbody(Rigidbody2D rigidbody)
         {
             float dt = Time.fixedDeltaTime;
@@ -55,17 +55,17 @@ namespace Runtime.Abstract.Movement
                 _vel = Vector2.MoveTowards(_vel, Vector2.zero, _config.LinearDamping * dt);
             }
 
-            Vector2 newPos = _pos + _vel * dt;
+            _pos += _vel * dt;
 
             if (_config.IsWrappedByWorldBounds)
             {
-                newPos = WrapUtility.Wrap(newPos, _world.WorldRect, _world.WrapOffset);
+                _pos = WrapUtility.Wrap(_pos, _world.WorldRect, _world.WrapOffset);
             }
 
-            rigidbody.MovePosition(newPos);
+            rigidbody.MovePosition(_pos);
             rigidbody.MoveRotation(_angRad * Mathf.Rad2Deg);
         }
-        
+
         public void SetControls(float thrust, float turnAxis)
         {
             _thrust = thrust;

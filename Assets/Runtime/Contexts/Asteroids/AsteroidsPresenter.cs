@@ -9,8 +9,7 @@ using Zenject;
 
 namespace Runtime.Contexts.Asteroids
 {
-    //TODO зарефакторить
-    public class AsteroidPresenter : BasePresenter<IModel>, IInitializable, IDisposable
+    public class AsteroidPresenter : BasePresenter<IModel>
     {
         private readonly AsteroidView.Pool _pool;
         private readonly HashSet<BaseView> _attached;
@@ -24,8 +23,9 @@ namespace Runtime.Contexts.Asteroids
             _attached = new HashSet<BaseView>();
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
+            base.Initialize();
             Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest);
             Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest);
 
@@ -35,8 +35,9 @@ namespace Runtime.Contexts.Asteroids
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
+            base.Dispose();
             Model.Unsubscribe<AsteroidSpawnRequest>(OnSpawnRequest);
             Model.Unsubscribe<AsteroidDespawnRequest>(OnDespawnRequest);
 
@@ -79,15 +80,15 @@ namespace Runtime.Contexts.Asteroids
         {
             if (_attached.Add(view))
             {
-                view.Emitted += OnEmitted;
+                ForwardAllFrom(view);
             }
         }
 
-        private void Detach(BaseView v)
+        private void Detach(BaseView view)
         {
-            if (_attached.Remove(v))
+            if (_attached.Remove(view))
             {
-                v.Emitted -= OnEmitted;
+                Untrack(view);
             }
         }
     }

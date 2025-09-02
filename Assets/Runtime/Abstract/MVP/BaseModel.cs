@@ -49,8 +49,8 @@ namespace Runtime.Abstract.MVP
             var after = mutate(before);
 
             if (Equals(before, after)) return;
-            
-            
+
+
             if (after is null)
                 _dataContainer.Remove(type);
             else
@@ -66,15 +66,44 @@ namespace Runtime.Abstract.MVP
             {
                 return;
             }
-            
+
             var type = newValue.GetType();
             if (_dataContainer.TryGetValue(type, out var oldValue) && Equals(oldValue, newValue))
             {
                 return;
             }
+
             OnDataChange(newValue);
             _dataContainer[type] = newValue;
             Notify(type);
+        }
+
+        public void Publish(IData eventData)
+        {
+            if (eventData == null) return;
+
+            var type = eventData.GetType();
+
+            _dataContainer[type] = eventData;
+
+            try
+            {
+                OnEventPublished(eventData);
+                Notify(type);
+            }
+            finally
+            {
+                
+                if (_dataContainer.TryGetValue(type, out var current) && ReferenceEquals(current, eventData))
+                {
+                    _dataContainer.Remove(type);
+                }
+            }
+        }
+
+        public void Publish<TEvent>(TEvent ev) where TEvent : IData
+        {
+            Publish((IData)ev);
         }
 
         public bool TryGet<TData>(out TData data) where TData : IData
@@ -84,6 +113,7 @@ namespace Runtime.Abstract.MVP
                 data = t;
                 return true;
             }
+
             data = default;
             return false;
         }
@@ -103,13 +133,12 @@ namespace Runtime.Abstract.MVP
         }
 
         protected virtual void OnDataChange(IData newValue)
-        {
-            
-        }
-        
+        { }
+
+        protected virtual void OnEventPublished(IData ev)
+        { }
+
         protected virtual void OnNotify(Action action)
-        {
-            
-        }
+        { }
     }
 }

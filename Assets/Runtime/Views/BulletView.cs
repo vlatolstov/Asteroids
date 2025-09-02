@@ -69,7 +69,6 @@ namespace Runtime.Views
 
             protected override void OnDespawned(BulletView item)
             {
-                item.RemoveAllListeners();
                 item._rb.linearVelocity = Vector2.zero;
                 item.gameObject.SetActive(false);
                 base.OnDespawned(item);

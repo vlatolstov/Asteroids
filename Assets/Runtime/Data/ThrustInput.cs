@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Data
 {
-    public struct ThrustInput : IData
+    public struct ThrustInput : IStateData
     {
         public float Value;
 
@@ -13,7 +13,7 @@ namespace Runtime.Data
         }
     }
 
-    public struct TurnInput : IData
+    public struct TurnInput : IStateData
     {
         public float Value;
 
@@ -23,13 +23,13 @@ namespace Runtime.Data
         }
     }
 
-    public struct FireLaserPressed : IData
+    public struct FireLaserPressed : IEventData
     { }
 
-    public struct FireBulletPressed : IData
+    public struct FireBulletPressed : IEventData
     { }
 
-    public struct BulletState : IData
+    public struct BulletState : IStateData
     {
         public float Cooldown;
 
@@ -39,7 +39,7 @@ namespace Runtime.Data
         }
     }
 
-    public struct LaserState : IData
+    public struct LaserState : IStateData
     {
         public int Charges;
         public float Cooldown;
@@ -51,7 +51,7 @@ namespace Runtime.Data
         }
     }
 
-    public struct ScoreAdded : IData
+    public struct ScoreAdded : IEventData
     {
         public int Amount;
 
@@ -61,7 +61,12 @@ namespace Runtime.Data
         }
     }
 
-    public struct ProjectileHit : IData
+    public struct TotalScore : IStateData
+    {
+        public int Amount;
+    }
+
+    public struct ProjectileHit : IEventData
     {
         public Faction Source;
         public GameObject Target;
