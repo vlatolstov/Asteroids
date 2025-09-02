@@ -76,7 +76,7 @@ namespace Runtime.Abstract.Movement
 
             if (Config.IsWrappedByWorldBounds)
             {
-                newPos = WrapUtility.Wrap(newPos, World.WorldRect);
+                newPos = WrapUtility.Wrap(newPos, World.WorldRect, World.WrapOffset);
             }
 
             _rb.MovePosition(newPos);

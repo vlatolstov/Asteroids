@@ -59,7 +59,7 @@ namespace Runtime.Contexts.Ship
 
         private void DetachPlayer()
         {
-            if (!_playerView)
+            if (_playerView)
             {
                 _playerView.Emitted -= OnViewEmitted;
             }

@@ -8,6 +8,12 @@ namespace Runtime.Views
         {
             public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
             { }
+            
+            protected override void OnDespawned(BaseAsteroidView item)
+            {
+                item.Reinitialize();
+                base.OnDespawned(item);
+            }
         }
     }
 }

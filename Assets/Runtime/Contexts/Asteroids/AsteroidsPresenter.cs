@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
-using Runtime.Data;
 using Runtime.Views;
+using Runtime.Data;
 using Zenject;
 
 namespace Runtime.Contexts.Asteroids

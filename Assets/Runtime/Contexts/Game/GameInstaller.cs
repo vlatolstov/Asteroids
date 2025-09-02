@@ -34,7 +34,7 @@ namespace Runtime.Contexts.Game
 
             Container
                 .Bind<IWorldConfig>()
-                .To<CameraWorldConfig>()
+                .FromComponentInHierarchy()
                 .AsSingle();
 
             Container
@@ -94,15 +94,15 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_smallAsteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AsteroidPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AsteroidsLifecycleSystem>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AsteroidSpawnSystem>()
                 .AsSingle();

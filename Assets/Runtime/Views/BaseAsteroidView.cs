@@ -1,4 +1,3 @@
-using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
@@ -27,7 +26,7 @@ namespace Runtime.Views
 
         void FixedUpdate()
         {
-            var inside = _world.WorldRect.Contains(_move.Position);
+            var inside = _world.ExpandedRect().Contains(_move.Position);
             if (!_entered && inside)
             {
                 _entered = true;
@@ -45,20 +44,9 @@ namespace Runtime.Views
 
         public void Reinitialize()
         {
+            _move.SetPose(_world.OffscreenPosition, Vector2.zero, 0f);
             _entered = false;
         }
         public void SetId(AsteroidId id) => Id = id;
-        
-        public abstract class Pool : ViewPool<BaseAsteroidView>
-        {
-            protected Pool(IViewsContainer viewsContainer) : base(viewsContainer)
-            { }
-
-            protected override void OnDespawned(BaseAsteroidView item)
-            {
-                item.Reinitialize();
-                base.OnDespawned(item);
-            }
-        }
     }
 }
