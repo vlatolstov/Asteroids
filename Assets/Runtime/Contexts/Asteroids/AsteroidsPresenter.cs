@@ -13,7 +13,7 @@ namespace Runtime.Contexts.Asteroids
         private readonly AsteroidLargeView.Pool _largePool;
         private readonly AsteroidSmallView.Pool _smallPool;
 
-        private readonly Dictionary<int, BaseView> _live = new();
+        private readonly Dictionary<uint, BaseView> _live = new();
         private readonly Dictionary<BaseView, Action<IData>> _handlers = new();
 
         public AsteroidPresenter(
@@ -79,15 +79,12 @@ namespace Runtime.Contexts.Asteroids
             }
         }
 
-        private void SetupSpawned(BaseView view, AsteroidSpawnRequest cmd)
+        private void SetupSpawned(BaseAsteroidView view, AsteroidSpawnRequest cmd)
         {
             view.GetComponent<IMove>()?.SetPose(cmd.Pos, cmd.Vel, cmd.AngleRad);
             view.GetComponent<IMotorInput>()?.SetControls(1f, 0f);
 
-            var ast = view as BaseAsteroidView;
-            ast?.SetId(cmd.Id);
-
-            _live[cmd.Id.Value] = view;
+            _live[view.ViewId] = view;
             Attach(view);
         }
 
@@ -98,7 +95,7 @@ namespace Runtime.Contexts.Asteroids
                 return;
             }
 
-            if (!_live.Remove(cmd.Id.Value, out var view))
+            if (!_live.Remove(cmd.ViewId, out var view))
             {
                 return;
             }

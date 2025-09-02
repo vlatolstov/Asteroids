@@ -10,25 +10,37 @@ namespace Runtime.Views
     {
         public event Action<BaseView> ViewAdded;
         public event Action<BaseView> ViewRemoved;
-        
+
         private readonly Dictionary<Type, List<BaseView>> _views;
+        private readonly Dictionary<uint, BaseView> _viewMap;
+
+        private readonly Queue<uint> _availableId;
+        private uint _lastId = 1;
 
         public ViewsContainer(List<BaseView> views)
         {
-            _views = views.GroupBy(v => v.GetType()).ToDictionary(g => g.Key, g => g.ToList());
-            Debug.Log($"ViewsContainer initialized");
-            foreach (var list in _views.Values)
+            _views = new Dictionary<Type, List<BaseView>>();
+            _viewMap = new Dictionary<uint, BaseView>();
+            _availableId = new Queue<uint>();
+
+            foreach (var view in views)
             {
-                foreach (var v in list)
-                {
-                    Debug.Log($"{v} in views container");
-                }
+                AssignIdAndRegisterView(view);
+                AddView(view);
             }
+        }
+
+        public BaseView GetViewById(uint viewId)
+        {
+            return _viewMap.GetValueOrDefault(viewId);
         }
 
         public TView GetView<TView>() where TView : BaseView
         {
-            return _views.ContainsKey(typeof(TView)) ? _views[typeof(TView)].Cast<TView>().FirstOrDefault() : null;
+            return _views
+                .ContainsKey(typeof(TView))
+                ? _views[typeof(TView)].Cast<TView>().FirstOrDefault()
+                : null;
         }
 
         public List<TView> GetViews<TView>() where TView : BaseView
@@ -51,9 +63,10 @@ namespace Runtime.Views
 
             if (!list.Contains(view))
             {
-                Debug.Log($"{view} added in container");
                 ViewAdded?.Invoke(view);
                 list.Add(view);
+                AssignIdAndRegisterView(view);
+                Debug.Log($"{view} with {view.ViewId} id added in container");
             }
         }
 
@@ -67,13 +80,43 @@ namespace Runtime.Views
             var type = view.GetType();
             if (_views.TryGetValue(type, out var list) && list.Remove(view))
             {
+                ViewRemoved?.Invoke(view);
+                UnregisterView(view);
+                Debug.Log($"{view} with {view.ViewId} id removed from container");
+
                 if (list.Count == 0)
                 {
-                    Debug.Log($"{view} removed from container");
-                    ViewRemoved?.Invoke(view);
                     _views.Remove(type);
                 }
             }
+        }
+
+        private void AssignIdAndRegisterView(BaseView view)
+        {
+            if (!_viewMap.ContainsKey(view.ViewId))
+            {
+                view.SetId(GetId());
+                _viewMap.Add(view.ViewId, view);
+            }
+        }
+
+        private void UnregisterView(BaseView view)
+        {
+            _availableId.Enqueue(view.ViewId);
+            _viewMap.Remove(view.ViewId);
+        }
+
+        private uint GetId()
+        {
+            if (_availableId.Count == 0)
+            {
+                for (var i = 0; i < 100; i++)
+                {
+                    _availableId.Enqueue(_lastId++);
+                }
+            }
+
+            return _availableId.Dequeue();
         }
     }
 }

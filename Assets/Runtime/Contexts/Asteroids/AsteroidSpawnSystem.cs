@@ -11,7 +11,6 @@ namespace Runtime.Contexts.Asteroids
         private readonly IModel _model;
         private readonly IWorldConfig _world;
         private readonly IAsteroidsSpawnConfig _config;
-        private int _nextId = 1;
         private float _timer;
 
         public AsteroidSpawnSystem(IModel model, IWorldConfig world, IAsteroidsSpawnConfig config)
@@ -57,8 +56,7 @@ namespace Runtime.Contexts.Asteroids
             Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
             float nose = Mathf.Atan2(-vel.x, vel.y);
 
-            var id = new AsteroidId(_nextId++);
-            _model.ChangeData(new AsteroidSpawnRequest(id, AsteroidSize.Large, pos, vel, nose));
+            _model.ChangeData(new AsteroidSpawnRequest(AsteroidSize.Large, pos, vel, nose));
         }
     }
 }

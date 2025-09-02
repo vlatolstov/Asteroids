@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b9ef6c66744bf794a21abc8ff67488, type: 3}
   m_Name: AsteroidsSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AsteroidsSpawnConfig
-  _interval: 0.88
+  _interval: 0.3
   _edgeOffset: 2
   _entrySpeedMin: 8
   _entrySpeedMax: 12
-  _entryAngleJitterDeg: 20
+  _entryAngleJitterDeg: 47.4
   _smallSplitMin: 2
   _smallSplitMax: 4
   _smallSpeedMin: 4

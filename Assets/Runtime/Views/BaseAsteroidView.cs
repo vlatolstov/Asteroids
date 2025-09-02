@@ -10,7 +10,6 @@ namespace Runtime.Views
     [RequireComponent(typeof(IMove))]
     public abstract class BaseAsteroidView : BaseView
     {
-        public AsteroidId Id { get; private set; }
         public AsteroidSize Size;
 
         [Inject]
@@ -33,13 +32,18 @@ namespace Runtime.Views
             }
             else if (_entered && !inside)
             {
-                Emit(new AsteroidViewOffscreen(Id, Size));
+                ReportOffscreen();
             };
+        }
+
+        public void ReportOffscreen()
+        {
+            Emit(new AsteroidViewOffscreen(ViewId, Size));
         }
 
         public void ReportDestroyedByHit()
         {
-            Emit(new AsteroidViewDestroyed(Id, Size, _move.Position, _move.Velocity));
+            Emit(new AsteroidViewDestroyed(ViewId, Size, _move.Position, _move.Velocity));
         }
 
         public void Reinitialize()
@@ -47,6 +51,5 @@ namespace Runtime.Views
             _move.SetPose(_world.OffscreenPosition, Vector2.zero, 0f);
             _entered = false;
         }
-        public void SetId(AsteroidId id) => Id = id;
     }
 }

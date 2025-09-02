@@ -8,8 +8,10 @@ using Zenject;
 
 namespace Runtime.Contexts.Ship
 {
+    //TODO remove ship instantiation
     public class ShipPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {
+        private readonly ShipView.Pool _pool;
         private ShipView _playerView;
         private IMotorInput _motor;
 
@@ -94,5 +96,17 @@ namespace Runtime.Contexts.Ship
             if (Model.TryGet(out TurnInput turn) && Model.TryGet(out ThrustInput thrust))
                 _motor.SetControls(thrust.Value, turn.Value);
         }
+
+        // private void OnShipSpawnRequest()
+        // {
+        //     if (Model.TryGet(out ShipSpawned turn) && Model.TryGet(out ThrustInput thrust))
+        //         _motor.SetControls(thrust.Value, turn.Value);
+        // }
+        
+        // private void OnShipDespawnRequest()
+        // {
+        //     if (Model.TryGet(out TurnInput turn) && Model.TryGet(out ThrustInput thrust))
+        //         _motor.SetControls(thrust.Value, turn.Value);
+        // }
     }
 }

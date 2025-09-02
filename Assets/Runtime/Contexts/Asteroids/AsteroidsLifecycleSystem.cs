@@ -12,7 +12,6 @@ namespace Runtime.Contexts.Asteroids
     {
         private readonly IModel _model;
         private readonly IAsteroidsSpawnConfig _cfg;
-        private int _nextId = 100000;
 
         public AsteroidsLifecycleSystem(IModel model, IAsteroidsSpawnConfig cfg)
         {
@@ -39,7 +38,7 @@ namespace Runtime.Contexts.Asteroids
                 return;
             }
 
-            _model.ChangeData(new AsteroidDespawnRequest(ev.Id));
+            _model.ChangeData(new AsteroidDespawnRequest(ev.ViewId));
         }
 
         private void OnDestroyed()
@@ -49,7 +48,7 @@ namespace Runtime.Contexts.Asteroids
                 return;
             }
 
-            _model.ChangeData(new AsteroidDespawnRequest(ev.Id));
+            _model.ChangeData(new AsteroidDespawnRequest(ev.ViewId));
 
             if (ev.Size == AsteroidSize.Large)
             {
@@ -65,9 +64,8 @@ namespace Runtime.Contexts.Asteroids
                     float spd = Random.Range(_cfg.SmallSpeedMin, _cfg.SmallSpeedMax);
                     Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
                     float nose = Mathf.Atan2(-vel.x, vel.y);
-
-                    var id = new AsteroidId(_nextId++);
-                    _model.ChangeData(new AsteroidSpawnRequest(id, AsteroidSize.Small, ev.Pos, vel, nose));
+                    
+                    _model.ChangeData(new AsteroidSpawnRequest(AsteroidSize.Small, ev.Pos, vel, nose));
                 }
             }
         }

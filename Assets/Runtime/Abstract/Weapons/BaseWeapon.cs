@@ -2,7 +2,6 @@ using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
-using Runtime.Views;
 using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
