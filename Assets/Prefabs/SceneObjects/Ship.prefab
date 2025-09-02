@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1074268564404137070}
   - component: {fileID: 5626302874393680537}
   - component: {fileID: 3837115616988274673}
-  - component: {fileID: 8340432549732760033}
+  - component: {fileID: -9081217606741827109}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Untagged
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Ship.ShipView
   _isPlayer: 1
---- !u!114 &8340432549732760033
+--- !u!114 &-9081217606741827109
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,6 +193,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2529211537695395251}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8aae5f526a543f2ac5625b4c75efb30, type: 3}
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Movement.ShipMotor
+  m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 6027052f928faa24eaf647e78c0efca5, type: 2}
+  _monoInstallers: []
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}

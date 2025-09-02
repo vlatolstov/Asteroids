@@ -7,33 +7,27 @@ using Zenject;
 
 namespace Runtime.Views
 {
-    [RequireComponent(typeof(IMove))]
-    public class AsteroidView : BaseView
+    public class AsteroidView : BaseMovableView
     {
         private AsteroidSize _size;
-
+        private bool _entered;
+        
         [Inject]
         private IWorldConfig _world;
 
-        private IMove _move;
-        private bool _entered;
-
-        private void Awake()
+        protected override void FixedUpdate()
         {
-            _move = GetComponent<IMove>();
-        }
-
-        private void FixedUpdate()
-        {
-            var maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
-            var inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(_move.Position);
-            if (!_entered && inside)
+            base.FixedUpdate();
+            float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
+            bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
+            switch (_entered)
             {
-                _entered = true;
-            }
-            else if (_entered && !inside)
-            {
-                ReportOffscreen();
+                case false when inside:
+                    _entered = true;
+                    break;
+                case true when !inside:
+                    ReportOffscreen();
+                    break;
             }
         }
 
@@ -44,14 +38,14 @@ namespace Runtime.Views
 
         public void ReportDestroyedByHit()
         {
-            Emit(new AsteroidViewDestroyed(ViewId, _size, _move.Position, _move.Velocity));
+            Emit(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
         private void Reinitialize(AsteroidSpawnRequest args)
         {
             _size = args.Size;
-            _move.SetPose(args.Pos, args.Vel, args.AngleRad);
             _entered = false;
+            Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
 
             transform.localScale = new Vector3(args.Scale, args.Scale);
         }

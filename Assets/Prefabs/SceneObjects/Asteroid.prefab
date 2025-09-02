@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 5431984038060129427}
   - component: {fileID: 3303389263095751344}
   - component: {fileID: 312892860874400923}
-  - component: {fileID: 2562884680227190825}
   - component: {fileID: 3076131453407892634}
+  - component: {fileID: 5833582518829910839}
   m_Layer: 0
   m_Name: Asteroid
   m_TagString: Untagged
@@ -120,18 +120,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2562884680227190825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268265408073184916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d1120d46d2f4133b5ad0d853a2de6ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Movement.AsteroidMotor
 --- !u!114 &3076131453407892634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,3 +132,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d40007e6ec04be7be6d79526e48b527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Views.AsteroidView
+--- !u!114 &5833582518829910839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 268265408073184916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
+  _scriptableObjectInstallers:
+  - {fileID: 11400000, guid: 05766e6be0f00434fa07db4b0af36aac, type: 2}
+  _monoInstallers: []
+  _installerPrefabs: []
+  _autoRun: 1
+  _kernel: {fileID: 0}

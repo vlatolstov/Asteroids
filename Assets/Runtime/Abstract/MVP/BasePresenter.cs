@@ -1,3 +1,5 @@
+using System;
+
 namespace Runtime.Abstract.MVP
 {
     public abstract class BasePresenter<TModel> where TModel : IModel
@@ -14,6 +16,11 @@ namespace Runtime.Abstract.MVP
         protected void OnEmitted(IData data)
         {
             Model.ChangeData(data);
+        }
+
+        protected void OnEmitted<TData>(Func<TData, TData> mutate) where TData : IData
+        {
+            Model.ChangeData(mutate);
         }
     }
 }

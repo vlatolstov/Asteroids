@@ -12,7 +12,6 @@ namespace Runtime.Contexts.Ship
     {
         private readonly ShipView.Pool _pool;
         private ShipView _player;
-        private IMotorInput _motor;
 
         public ShipPresenter(IModel model, IViewsContainer viewsContainer, ShipView.Pool pool) : base(model,
             viewsContainer)
@@ -40,19 +39,13 @@ namespace Runtime.Contexts.Ship
 
         private void TryAttachPlayer(ShipView shipView)
         {
-            if (!shipView.IsPlayer) return;
+            if (!shipView.IsPlayer)
+            {
+                return;
+            }
 
             _player = shipView;
             _player.Emitted += OnEmitted;
-
-            if (shipView.TryGetComponent<IMotorInput>(out var motor))
-            {
-                _motor = motor;
-            }
-            else
-            {
-                Debug.LogWarning($"Motor not found on {shipView.gameObject.name}.");
-            }
         }
 
         private void DetachPlayer()
@@ -63,7 +56,6 @@ namespace Runtime.Contexts.Ship
             }
 
             _player = null;
-            _motor = null;
         }
 
         private void OnControlChanged()
@@ -72,7 +64,7 @@ namespace Runtime.Contexts.Ship
                 Model.TryGet(out ThrustInput thrust) &&
                 _player)
             {
-                _motor.SetControls(thrust.Value, turn.Value);
+                _player.Motor.SetControls(thrust.Value, turn.Value);
             }
         }
 
@@ -82,7 +74,10 @@ namespace Runtime.Contexts.Ship
             {
                 var player = _pool.Spawn();
                 TryAttachPlayer(player);
-                player.GetComponent<IMove>()?.SetPose(spawn.Position, Vector2.zero, 0f);
+                if (_player)
+                {
+                    _player.Motor.SetPose(spawn.Position, Vector2.zero, 0f);
+                }
             }
         }
 

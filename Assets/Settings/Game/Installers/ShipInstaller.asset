@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84d77ce0f09a4da5a7b8a49e74304c0b, type: 3}
+  m_Name: ShipInstaller
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Contexts.Ship.ShipInstaller
+  MovementConfig: {fileID: 11400000, guid: 60dd05d0b0ae48146b8fc9de5fe48e15, type: 2}

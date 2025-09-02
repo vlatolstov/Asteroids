@@ -10,7 +10,8 @@ using Zenject;
 
 namespace Runtime.Contexts.Game
 {
-    public class GameInstaller : MonoInstaller<GameInstaller>
+    [CreateAssetMenu(fileName = "GameInstaller", menuName = "Installers/Game Installer")]
+    public class GameInstaller : ScriptableObjectInstaller
     {
         [SerializeField]
         private GameObject _shipPrefab;
@@ -20,23 +21,13 @@ namespace Runtime.Contexts.Game
 
         public override void InstallBindings()
         {
-            ShipBindings();
-            AsteroidBindings();
+            ShipLogicBindings();
+            AsteroidLogicBindings();
+            ViewsContainerBindings();
 
             Container
                 .Bind<IWorldConfig>()
                 .FromComponentInHierarchy()
-                .AsSingle();
-
-            Container
-                .Bind<BaseView>()
-                .FromComponentsInHierarchy()
-                .AsSingle()
-                .WhenInjectedInto<IViewsContainer>();
-
-            Container
-                .Bind<IViewsContainer>()
-                .To<ViewsContainer>()
                 .AsSingle();
 
             Container
@@ -51,25 +42,39 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<HudPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<InputPresenter>()
                 .AsSingle();
         }
 
 
-        private void ShipBindings()
+        private void ViewsContainerBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<ShipPresenter>()
-                .AsSingle();
+                .Bind<BaseView>()
+                .FromComponentsInHierarchy()
+                .AsSingle()
+                .WhenInjectedInto<IViewsContainer>();
 
+            Container
+                .Bind<IViewsContainer>()
+                .To<ViewsContainer>()
+                .AsSingle();
+        }
+
+        private void ShipLogicBindings()
+        {
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
                 .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
+
+            Container
+                .BindInterfacesAndSelfTo<ShipPresenter>()
+                .AsSingle();
         }
 
-        private void AsteroidBindings()
+        private void AsteroidLogicBindings()
         {
             Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
                 .WithInitialSize(50)
