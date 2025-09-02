@@ -2,6 +2,7 @@ using System;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Views;
+using UnityEngine;
 using Zenject;
 
 namespace Runtime.Contexts.Game
@@ -15,45 +16,26 @@ namespace Runtime.Contexts.Game
 
         public void Initialize()
         {
-            AttachHud(ViewsContainer.GetView<HudView>());
+            _hud = ViewsContainer.GetView<HudView>();
+            
+            if (!_hud)
+            {
+                Debug.LogError("HudView not found in container");
+            }
 
-            ViewsContainer.ViewAdded += OnViewAdded;
-            ViewsContainer.ViewRemoved += OnViewRemoved;
-
+            _hud.Emitted += OnEmitted;
             Model.Subscribe<ShipPose>(OnPoseChanged);
-
-            PushPoseToHud();
+            OnPoseChanged();
         }
 
         public void Dispose()
         {
-            ViewsContainer.ViewAdded -= OnViewAdded;
-            ViewsContainer.ViewRemoved -= OnViewRemoved;
             Model.Unsubscribe<ShipPose>(OnPoseChanged);
+            _hud.Emitted -= OnEmitted;
             _hud = null;
         }
 
-        private void OnViewAdded(BaseView view)
-        {
-            if (_hud == null && view is HudView hv)
-                AttachHud(hv);
-        }
-
-        private void OnViewRemoved(BaseView view)
-        {
-            if (view == _hud)
-                _hud = null;
-        }
-
-        private void AttachHud(HudView hv)
-        {
-            _hud = hv;
-            PushPoseToHud();
-        }
-
-        private void OnPoseChanged() => PushPoseToHud();
-
-        private void PushPoseToHud()
+        private void OnPoseChanged()
         {
             if (!_hud)
             {
@@ -65,7 +47,7 @@ namespace Runtime.Contexts.Game
                 return;
             }
 
-            _hud.SetPose(pose.Position, pose.Velocity, pose.AngleRadians);
+            _hud.SetPoseData(pose.Position, pose.Velocity, pose.AngleRadians);
         }
     }
 }

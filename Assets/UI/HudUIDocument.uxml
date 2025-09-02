@@ -5,4 +5,5 @@
         <ui:Label text="Speed" name="Speed" class="dataText" />
         <ui:Label text="Angle" name="Angle" class="dataText" />
     </ui:VisualElement>
+    <ui:Button text="Spawn player" name="SpawnPlayer" style="white-space: nowrap; max-width: 50px; max-height: 20px; min-width: 20px; min-height: 20px; font-size: 6px; -unity-text-align: middle-center;" />
 </ui:UXML>

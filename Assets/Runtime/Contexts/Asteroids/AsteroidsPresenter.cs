@@ -8,6 +8,7 @@ using Zenject;
 
 namespace Runtime.Contexts.Asteroids
 {
+    //TODO зарефакторить
     public class AsteroidPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {
         private readonly AsteroidLargeView.Pool _largePool;

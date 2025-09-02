@@ -7,6 +7,7 @@ using Zenject;
 
 namespace Runtime.Views
 {
+    //TODO сделать один общий тип и один общий пул, сетапить скейл в зависимости от AsteroidConfig и Scale запроса
     [RequireComponent(typeof(IMove))]
     public abstract class BaseAsteroidView : BaseView
     {

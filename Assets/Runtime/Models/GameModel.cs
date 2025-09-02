@@ -9,10 +9,10 @@ namespace Runtime.Models
     {
         protected override void OnDataChange(IData newValue)
         {
-            if (newValue is TurnInput turnInput)
-            {
-                Debug.Log($"GameModel.OnDataChange: new TurnInput {turnInput.Value:F1}");
-            }
+            // if (newValue is TurnInput turnInput)
+            // {
+            //     Debug.Log($"GameModel.OnDataChange: new TurnInput {turnInput.Value:F1}");
+            // }
         }
 
         protected override void OnNotify(Action action)

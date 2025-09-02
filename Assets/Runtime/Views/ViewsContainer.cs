@@ -66,7 +66,7 @@ namespace Runtime.Views
                 ViewAdded?.Invoke(view);
                 list.Add(view);
                 AssignIdAndRegisterView(view);
-                Debug.Log($"{view} with {view.ViewId} id added in container");
+                // Debug.Log($"{view} with {view.ViewId} id added in container");
             }
         }
 
@@ -82,7 +82,7 @@ namespace Runtime.Views
             {
                 ViewRemoved?.Invoke(view);
                 UnregisterView(view);
-                Debug.Log($"{view} with {view.ViewId} id removed from container");
+                // Debug.Log($"{view} with {view.ViewId} id removed from container");
 
                 if (list.Count == 0)
                 {

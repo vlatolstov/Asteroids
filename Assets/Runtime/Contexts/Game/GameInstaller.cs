@@ -3,9 +3,6 @@ using Runtime.Abstract.MVP;
 using Runtime.Contexts.Asteroids;
 using Runtime.Contexts.Ship;
 using Runtime.Models;
-using Runtime.Movement;
-using Runtime.Settings;
-using Runtime.Spawn;
 using Runtime.Views;
 using Runtime.Weapons;
 using UnityEngine;
@@ -23,9 +20,6 @@ namespace Runtime.Contexts.Game
 
         [SerializeField]
         private GameObject _largeAsteroidPrefab;
-
-        [SerializeField]
-        private bool _autoSpawnShip = true;
 
         public override void InstallBindings()
         {
@@ -72,13 +66,6 @@ namespace Runtime.Contexts.Game
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
                 .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
-
-            if (_autoSpawnShip)
-            {
-                Container
-                    .BindInterfacesTo<PlayerShipSpawner>()
-                    .AsSingle();
-            }
         }
 
         private void AsteroidBindings()

@@ -10,5 +10,10 @@ namespace Runtime.Abstract.MVP
             Model = model;
             ViewsContainer = viewsContainer;
         }
+        
+        protected void OnEmitted(IData data)
+        {
+            Model.ChangeData(data);
+        }
     }
 }

@@ -8,36 +8,32 @@ using Zenject;
 
 namespace Runtime.Contexts.Ship
 {
-    //TODO remove ship instantiation
     public class ShipPresenter : BasePresenter<IModel>, IInitializable, IDisposable
     {
         private readonly ShipView.Pool _pool;
-        private ShipView _playerView;
+        private ShipView _player;
         private IMotorInput _motor;
 
-        public ShipPresenter(IModel model, IViewsContainer viewsContainer) : base(model,
+        public ShipPresenter(IModel model, IViewsContainer viewsContainer, ShipView.Pool pool) : base(model,
             viewsContainer)
-        { }
+        {
+            _pool = pool;
+        }
 
         public void Initialize()
         {
-            foreach (var shipView in ViewsContainer.GetViews<ShipView>())
-            {
-                TryAttachPlayer(shipView);
-            }
-
-            ViewsContainer.ViewAdded += OnViewAdded;
-            ViewsContainer.ViewRemoved += OnViewRemoved;
             Model.Subscribe<TurnInput>(OnControlChanged);
             Model.Subscribe<ThrustInput>(OnControlChanged);
+            Model.Subscribe<ShipSpawnRequest>(OnShipSpawnRequest);
+            Model.Subscribe<ShipDespawnRequest>(OnShipDespawnRequest);
         }
 
         public void Dispose()
         {
-            ViewsContainer.ViewAdded -= OnViewAdded;
-            ViewsContainer.ViewRemoved -= OnViewRemoved;
             Model.Unsubscribe<TurnInput>(OnControlChanged);
             Model.Unsubscribe<ThrustInput>(OnControlChanged);
+            Model.Unsubscribe<ShipSpawnRequest>(OnShipSpawnRequest);
+            Model.Unsubscribe<ShipDespawnRequest>(OnShipDespawnRequest);
 
             DetachPlayer();
         }
@@ -46,8 +42,8 @@ namespace Runtime.Contexts.Ship
         {
             if (!shipView.IsPlayer) return;
 
-            _playerView = shipView;
-            _playerView.Emitted += OnViewEmitted;
+            _player = shipView;
+            _player.Emitted += OnEmitted;
 
             if (shipView.TryGetComponent<IMotorInput>(out var motor))
             {
@@ -61,34 +57,13 @@ namespace Runtime.Contexts.Ship
 
         private void DetachPlayer()
         {
-            if (_playerView)
+            if (_player)
             {
-                _playerView.Emitted -= OnViewEmitted;
+                _player.Emitted -= OnEmitted;
             }
 
-            _playerView = null;
+            _player = null;
             _motor = null;
-        }
-
-        private void OnViewAdded(BaseView view)
-        {
-            if (view is ShipView sv)
-            {
-                TryAttachPlayer(sv);
-            }
-        }
-
-        private void OnViewRemoved(BaseView view)
-        {
-            if (view is ShipView sv && sv == _playerView)
-            {
-                DetachPlayer();
-            }
-        }
-
-        private void OnViewEmitted(IData data)
-        {
-            Model.ChangeData(data);
         }
 
         private void OnControlChanged()
@@ -97,16 +72,29 @@ namespace Runtime.Contexts.Ship
                 _motor.SetControls(thrust.Value, turn.Value);
         }
 
-        // private void OnShipSpawnRequest()
-        // {
-        //     if (Model.TryGet(out ShipSpawned turn) && Model.TryGet(out ThrustInput thrust))
-        //         _motor.SetControls(thrust.Value, turn.Value);
-        // }
+        private void OnShipSpawnRequest()
+        {
+            if (Model.TryGet(out ShipSpawnRequest spawn))
+            {
+                var player = _pool.Spawn();
+                TryAttachPlayer(player);
+                player.GetComponent<IMove>()?.SetPose(spawn.Position, Vector2.zero, 0f);
+            }
+        }
         
-        // private void OnShipDespawnRequest()
-        // {
-        //     if (Model.TryGet(out TurnInput turn) && Model.TryGet(out ThrustInput thrust))
-        //         _motor.SetControls(thrust.Value, turn.Value);
-        // }
+        private void OnShipDespawnRequest()
+        {
+            if (!_player)
+            {
+                Debug.LogError("Can't despawn. No player assigned.");
+                return;
+            }
+
+            if (Model.TryGet<ShipDespawnRequest>(out _))
+            {
+                DetachPlayer();
+                _pool.Despawn(_player);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 using Runtime.Abstract.MVP;
+using Runtime.Data;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,7 @@ namespace Runtime.Views
         private Label _posLabel;
         private Label _spdLabel;
         private Label _angLabel;
+        private Button _playerSpawnButton;
         
         private void Awake()
         {
@@ -24,9 +26,11 @@ namespace Runtime.Views
             _posLabel = root.Q<Label>("Pos");
             _spdLabel = root.Q<Label>("Speed");
             _angLabel = root.Q<Label>("Angle");
+            _playerSpawnButton = root.Q<Button>("SpawnPlayer");
+            _playerSpawnButton.clicked += OnSpawnPlayerButtonClicked;
         }
         
-        public void SetPose(Vector2 pos, Vector2 vel, float angleRad)
+        public void SetPoseData(Vector2 pos, Vector2 vel, float angleRad)
         {
             if (_posLabel != null)
                 _posLabel.text = $"POS  X:{pos.x,7:0.00}  Y:{pos.y,7:0.00}";
@@ -42,6 +46,11 @@ namespace Runtime.Views
                 float angDeg = Mathf.Repeat(angleRad * Mathf.Rad2Deg, 360f);
                 _angLabel.text = $"ANG  {angDeg:0.0}°";
             }
+        }
+
+        public void OnSpawnPlayerButtonClicked()
+        {
+            Emit(new ShipSpawnRequest(Vector2.zero));
         }
     }
 }
