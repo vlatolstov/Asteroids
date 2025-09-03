@@ -35,14 +35,6 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<ProjectileHitResolver>()
                 .AsSingle();
-            
-            Container
-                .BindInterfacesAndSelfTo<AsteroidsLifecycleSystem>()
-                .AsSingle();
-
-            Container
-                .BindInterfacesAndSelfTo<AsteroidSpawnSystem>()
-                .AsSingle();
         }
 
         private void ViewsBindings()
@@ -57,18 +49,18 @@ namespace Runtime.Contexts.Game
                 .Bind<IViewsContainer>()
                 .To<ViewsContainer>()
                 .AsSingle();
-            
+
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
                 .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
-            
+
             Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
                 .WithInitialSize(50)
                 .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
         }
-        
+
         private void PresentersBindings()
         {
             Container
@@ -78,21 +70,32 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<InputPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<ShipPresenter>()
                 .AsSingle();
-            
+
             Container
-                .BindInterfacesAndSelfTo<AsteroidPresenter>()
+                .BindInterfacesAndSelfTo<AsteroidsPresenter>()
                 .AsSingle();
         }
 
         private void ModelsBindings()
         {
             Container
-                .Bind<IModel>()
-                .To<GameModel>()
+                .BindInterfacesAndSelfTo<GameModel>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<InputModel>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<ShipModel>()
+                .AsSingle();
+
+            Container
+                .BindInterfacesAndSelfTo<AsteroidsModel>()
                 .AsSingle();
         }
 
@@ -100,7 +103,7 @@ namespace Runtime.Contexts.Game
         private void DeclareSignals()
         {
             SignalBusInstaller.Install(Container);
-            
+
             var signalTypes = TypeHelpers.GetTypesImplementingInterface<IData>();
 
             foreach (var type in signalTypes)

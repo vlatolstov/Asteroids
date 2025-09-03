@@ -2,6 +2,8 @@ namespace Runtime.Abstract.Movement
 {
     public interface IMotorInput
     {
-        void SetControls(float thrust, float turnAxis);
+        void SetThrust(float thrust);
+
+        void SetTurnAxis(float turnAxis);
     }
 }

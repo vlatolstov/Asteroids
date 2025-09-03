@@ -1,19 +1,23 @@
-using System;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
+using Runtime.Models;
 using Runtime.Views;
 using UnityEngine;
 using Zenject;
 
 namespace Runtime.Contexts.Game
 {
-    public class HudPresenter : BasePresenter<IModel>
+    public class HudPresenter : BasePresenter<GameModel>
     {
+        private readonly ShipModel _shipModel;
         private HudView _hud;
 
-        public HudPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus) : base(model,
+        public HudPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus,
+            ShipModel shipModel) : base(model,
             viewsContainer, signalBus)
-        { }
+        {
+            _shipModel = shipModel;
+        }
 
         public override void Initialize()
         {
@@ -24,14 +28,16 @@ namespace Runtime.Contexts.Game
             {
                 Debug.LogError("HudView not found in container");
             }
-            ForwardOn<ShipPose>();
-            Model.Subscribe<ShipPose>(OnPoseChanged);
+
+            
+            _shipModel.Subscribe<ShipPose>(OnPoseChanged);
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            Model.Unsubscribe<ShipPose>(OnPoseChanged);
+            
+            _shipModel.Unsubscribe<ShipPose>(OnPoseChanged);
             _hud = null;
         }
 
@@ -42,7 +48,7 @@ namespace Runtime.Contexts.Game
                 return;
             }
 
-            if (!Model.TryGet(out ShipPose pose))
+            if (!_shipModel.TryGet(out ShipPose pose))
             {
                 return;
             }

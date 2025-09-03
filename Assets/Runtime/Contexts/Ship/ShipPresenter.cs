@@ -1,28 +1,35 @@
-using System;
-using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
+using Runtime.Models;
 using Runtime.Views;
 using UnityEngine;
 using Zenject;
 
 namespace Runtime.Contexts.Ship
 {
-    public class ShipPresenter : BasePresenter<IModel>
+    public class ShipPresenter : BasePresenter<ShipModel>
     {
+        private readonly InputModel _inputModel;
         private readonly ShipView.Pool _pool;
         private ShipView _player;
-        
-        public ShipPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipView.Pool pool) : base(model, viewsContainer, signalBus)
+
+        public ShipPresenter(ShipModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipView.Pool pool,
+            InputModel inputModel) : base(model, viewsContainer, signalBus)
         {
             _pool = pool;
+            _inputModel = inputModel;
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            Model.Subscribe<TurnInput>(OnControlChanged);
-            Model.Subscribe<ThrustInput>(OnControlChanged);
+
+            ForwardOn<ShipPose>();
+            ForwardOn<ShipSpawnRequest>(publish: true);
+            ForwardOn<ShipDespawnRequest>(publish: true);
+
+            _inputModel.Subscribe<ThrustInput>(OnThrustChanged);
+            _inputModel.Subscribe<TurnInput>(OnTurnAxisChanged);
             Model.Subscribe<ShipSpawnRequest>(OnShipSpawnRequest);
             Model.Subscribe<ShipDespawnRequest>(OnShipDespawnRequest);
         }
@@ -30,8 +37,9 @@ namespace Runtime.Contexts.Ship
         public override void Dispose()
         {
             base.Dispose();
-            Model.Unsubscribe<TurnInput>(OnControlChanged);
-            Model.Unsubscribe<ThrustInput>(OnControlChanged);
+
+            _inputModel.Unsubscribe<ThrustInput>(OnThrustChanged);
+            _inputModel.Unsubscribe<TurnInput>(OnTurnAxisChanged);
             Model.Unsubscribe<ShipSpawnRequest>(OnShipSpawnRequest);
             Model.Unsubscribe<ShipDespawnRequest>(OnShipDespawnRequest);
 
@@ -53,13 +61,21 @@ namespace Runtime.Contexts.Ship
             _player = null;
         }
 
-        private void OnControlChanged()
+        private void OnThrustChanged()
         {
-            if (Model.TryGet(out TurnInput turn) &&
-                Model.TryGet(out ThrustInput thrust) &&
+            if (_inputModel.TryGet(out ThrustInput thrust) &&
                 _player)
             {
-                _player.Motor.SetControls(thrust.Value, turn.Value);
+                _player.Motor.SetThrust(thrust.Value);
+            }
+        }
+
+        private void OnTurnAxisChanged()
+        {
+            if (_inputModel.TryGet(out TurnInput turn) &&
+                _player)
+            {
+                _player.Motor.SetTurnAxis(turn.Value);
             }
         }
 

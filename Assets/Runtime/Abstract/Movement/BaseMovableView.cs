@@ -17,7 +17,7 @@ namespace Runtime.Abstract.Movement
         protected virtual void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            _rb.bodyType = RigidbodyType2D.Kinematic;
+            _rb.bodyType = RigidbodyType2D.Dynamic;
             _rb.gravityScale = 0f;
             _rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
         }

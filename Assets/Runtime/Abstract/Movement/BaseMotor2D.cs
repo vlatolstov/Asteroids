@@ -66,13 +66,17 @@ namespace Runtime.Abstract.Movement
             rigidbody.MoveRotation(_angRad * Mathf.Rad2Deg);
         }
 
-        public void SetControls(float thrust, float turnAxis)
-        {
-            _thrust = thrust;
-            _turnAxis = turnAxis;
-        }
-
         protected virtual void UpdateControls(float dt)
         { }
+
+        public void SetThrust(float thrust)
+        {
+            _thrust = thrust;
+        }
+
+        public void SetTurnAxis(float turnAxis)
+        {
+            _turnAxis = turnAxis;
+        }
     }
 }

@@ -1,19 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Views;
 using Runtime.Data;
+using Runtime.Models;
 using Zenject;
 
 namespace Runtime.Contexts.Asteroids
 {
-    public class AsteroidPresenter : BasePresenter<IModel>
+    public class AsteroidsPresenter : BasePresenter<AsteroidsModel>
     {
         private readonly AsteroidView.Pool _pool;
 
-        public AsteroidPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus,
+        public AsteroidsPresenter(AsteroidsModel model, IViewsContainer viewsContainer, SignalBus signalBus,
             AsteroidView.Pool pool) : base(model, viewsContainer, signalBus)
         {
             _pool = pool;
@@ -23,8 +20,8 @@ namespace Runtime.Contexts.Asteroids
         {
             base.Initialize();
             
-            ForwardOn<AsteroidSpawnRequest>(publish: true);
-            ForwardOn<AsteroidDespawnRequest>(publish: true);
+            ForwardOn<AsteroidViewOffscreen>(publish: true);
+            ForwardOn<AsteroidViewDestroyed>(publish: true);
 
             Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest);
             Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest);

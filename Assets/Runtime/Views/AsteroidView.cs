@@ -1,3 +1,4 @@
+using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
@@ -21,6 +22,7 @@ namespace Runtime.Views
             
             float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
             bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
+            
             switch (_entered)
             {
                 case false when inside:
@@ -37,8 +39,15 @@ namespace Runtime.Views
             Fire(new AsteroidViewOffscreen(ViewId, _size));
         }
 
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
+        }
+        
         public void ReportDestroyedByHit()
         {
+            Debug.Log($"Asteroid view {ViewId} reporting destroyed by hit");
             Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
@@ -48,6 +57,7 @@ namespace Runtime.Views
             _entered = false;
             Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
 
+            transform.position = args.Pos;
             transform.localScale = new Vector3(args.Scale, args.Scale);
         }
 

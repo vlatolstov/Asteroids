@@ -9,7 +9,7 @@ namespace Runtime.Movement
     {
         public AsteroidMotor(IMovementConfig config, IWorldConfig world) : base(config, world)
         {
-            SetControls(1f, 0f);
+            SetThrust(1f);
         }
     }
 }

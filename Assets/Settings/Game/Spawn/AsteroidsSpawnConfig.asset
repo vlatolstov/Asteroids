@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b9ef6c66744bf794a21abc8ff67488, type: 3}
   m_Name: AsteroidsSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AsteroidsSpawnConfig
-  _interval: 2
+  _interval: -10.16
   _largeScale: 1.6
   _edgeOffset: 7.02
   _entrySpeedMin: 8
