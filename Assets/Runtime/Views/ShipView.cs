@@ -18,7 +18,7 @@ namespace Runtime.Views
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            Emit(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
+            Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
         }
 
         public class Pool : ViewPool<ShipView>

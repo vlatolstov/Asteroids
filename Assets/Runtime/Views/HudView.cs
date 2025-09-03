@@ -50,7 +50,7 @@ namespace Runtime.Views
 
         public void OnSpawnPlayerButtonClicked()
         {
-            Emit(new ShipSpawnRequest(Vector2.zero));
+            Fire(new ShipSpawnRequest(Vector2.zero));
         }
     }
 }

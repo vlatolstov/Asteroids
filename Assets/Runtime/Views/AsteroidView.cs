@@ -18,6 +18,7 @@ namespace Runtime.Views
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+            
             float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
             bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
             switch (_entered)
@@ -33,12 +34,12 @@ namespace Runtime.Views
 
         private void ReportOffscreen()
         {
-            Emit(new AsteroidViewOffscreen(ViewId, _size));
+            Fire(new AsteroidViewOffscreen(ViewId, _size));
         }
 
         public void ReportDestroyedByHit()
         {
-            Emit(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
+            Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
         private void Reinitialize(AsteroidSpawnRequest args)

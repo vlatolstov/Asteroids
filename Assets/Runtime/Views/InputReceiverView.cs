@@ -25,9 +25,8 @@ namespace Runtime.Views
             _controls?.Gameplay.Disable();
         }
 
-        protected override void OnDestroy()
+        protected virtual void OnDestroy()
         {
-            base.OnDestroy();
             if (_controls == null)
             {
                 return;
@@ -48,7 +47,7 @@ namespace Runtime.Views
                     v = 0;
                 }
 
-                Emit(new ThrustInput(v));
+                Fire(new ThrustInput(v));
             }
         }
 
@@ -57,7 +56,7 @@ namespace Runtime.Views
             if (context.performed || context.canceled)
             {
                 var v = Mathf.Clamp(context.ReadValue<float>(), -1f, 1f);
-                Emit(new TurnInput(v));
+                Fire(new TurnInput(v));
             }
         }
 
@@ -65,7 +64,7 @@ namespace Runtime.Views
         {
             if (context.performed)
             {
-                Emit(new FireBulletPressed());
+                Fire(new FireBulletPressed());
             }
         }
 
@@ -73,7 +72,7 @@ namespace Runtime.Views
         {
             if (context.performed)
             {
-                Emit(new FireLaserPressed());
+                Fire(new FireLaserPressed());
             }
         }
     }

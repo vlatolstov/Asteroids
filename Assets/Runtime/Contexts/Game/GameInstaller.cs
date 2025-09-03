@@ -3,6 +3,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Contexts.Asteroids;
 using Runtime.Contexts.Ship;
 using Runtime.Models;
+using Runtime.Utils;
 using Runtime.Views;
 using Runtime.Weapons;
 using UnityEngine;
@@ -21,9 +22,10 @@ namespace Runtime.Contexts.Game
 
         public override void InstallBindings()
         {
-            ShipLogicBindings();
-            AsteroidLogicBindings();
-            ViewsContainerBindings();
+            ViewsBindings();
+            PresentersBindings();
+            ModelsBindings();
+            DeclareSignals();
 
             Container
                 .Bind<IWorldConfig>()
@@ -31,25 +33,19 @@ namespace Runtime.Contexts.Game
                 .AsSingle();
 
             Container
-                .Bind<IModel>()
-                .To<GameModel>()
-                .AsSingle();
-
-            Container
                 .BindInterfacesAndSelfTo<ProjectileHitResolver>()
                 .AsSingle();
-
+            
             Container
-                .BindInterfacesAndSelfTo<HudPresenter>()
+                .BindInterfacesAndSelfTo<AsteroidsLifecycleSystem>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<InputPresenter>()
+                .BindInterfacesAndSelfTo<AsteroidSpawnSystem>()
                 .AsSingle();
         }
 
-
-        private void ViewsContainerBindings()
+        private void ViewsBindings()
         {
             Container
                 .Bind<BaseView>()
@@ -61,38 +57,56 @@ namespace Runtime.Contexts.Game
                 .Bind<IViewsContainer>()
                 .To<ViewsContainer>()
                 .AsSingle();
-        }
-
-        private void ShipLogicBindings()
-        {
+            
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
                 .WithInitialSize(1)
                 .FromComponentInNewPrefab(_shipPrefab);
-
-            Container
-                .BindInterfacesAndSelfTo<ShipPresenter>()
-                .AsSingle();
-        }
-
-        private void AsteroidLogicBindings()
-        {
+            
             Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
                 .WithInitialSize(50)
                 .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
+        }
+        
+        private void PresentersBindings()
+        {
+            Container
+                .BindInterfacesAndSelfTo<HudPresenter>()
+                .AsSingle();
 
+            Container
+                .BindInterfacesAndSelfTo<InputPresenter>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<ShipPresenter>()
+                .AsSingle();
+            
             Container
                 .BindInterfacesAndSelfTo<AsteroidPresenter>()
                 .AsSingle();
+        }
 
+        private void ModelsBindings()
+        {
             Container
-                .BindInterfacesAndSelfTo<AsteroidsLifecycleSystem>()
+                .Bind<IModel>()
+                .To<GameModel>()
                 .AsSingle();
+        }
 
-            Container
-                .BindInterfacesAndSelfTo<AsteroidSpawnSystem>()
-                .AsSingle();
+
+        private void DeclareSignals()
+        {
+            SignalBusInstaller.Install(Container);
+            
+            var signalTypes = TypeHelpers.GetTypesImplementingInterface<IData>();
+
+            foreach (var type in signalTypes)
+            {
+                Container.DeclareSignal(type);
+            }
         }
     }
 }

@@ -8,21 +8,20 @@ namespace Runtime.Contexts.Game
 {
     public class InputPresenter : BasePresenter<IModel>
     {
-        private InputReceiverView _inputView;
-        public InputPresenter(IModel model, IViewsContainer viewsContainer) : base(model, viewsContainer)
+        public InputPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus) : base(model,
+            viewsContainer, signalBus)
         { }
 
         public override void Initialize()
         {
             base.Initialize();
-            _inputView = ViewsContainer.GetView<InputReceiverView>();
-            ForwardAllFrom(_inputView);
-        }
 
-        public override void Dispose()
-        {
-            base.Dispose();
-            _inputView = null;
+            ForwardOn<ThrustInput>();
+            ForwardOn<TurnInput>();
+            ForwardOn<FireBulletPressed>(publish: true);
+            ForwardOn<FireLaserPressed>(publish: true);
+            ForwardOn<ShipSpawnRequest>(publish: true);
+            ForwardOn<ShipDespawnRequest>(publish: true);
         }
     }
 }

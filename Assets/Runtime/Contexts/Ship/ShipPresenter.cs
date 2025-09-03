@@ -4,6 +4,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Views;
 using UnityEngine;
+using Zenject;
 
 namespace Runtime.Contexts.Ship
 {
@@ -11,9 +12,8 @@ namespace Runtime.Contexts.Ship
     {
         private readonly ShipView.Pool _pool;
         private ShipView _player;
-
-        public ShipPresenter(IModel model, IViewsContainer viewsContainer, ShipView.Pool pool) : base(model,
-            viewsContainer)
+        
+        public ShipPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipView.Pool pool) : base(model, viewsContainer, signalBus)
         {
             _pool = pool;
         }
@@ -46,12 +46,10 @@ namespace Runtime.Contexts.Ship
             }
 
             _player = shipView;
-            ForwardAllFrom(_player);
         }
 
         private void DetachPlayer()
         {
-            Untrack(_player);
             _player = null;
         }
 

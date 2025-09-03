@@ -11,20 +11,20 @@ namespace Runtime.Contexts.Game
     {
         private HudView _hud;
 
-        public HudPresenter(IModel model, IViewsContainer views) : base(model, views)
+        public HudPresenter(IModel model, IViewsContainer viewsContainer, SignalBus signalBus) : base(model,
+            viewsContainer, signalBus)
         { }
 
         public override void Initialize()
         {
             base.Initialize();
             _hud = ViewsContainer.GetView<HudView>();
-            
+
             if (!_hud)
             {
                 Debug.LogError("HudView not found in container");
             }
-
-            ForwardAllFrom(_hud);
+            ForwardOn<ShipPose>();
             Model.Subscribe<ShipPose>(OnPoseChanged);
         }
 

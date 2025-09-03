@@ -50,16 +50,16 @@ namespace Runtime.Views
 
         void OnTriggerEnter2D(Collider2D other)
         {
-            if (_faction == Faction.Enemy)
-            {
-                Emit(new ShipDestroyed());
-            }
-            else
-            {
-                Emit(new ScoreAdded(0));
-            }
-
-            _pool.Despawn(this);
+            // if (_faction == Faction.Enemy)
+            // {
+            //     Fire(new ShipDestroyed());
+            // }
+            // else
+            // {
+            //     Fire(new ScoreAdded(0));
+            // }
+            //
+            // _pool.Despawn(this);
         }
 
         public class Pool : MonoMemoryPool<Vector2, Vector2, float, Faction, BulletView>
