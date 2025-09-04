@@ -1,3 +1,5 @@
+using Runtime.Abstract.Weapons;
+
 namespace Runtime.Abstract.Configs
 {
     public interface ILaserConfig : IWeaponConfig

@@ -8,7 +8,8 @@ using Zenject;
 
 namespace Runtime.Abstract.Weapons
 {
-    public abstract class BaseWeapon<TWeaponConfig> : IInitializable, IFixedTickable, IDisposable where TWeaponConfig : IWeaponConfig
+    public abstract class BaseWeapon<TWeaponConfig> : IInitializable, IFixedTickable, IDisposable
+        where TWeaponConfig : IWeaponConfig
     {
         private readonly ProjectileHitResolver _resolver;
         protected readonly TWeaponConfig Config;
@@ -41,7 +42,7 @@ namespace Runtime.Abstract.Weapons
         { }
 
         public abstract bool TryFire();
-        
+
         protected void OnHitEvent(IData data)
         {
             if (data is ProjectileHit hit)
@@ -50,7 +51,6 @@ namespace Runtime.Abstract.Weapons
             }
         }
 
-        protected abstract bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity,
-            out Faction faction);
+        protected abstract bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity);
     }
 }

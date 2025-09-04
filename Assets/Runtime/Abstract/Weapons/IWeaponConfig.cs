@@ -1,4 +1,4 @@
-namespace Runtime.Abstract.Configs
+namespace Runtime.Abstract.Weapons
 {
     public interface IWeaponConfig
     {

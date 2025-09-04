@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "LaserConfig", menuName = "Settings/Weapons/LaserConfig", order = 0)]
+    [CreateAssetMenu(fileName = "LaserConfig", menuName = "Settings/Weapons/Laser Weapon", order = 0)]
     public class LaserConfig : ScriptableObject, ILaserConfig
     {
         [SerializeField]

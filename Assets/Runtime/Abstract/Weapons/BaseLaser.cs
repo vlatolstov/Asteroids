@@ -15,7 +15,7 @@ namespace Runtime.Abstract.Weapons
             throw new System.NotImplementedException();
         }
 
-        protected override bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity, out Faction faction)
+        protected override bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity)
         {
             throw new System.NotImplementedException();
         }

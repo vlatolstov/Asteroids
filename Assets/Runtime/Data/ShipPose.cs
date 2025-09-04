@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Runtime.Data
 {
-    public struct ShipPose : IStateData
+    public readonly struct ShipPose : IStateData
     {
-        public Vector2 Position;
-        public Vector2 Velocity;
-        public float AngleRadians;
+        public readonly Vector2 Position;
+        public readonly Vector2 Velocity;
+        public readonly float AngleRadians;
 
         public ShipPose(Vector2 position, Vector2 velocity, float angleRadians)
         {

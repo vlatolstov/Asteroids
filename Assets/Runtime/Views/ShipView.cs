@@ -8,7 +8,7 @@ using Zenject;
 
 namespace Runtime.Views
 {
-    public class ShipView : BaseMovableView, IPlayerTarget
+    public class ShipView : BaseMovableView
     {
         [SerializeField]
         private bool _isPlayer;

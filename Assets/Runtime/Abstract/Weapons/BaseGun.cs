@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Runtime.Abstract.Weapons
 {
-    public class BaseGun : BaseWeapon<IGunConfig>
+    public class BaseGun : BaseWeapon<IProjectileWeaponConfig>
     {
-        private readonly BulletView.Pool _bulletPool;
+        private readonly ProjectileView.Pool _bulletPool;
 
-        public BaseGun(IGunConfig config, ProjectileHitResolver resolver, BulletView.Pool pool) : base(config, resolver)
+        public BaseGun(IProjectileWeaponConfig config, ProjectileHitResolver resolver, ProjectileView.Pool pool) : base(config, resolver)
         {
             _bulletPool = pool;
         }
@@ -32,7 +32,7 @@ namespace Runtime.Abstract.Weapons
             // return true;
         }
 
-        protected override bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity, out Faction faction)
+        protected override bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity)
         {
             throw new System.NotImplementedException();
         }

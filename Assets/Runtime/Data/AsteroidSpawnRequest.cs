@@ -8,35 +8,6 @@ namespace Runtime.Data
         Large,
         Small
     }
-
-    public readonly struct AsteroidViewOffscreen : IEventData
-    {
-        public readonly uint ViewId;
-        public readonly AsteroidSize Size;
-
-        public AsteroidViewOffscreen(uint viewId, AsteroidSize size)
-        {
-            ViewId = viewId;
-            Size = size;
-        }
-    }
-
-    public readonly struct AsteroidViewDestroyed : IEventData
-    {
-        public readonly uint ViewId;
-        public readonly AsteroidSize Size;
-        public readonly Vector2 Pos;
-        public readonly Vector2 Vel;
-
-        public AsteroidViewDestroyed(uint viewId, AsteroidSize size, Vector2 pos, Vector2 vel)
-        {
-            ViewId = viewId;
-            Size = size;
-            Pos = pos;
-            Vel = vel;
-        }
-    }
-
     
     public readonly struct AsteroidSpawnRequest : IEventData
     {
@@ -63,6 +34,34 @@ namespace Runtime.Data
         public AsteroidDespawnRequest(uint viewId)
         {
             ViewId = viewId;
+        }
+    }
+
+    public readonly struct AsteroidViewOffscreen : IEventData
+    {
+        public readonly uint ViewId;
+        public readonly AsteroidSize Size;
+
+        public AsteroidViewOffscreen(uint viewId, AsteroidSize size)
+        {
+            ViewId = viewId;
+            Size = size;
+        }
+    }
+
+    public readonly struct AsteroidViewDestroyed : IEventData
+    {
+        public readonly uint ViewId;
+        public readonly AsteroidSize Size;
+        public readonly Vector2 Pos;
+        public readonly Vector2 Vel;
+
+        public AsteroidViewDestroyed(uint viewId, AsteroidSize size, Vector2 pos, Vector2 vel)
+        {
+            ViewId = viewId;
+            Size = size;
+            Pos = pos;
+            Vel = vel;
         }
     }
 }
