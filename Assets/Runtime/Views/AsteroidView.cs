@@ -34,20 +34,21 @@ namespace Runtime.Views
             }
         }
 
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (other.gameObject.layer != gameObject.layer)
+            {
+                ReportDestroyedByHit();
+            }
+        }
+
         private void ReportOffscreen()
         {
             Fire(new AsteroidViewOffscreen(ViewId, _size));
         }
-
-
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
-        }
         
         public void ReportDestroyedByHit()
         {
-            Debug.Log($"Asteroid view {ViewId} reporting destroyed by hit");
             Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
