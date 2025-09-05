@@ -13,7 +13,10 @@ namespace Runtime.Views
         private Label _posLabel;
         private Label _spdLabel;
         private Label _angLabel;
+        
         private Button _playerSpawnButton;
+
+        private Label _gameStateLabel;
         
         private void Awake()
         {
@@ -26,21 +29,35 @@ namespace Runtime.Views
             
             _shipDataContainer = root.Q<VisualElement>("ShipDataContainer");
             _shipDataContainer.visible = false;
-            
             _posLabel = root.Q<Label>("Pos");
             _spdLabel = root.Q<Label>("Speed");
             _angLabel = root.Q<Label>("Angle");
+            
+            
             _playerSpawnButton = root.Q<Button>("SpawnPlayer");
             _playerSpawnButton.clicked += OnSpawnPlayerButtonClicked;
+            
+            _gameStateLabel = root.Q<Label>("GameStateLabel");
+            _gameStateLabel.text = GameState.Preparing.ToString();
+        }
+
+        public void SetGameState(GameState gameState)
+        {
+            _gameStateLabel.text = gameState.ToString();
+        }
+
+        public void SetSpawnPlayerButtonVisibility(bool visible)
+        {
+            _playerSpawnButton.visible = visible;
+        }
+        
+        public void SetPoseDataVisibility(bool visible)
+        {
+            _shipDataContainer.visible = visible;
         }
         
         public void SetPoseData(Vector2 pos, Vector2 vel, float angleRad)
         {
-            if (!_shipDataContainer.visible)
-            {
-                _shipDataContainer.visible = true;
-            }
-            
             if (_posLabel != null)
                 _posLabel.text = $"POS  X:{pos.x,7:0.00}  Y:{pos.y,7:0.00}";
 
@@ -59,7 +76,7 @@ namespace Runtime.Views
 
         public void OnSpawnPlayerButtonClicked()
         {
-            Fire(new ShipSpawnRequest(Vector2.zero));
+            Fire(new ShipSpawnRequest());
         }
     }
 }

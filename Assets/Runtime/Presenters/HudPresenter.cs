@@ -5,7 +5,7 @@ using Runtime.Views;
 using UnityEngine;
 using Zenject;
 
-namespace Runtime.Contexts.Game
+namespace Runtime.Presenters
 {
     public class HudPresenter : BasePresenter<GameModel>
     {
@@ -21,7 +21,6 @@ namespace Runtime.Contexts.Game
 
         public override void Initialize()
         {
-            base.Initialize();
             _hud = ViewsContainer.GetView<HudView>();
 
             if (!_hud)
@@ -29,15 +28,11 @@ namespace Runtime.Contexts.Game
                 Debug.LogError("HudView not found in container");
             }
 
-            
-            _shipModel.Subscribe<ShipPose>(OnPoseChanged);
+            AddUnsub(_shipModel.Subscribe<ShipPose>(OnPoseChanged));
         }
 
         public override void Dispose()
         {
-            base.Dispose();
-            
-            _shipModel.Unsubscribe<ShipPose>(OnPoseChanged);
             _hud = null;
         }
 

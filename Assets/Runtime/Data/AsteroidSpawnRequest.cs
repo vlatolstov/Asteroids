@@ -53,14 +53,14 @@ namespace Runtime.Data
         }
     }
 
-    public readonly struct AsteroidViewDestroyed : IEventData
+    public readonly struct AsteroidDestroyed : IEventData
     {
         public readonly uint ViewId;
         public readonly AsteroidSize Size;
         public readonly Vector2 Pos;
         public readonly Vector2 Vel;
 
-        public AsteroidViewDestroyed(uint viewId, AsteroidSize size, Vector2 pos, Vector2 vel)
+        public AsteroidDestroyed(uint viewId, AsteroidSize size, Vector2 pos, Vector2 vel)
         {
             ViewId = viewId;
             Size = size;

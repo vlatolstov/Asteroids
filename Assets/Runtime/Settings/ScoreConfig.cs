@@ -15,7 +15,7 @@ namespace Runtime.Settings
         [SerializeField]
         private int _ufoScore;
 
-        public int BigAsteroidScore => _bigAsteroidScore;
+        public int LargeAsteroidScore => _bigAsteroidScore;
         public int SmallAsteroidScore => _smallAsteroidScore;
         public int UfoScore => _ufoScore;
     }

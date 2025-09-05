@@ -8,6 +8,21 @@ namespace Runtime.Views
     public class InputReceiverView : BaseView, GameControls.IGameplayActions
     {
         private GameControls _controls;
+        private bool _isGunButtonHeld;
+        private bool _isLaserButtonHeld;
+
+        private void FixedUpdate()
+        {
+            if (_isGunButtonHeld)
+            {
+                Fire(new FireGunPressed());
+            }
+
+            if (_isLaserButtonHeld)
+            {
+                Fire(new FireLaserPressed());
+            }
+        }
 
         private void OnEnable()
         {
@@ -62,18 +77,14 @@ namespace Runtime.Views
 
         public void OnBullet(InputAction.CallbackContext context)
         {
-            if (context.performed)
-            {
-                Fire(new FireGunPressed());
-            }
+            if (context.performed) _isGunButtonHeld = true;
+            if (context.canceled) _isGunButtonHeld = false;
         }
 
         public void OnLaser(InputAction.CallbackContext context)
         {
-            if (context.performed)
-            {
-                Fire(new FireLaserPressed());
-            }
+            if (context.performed) _isLaserButtonHeld = true;
+            if (context.canceled) _isLaserButtonHeld = false;
         }
     }
 }

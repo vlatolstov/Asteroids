@@ -3,6 +3,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Contexts.Asteroids;
 using Runtime.Contexts.Ship;
 using Runtime.Models;
+using Runtime.Presenters;
 using Runtime.Utils;
 using Runtime.Views;
 using UnityEngine;
@@ -49,8 +50,10 @@ namespace Runtime.Contexts.Game
                 .AsSingle();
 
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
-                .WithInitialSize(1)
-                .FromComponentInNewPrefab(_shipPrefab);
+                .WithInitialSize(2)
+                .FromComponentInNewPrefab(_shipPrefab)
+                .UnderTransformGroup("Ship")
+                .NonLazy();
 
             Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
                 .WithInitialSize(50)
@@ -85,6 +88,14 @@ namespace Runtime.Contexts.Game
             
             Container
                 .BindInterfacesAndSelfTo<WeaponPresenter>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<BackgroundPresenter>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<GameStatePresenter>()
                 .AsSingle();
         }
 

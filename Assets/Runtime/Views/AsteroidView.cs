@@ -56,7 +56,7 @@ namespace Runtime.Views
         
         public void ReportDestroyedByHit()
         {
-            Fire(new AsteroidViewDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
+            Fire(new AsteroidDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
         private void Reinitialize(AsteroidSpawnRequest args)

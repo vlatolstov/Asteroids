@@ -1,38 +1,30 @@
 using Runtime.Abstract.MVP;
-using Runtime.Views;
 using Runtime.Data;
 using Runtime.Models;
+using Runtime.Views;
 using Zenject;
 
-namespace Runtime.Contexts.Asteroids
+namespace Runtime.Presenters
 {
     public class AsteroidsPresenter : BasePresenter<AsteroidsModel>
     {
         private readonly AsteroidView.Pool _pool;
-
+        private readonly GameModel _gameModel;
+        
         public AsteroidsPresenter(AsteroidsModel model, IViewsContainer viewsContainer, SignalBus signalBus,
-            AsteroidView.Pool pool) : base(model, viewsContainer, signalBus)
+            AsteroidView.Pool pool, GameModel gameModel) : base(model, viewsContainer, signalBus)
         {
             _pool = pool;
+            _gameModel = gameModel;
         }
 
         public override void Initialize()
         {
-            base.Initialize();
-            
             ForwardOn<AsteroidViewOffscreen>(publish: true);
-            ForwardOn<AsteroidViewDestroyed>(publish: true);
+            ForwardOn<AsteroidDestroyed>(publish: true);
 
-            Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest);
-            Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            
-            Model.Unsubscribe<AsteroidSpawnRequest>(OnSpawnRequest);
-            Model.Unsubscribe<AsteroidDespawnRequest>(OnDespawnRequest);
+            AddUnsub(Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest));
+            AddUnsub(Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest));
         }
 
         private void OnSpawnRequest()

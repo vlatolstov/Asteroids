@@ -4,7 +4,7 @@ using Runtime.Models;
 using Runtime.Views;
 using Zenject;
 
-namespace Runtime.Contexts.Game
+namespace Runtime.Presenters
 {
     public class WeaponPresenter : BasePresenter<GameModel>
     {
@@ -21,13 +21,7 @@ namespace Runtime.Contexts.Game
             base.Initialize();
             
             ForwardOn<ProjectileShoot>();
-            Model.Subscribe<ProjectileShoot>(OnProjectileShoot);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            Model.Unsubscribe<ProjectileShoot>(OnProjectileShoot);
+            AddUnsub(Model.Subscribe<ProjectileShoot>(OnProjectileShoot));
         }
 
         private void OnProjectileShoot()

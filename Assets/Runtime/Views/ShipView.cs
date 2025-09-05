@@ -25,6 +25,8 @@ namespace Runtime.Views
 
         public ProjectileWeapon Gun;
 
+        private bool _destriyed;
+
         protected override void Awake()
         {
             base.Awake();
@@ -67,13 +69,7 @@ namespace Runtime.Views
             _leftEngine.SetActive(left);
             _rightEngine.SetActive(right);
         }
-
-        public class Pool : ViewPool<ShipView>
-        {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
-            { }
-        }
-
+        
         public bool TryGetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity,
             out int layer)
         {
@@ -82,6 +78,36 @@ namespace Runtime.Views
             inheritVelocity = Motor?.Velocity ?? Vector2.zero;
             layer = gameObject.layer;
             return true;
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (gameObject.layer != other.gameObject.layer && !_destriyed)
+            {
+                _destriyed = true;
+                Fire(new ShipDestroyed(ViewId, Motor.Position));
+            }
+        }
+
+        private void Reinitialize(Vector2 position)
+        {
+            
+            _destriyed = false;
+            transform.position = position;
+            Motor.SetPose(position, Vector2.zero, 0f);
+            Fire(new ShipSpawned(ViewId, Motor.Position));
+        }
+
+        public class Pool : ViewPool<Vector2, ShipView>
+        {
+            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            { }
+
+            protected override void Reinitialize(Vector2 p1, ShipView item)
+            {
+                base.Reinitialize(p1, item);
+                item.Reinitialize(p1);
+            }
         }
     }
 }

@@ -26,13 +26,13 @@ namespace Runtime.Models
             _timer = _config.Interval;
 
             Subscribe<AsteroidViewOffscreen>(OnOffscreen);
-            Subscribe<AsteroidViewDestroyed>(OnDestroyed);
+            Subscribe<AsteroidDestroyed>(OnDestroyed);
         }
 
         public void Dispose()
         {
             Unsubscribe<AsteroidViewOffscreen>(OnOffscreen);
-            Unsubscribe<AsteroidViewDestroyed>(OnDestroyed);
+            Unsubscribe<AsteroidDestroyed>(OnDestroyed);
         }
 
         public void Tick()
@@ -60,7 +60,7 @@ namespace Runtime.Models
 
         private void OnDestroyed()
         {
-            if (!TryGet(out AsteroidViewDestroyed eventData))
+            if (!TryGet(out AsteroidDestroyed eventData))
             {
                 return;
             }
@@ -99,7 +99,7 @@ namespace Runtime.Models
             ChangeData(new AsteroidSpawnRequest(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel, nose, _config.AngleRotationDeg));
         }
 
-        private void SpawnSmallAsteroids(AsteroidViewDestroyed ev)
+        private void SpawnSmallAsteroids(AsteroidDestroyed ev)
         {
             int count = _config.SmallSplit;
             float baseA = Mathf.Atan2(ev.Vel.y, ev.Vel.x);

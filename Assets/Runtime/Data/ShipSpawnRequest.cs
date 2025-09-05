@@ -4,30 +4,59 @@ using UnityEngine;
 namespace Runtime.Data
 {
     public readonly struct ShipSpawnRequest : IEventData
+    { }
+
+    public readonly struct ShipSpawnCommand : IEventData
     {
         public readonly Vector2 Position;
 
-        public ShipSpawnRequest(Vector2 position)
+        public ShipSpawnCommand(Vector2 position)
         {
             Position = position;
         }
     }
-    
+
     public readonly struct ShipDespawnRequest : IEventData
     {
-        
+        public readonly uint ViewId;
+
+        public ShipDespawnRequest(uint viewId)
+        {
+            ViewId = viewId;
+        }
     }
 
-    public readonly struct ShipSpawned : IEventData
+    public readonly struct ShipDespawnCommand : IEventData
     {
+        public readonly uint ViewId;
+
+        public ShipDespawnCommand(uint viewId)
+        {
+            ViewId = viewId;
+        }
+    }
+
+    public readonly struct ShipSpawned : IStateData
+    {
+        public readonly uint ViewId;
         public readonly Vector2 Position;
 
-        public ShipSpawned(Vector2 position)
+        public ShipSpawned(uint viewId, Vector2 position)
         {
+            ViewId = viewId;
             Position = position;
         }
     }
 
-    public struct ShipDestroyed : IEventData
-    { }
+    public struct ShipDestroyed : IStateData
+    {
+        public readonly uint ViewId;
+        public readonly Vector2 Position;
+
+        public ShipDestroyed(uint viewId, Vector2 position)
+        {
+            ViewId = viewId;
+            Position = position;
+        }
+    }
 }

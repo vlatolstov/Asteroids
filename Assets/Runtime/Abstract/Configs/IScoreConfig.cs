@@ -2,7 +2,7 @@ namespace Runtime.Abstract.Configs
 {
     public interface IScoreConfig
     {
-        int BigAsteroidScore { get; }
+        int LargeAsteroidScore { get; }
         int SmallAsteroidScore { get; }
         int UfoScore { get; }
     }

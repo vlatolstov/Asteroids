@@ -1,11 +1,9 @@
-using System;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Models;
-using Runtime.Views;
 using Zenject;
 
-namespace Runtime.Contexts.Game
+namespace Runtime.Presenters
 {
     public class InputPresenter : BasePresenter<InputModel>
     {
@@ -14,8 +12,6 @@ namespace Runtime.Contexts.Game
 
         public override void Initialize()
         {
-            base.Initialize();
-
             ForwardOn<ThrustInput>();
             ForwardOn<TurnInput>();
             ForwardOn<FireGunPressed>(publish: true);

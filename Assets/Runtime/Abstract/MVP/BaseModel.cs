@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Runtime.Utils;
 
 namespace Runtime.Abstract.MVP
 {
@@ -8,7 +9,7 @@ namespace Runtime.Abstract.MVP
         private readonly Dictionary<Type, IData> _dataContainer = new();
         private readonly Dictionary<Type, List<Action>> _subscriptions = new();
 
-        public void Subscribe<TData>(Action action) where TData : IData
+        public IDisposable Subscribe<TData>(Action action) where TData : IData
         {
             var type = typeof(TData);
             if (!_subscriptions.TryGetValue(type, out var list))
@@ -20,23 +21,11 @@ namespace Runtime.Abstract.MVP
             if (action != null && !list.Contains(action))
             {
                 list.Add(action);
+                return new AnonDisposable(() => { Unsubscribe<TData>(action); });
             }
+
+            return null;
         }
-        
-        // public void Subscribe<TData>(Func<TData> action) where TData : IData
-        // {
-        //     var type = typeof(TData);
-        //     if (!_subscriptions.TryGetValue(type, out var list))
-        //     {
-        //         list = new List<Action>();
-        //         _subscriptions[type] = list;
-        //     }
-        //
-        //     if (action != null && !list.Contains(action))
-        //     {
-        //         list.Add(action);
-        //     }
-        // }
 
         public void Unsubscribe<TData>(Action action) where TData : IData
         {

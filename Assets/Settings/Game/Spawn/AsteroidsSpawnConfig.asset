@@ -29,9 +29,9 @@ MonoBehaviour:
   _edgeOffset: 7
   _entrySpeedMin: 3
   _entrySpeedMax: 7
-  _entryAngleJitterDeg: 30
+  _entryAngleJitterDeg: 40
   _smallScale: 0.5
   _smallSplitMin: 3
   _smallSplitMax: 6
-  _smallSpeedMin: 8
-  _smallSpeedMax: 12
+  _smallSpeedMin: 6
+  _smallSpeedMax: 8

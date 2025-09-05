@@ -20,6 +20,11 @@ namespace Runtime.Abstract.MVP
             _signalBus = signalBus;
         }
 
+        protected void AddUnsub(IDisposable disposable)
+        {
+            _subs.Add(disposable);
+        }
+        
         private void SubscribeOn<TPayload>(Action<TPayload> onPayload) where TPayload : IData
         {
             _signalBus.Subscribe(onPayload);
