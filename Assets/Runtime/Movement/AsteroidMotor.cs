@@ -11,5 +11,10 @@ namespace Runtime.Movement
         {
             SetThrust(1f);
         }
+
+        protected override void ApplyRotation(Rigidbody2D rb, float angleRad)
+        {
+            //don't apply rotation over time
+        }
     }
 }

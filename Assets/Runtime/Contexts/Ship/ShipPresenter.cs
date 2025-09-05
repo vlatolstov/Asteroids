@@ -11,7 +11,7 @@ namespace Runtime.Contexts.Ship
     {
         private readonly InputModel _inputModel;
         private readonly ShipView.Pool _pool;
-        private ShipView _player;
+        private ShipView _ship;
 
         public ShipPresenter(ShipModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipView.Pool pool,
             InputModel inputModel) : base(model, viewsContainer, signalBus)
@@ -28,6 +28,7 @@ namespace Runtime.Contexts.Ship
             ForwardOn<ShipSpawnRequest>(publish: true);
             ForwardOn<ShipDespawnRequest>(publish: true);
 
+            _inputModel.Subscribe<FireGunPressed>(OnGunAttackSignal);
             _inputModel.Subscribe<ThrustInput>(OnThrustChanged);
             _inputModel.Subscribe<TurnInput>(OnTurnAxisChanged);
             Model.Subscribe<ShipSpawnRequest>(OnShipSpawnRequest);
@@ -38,44 +39,64 @@ namespace Runtime.Contexts.Ship
         {
             base.Dispose();
 
+            _inputModel.Unsubscribe<FireGunPressed>(OnGunAttackSignal);
             _inputModel.Unsubscribe<ThrustInput>(OnThrustChanged);
             _inputModel.Unsubscribe<TurnInput>(OnTurnAxisChanged);
             Model.Unsubscribe<ShipSpawnRequest>(OnShipSpawnRequest);
             Model.Unsubscribe<ShipDespawnRequest>(OnShipDespawnRequest);
 
-            DetachPlayer();
+            DetachShip();
         }
 
-        private void TryAttachPlayer(ShipView shipView)
+        private void TryAttachShip(ShipView shipView)
         {
-            if (!shipView.IsPlayer)
-            {
-                return;
-            }
-
-            _player = shipView;
+            _ship = shipView;
         }
 
-        private void DetachPlayer()
+        private void DetachShip()
         {
-            _player = null;
+            _ship = null;
         }
 
         private void OnThrustChanged()
         {
             if (_inputModel.TryGet(out ThrustInput thrust) &&
-                _player)
+                _ship)
             {
-                _player.Motor.SetThrust(thrust.Value);
+                _ship.SetupMainEngine(thrust.Value != 0);
+                _ship.Motor.SetThrust(thrust.Value);
             }
         }
 
         private void OnTurnAxisChanged()
         {
-            if (_inputModel.TryGet(out TurnInput turn) &&
-                _player)
+            if (!_inputModel.TryGet(out TurnInput turn) ||
+                !_ship)
             {
-                _player.Motor.SetTurnAxis(turn.Value);
+                return;
+            }
+
+            switch (turn.Value)
+            {
+                case > 0:
+                    _ship.SetupSideEngines(true, false);
+                    break;
+                case < 0:
+                    _ship.SetupSideEngines(false, true);
+                    break;
+                default:
+                    _ship.SetupSideEngines(false, false);
+                    break;
+            }
+
+            _ship.Motor.SetTurnAxis(turn.Value);
+        }
+
+        private void OnGunAttackSignal()
+        {
+            if (_inputModel.TryGet(out FireGunPressed fire))
+            {
+                _ship.Gun.TryAttack();
             }
         }
 
@@ -83,18 +104,18 @@ namespace Runtime.Contexts.Ship
         {
             if (Model.TryGet(out ShipSpawnRequest spawn))
             {
-                var player = _pool.Spawn();
-                TryAttachPlayer(player);
-                if (_player)
+                var ship = _pool.Spawn();
+                TryAttachShip(ship);
+                if (_ship)
                 {
-                    _player.Motor.SetPose(spawn.Position, Vector2.zero, 0f);
+                    _ship.Motor.SetPose(spawn.Position, Vector2.zero, 0f);
                 }
             }
         }
 
         private void OnShipDespawnRequest()
         {
-            if (!_player)
+            if (!_ship)
             {
                 Debug.LogError("Can't despawn. No player assigned.");
                 return;
@@ -102,8 +123,8 @@ namespace Runtime.Contexts.Ship
 
             if (Model.TryGet<ShipDespawnRequest>(out _))
             {
-                DetachPlayer();
-                _pool.Despawn(_player);
+                DetachShip();
+                _pool.Despawn(_ship);
             }
         }
     }

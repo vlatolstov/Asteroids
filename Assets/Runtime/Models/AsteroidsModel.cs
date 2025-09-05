@@ -92,16 +92,16 @@ namespace Runtime.Models
             float jitter = _config.EntryAngleJitterDeg * Mathf.Deg2Rad;
             float a = baseA + Random.Range(-jitter, jitter);
 
-            float spd = Random.Range(_config.EntrySpeedMin, _config.EntrySpeedMax);
+            float spd = _config.LargeSpeed;
             var vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
             float nose = Mathf.Atan2(-vel.x, vel.y);
 
-            ChangeData(new AsteroidSpawnRequest(AsteroidSize.Large, _config.LargeScale, pos, vel, nose));
+            ChangeData(new AsteroidSpawnRequest(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel, nose, _config.AngleRotationDeg));
         }
 
         private void SpawnSmallAsteroids(AsteroidViewDestroyed ev)
         {
-            int count = Random.Range(_config.SmallSplitMin, _config.SmallSplitMax + 1);
+            int count = _config.SmallSplit;
             float baseA = Mathf.Atan2(ev.Vel.y, ev.Vel.x);
 
             for (int i = 0; i < count; i++)
@@ -110,11 +110,11 @@ namespace Runtime.Models
                 float a = baseA + (i - (count - 1) * 0.5f) * spread
                                 + Random.Range(-0.25f, 0.25f) * spread;
 
-                float spd = Random.Range(_config.SmallSpeedMin, _config.SmallSpeedMax);
+                float spd = _config.SmallSpeed;
                 Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
                 float nose = Mathf.Atan2(-vel.x, vel.y);
 
-                ChangeData(new AsteroidSpawnRequest(AsteroidSize.Small, _config.SmallScale, ev.Pos, vel, nose));
+                ChangeData(new AsteroidSpawnRequest(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Pos, vel, nose, _config.AngleRotationDeg));
             }
         }
     }

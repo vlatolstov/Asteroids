@@ -1,4 +1,3 @@
-using System;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
 using UnityEngine;
@@ -14,8 +13,9 @@ namespace Runtime.Views
 
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
-        private float _life;
         private Pool _pool;
+        private float _life;
+        private bool _spawned;
 
         void Awake()
         {
@@ -25,22 +25,29 @@ namespace Runtime.Views
             _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
             _sr = GetComponent<SpriteRenderer>();
-
-            GetComponent<Collider2D>().isTrigger = true;
         }
 
 
         void FixedUpdate()
         {
             _life -= Time.fixedDeltaTime;
-            if (_life <= 0f)
+            if (_life <= 0f && _spawned)
             {
-                _pool.Despawn(this);
+                Despawn();
             }
         }
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            if (_spawned)
+            {
+                Despawn();
+            }
+        }
+
+        private void Despawn()
+        {
+            _spawned = false;
             _pool.Despawn(this);
         }
 
@@ -49,20 +56,24 @@ namespace Runtime.Views
             _pool = pool;
 
             var conf = shootData.Projectile;
-            
+
             transform.position = shootData.Position;
-            
-            transform.localScale = new Vector3(conf.Size, conf.Size);
-            
-            var projectileVelocity = conf.Speed * shootData.Direction;
+            transform.localScale = conf.Size;
+
+            var dir = shootData.Direction;
+            var projectileVelocity = conf.Speed * dir;
+
+            transform.up = dir;
+
             _rb.linearVelocity = shootData.InheritVelocity + projectileVelocity;
-            
+
             float lifeTime = conf.Lifetime;
             _life = lifeTime > 0 ? lifeTime : _defaultLife;
-            
+
             _sr.sprite = conf.Sprite;
-            
+
             gameObject.layer = shootData.Layer;
+            _spawned = true;
             gameObject.SetActive(true);
         }
 

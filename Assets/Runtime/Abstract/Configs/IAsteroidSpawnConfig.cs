@@ -4,16 +4,15 @@ namespace Runtime.Abstract.Configs
 {
     public interface IAsteroidsSpawnConfig
     {
+        Sprite Sprite { get; }
+        float AngleRotationDeg { get; }
         float Interval { get; }
         float LargeScale { get; }
         float EdgeOffset { get; }
-        float EntrySpeedMin { get; }
-        float EntrySpeedMax { get; }
+        float LargeSpeed { get; }
         float EntryAngleJitterDeg { get; }
         float SmallScale { get; }
-        int SmallSplitMin { get; }
-        int SmallSplitMax { get; }
-        float SmallSpeedMin { get; }
-        float SmallSpeedMax { get; }
+        int SmallSplit { get; }
+        float SmallSpeed { get; }
     }
 }

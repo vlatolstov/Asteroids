@@ -1,32 +1,24 @@
 using System;
-using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
-using Runtime.Data;
-using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
 namespace Runtime.Abstract.Weapons
 {
-    public abstract class BaseWeapon<TWeaponConfig> : IInitializable, IFixedTickable, IDisposable
-        where TWeaponConfig : IWeaponConfig
+    public abstract class BaseWeapon<TWeaponConfig> : IFixedTickable where TWeaponConfig : IWeaponConfig
     {
-        private readonly ProjectileHitResolver _resolver;
         protected readonly TWeaponConfig Config;
-
+        protected readonly IFireParamsSource Source;
+        
         protected float Cooldown;
+        public event Action<IData> AttackGenerated;
+        
 
-        protected BaseWeapon(TWeaponConfig config, ProjectileHitResolver resolver)
+        protected BaseWeapon(TWeaponConfig config, IFireParamsSource source)
         {
             Config = config;
-            _resolver = resolver;
+            Source = source;
         }
-
-        public virtual void Initialize()
-        { }
-
-        public virtual void Dispose()
-        { }
 
         public void FixedTick()
         {
@@ -41,16 +33,11 @@ namespace Runtime.Abstract.Weapons
         protected virtual void OnFixedTick()
         { }
 
-        public abstract bool TryFire();
+        public abstract bool TryAttack();
 
-        protected void OnHitEvent(IData data)
+        protected void NotifyAttack(IData data)
         {
-            if (data is ProjectileHit hit)
-            {
-                _resolver.Handle(hit);
-            }
+            AttackGenerated?.Invoke(data);
         }
-
-        protected abstract bool GetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity);
     }
 }

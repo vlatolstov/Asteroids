@@ -1,3 +1,5 @@
+using System;
+
 namespace Runtime.Abstract.Weapons
 {
     public interface IWeaponConfig

@@ -12,14 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81b9ef6c66744bf794a21abc8ff67488, type: 3}
   m_Name: AsteroidsSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AsteroidsSpawnConfig
-  _interval: 0.1
-  _largeScale: 1.5
+  _spritesVariations:
+  - {fileID: 3081143669861812943, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 573480471842989644, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -7077940578750919511, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 8774496958142140879, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 1155384074951209051, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -2685122100807815614, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -4384568171156119087, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 2679123809562312862, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 3142108872925249854, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  _rotationMin: -5
+  _rotationMax: 5
+  _interval: 1.61
+  _largeScale: 1.2
   _edgeOffset: 7
-  _entrySpeedMin: 8
-  _entrySpeedMax: 16
+  _entrySpeedMin: 3
+  _entrySpeedMax: 7
   _entryAngleJitterDeg: 30
-  _smallScale: 0.75
-  _smallSplitMin: 2
-  _smallSplitMax: 4
-  _smallSpeedMin: 4
-  _smallSpeedMax: 8
+  _smallScale: 0.5
+  _smallSplitMin: 3
+  _smallSplitMax: 6
+  _smallSpeedMin: 8
+  _smallSpeedMax: 12

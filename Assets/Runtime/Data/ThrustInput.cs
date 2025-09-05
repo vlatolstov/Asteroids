@@ -25,6 +25,6 @@ namespace Runtime.Data
     public struct FireLaserPressed : IEventData
     { }
 
-    public struct FireBulletPressed : IEventData
+    public struct FireGunPressed : IEventData
     { }
 }

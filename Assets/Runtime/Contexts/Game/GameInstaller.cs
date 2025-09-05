@@ -5,7 +5,6 @@ using Runtime.Contexts.Ship;
 using Runtime.Models;
 using Runtime.Utils;
 using Runtime.Views;
-using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
@@ -19,6 +18,9 @@ namespace Runtime.Contexts.Game
 
         [SerializeField]
         private GameObject _asteroidPrefab;
+        
+        [SerializeField]
+        private GameObject _projectilePrefab;
 
         public override void InstallBindings()
         {
@@ -30,10 +32,6 @@ namespace Runtime.Contexts.Game
             Container
                 .Bind<IWorldConfig>()
                 .FromComponentInHierarchy()
-                .AsSingle();
-
-            Container
-                .BindInterfacesAndSelfTo<ProjectileHitResolver>()
                 .AsSingle();
         }
 
@@ -59,6 +57,12 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
+            
+            Container.BindMemoryPool<ProjectileView, ProjectileView.Pool>()
+                .WithInitialSize(100)
+                .FromComponentInNewPrefab(_projectilePrefab)
+                .UnderTransformGroup("Projectiles")
+                .NonLazy();
         }
 
         private void PresentersBindings()
@@ -77,6 +81,10 @@ namespace Runtime.Contexts.Game
 
             Container
                 .BindInterfacesAndSelfTo<AsteroidsPresenter>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<WeaponPresenter>()
                 .AsSingle();
         }
 

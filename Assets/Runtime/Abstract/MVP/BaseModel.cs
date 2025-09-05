@@ -22,6 +22,21 @@ namespace Runtime.Abstract.MVP
                 list.Add(action);
             }
         }
+        
+        // public void Subscribe<TData>(Func<TData> action) where TData : IData
+        // {
+        //     var type = typeof(TData);
+        //     if (!_subscriptions.TryGetValue(type, out var list))
+        //     {
+        //         list = new List<Action>();
+        //         _subscriptions[type] = list;
+        //     }
+        //
+        //     if (action != null && !list.Contains(action))
+        //     {
+        //         list.Add(action);
+        //     }
+        // }
 
         public void Unsubscribe<TData>(Action action) where TData : IData
         {

@@ -9,6 +9,7 @@ namespace Runtime.Views
     public class HudView : BaseView
     {
         private UIDocument _doc;
+        private VisualElement _shipDataContainer;
         private Label _posLabel;
         private Label _spdLabel;
         private Label _angLabel;
@@ -23,6 +24,9 @@ namespace Runtime.Views
         {
             var root = _doc.rootVisualElement;
             
+            _shipDataContainer = root.Q<VisualElement>("ShipDataContainer");
+            _shipDataContainer.visible = false;
+            
             _posLabel = root.Q<Label>("Pos");
             _spdLabel = root.Q<Label>("Speed");
             _angLabel = root.Q<Label>("Angle");
@@ -32,6 +36,11 @@ namespace Runtime.Views
         
         public void SetPoseData(Vector2 pos, Vector2 vel, float angleRad)
         {
+            if (!_shipDataContainer.visible)
+            {
+                _shipDataContainer.visible = true;
+            }
+            
             if (_posLabel != null)
                 _posLabel.text = $"POS  X:{pos.x,7:0.00}  Y:{pos.y,7:0.00}";
 

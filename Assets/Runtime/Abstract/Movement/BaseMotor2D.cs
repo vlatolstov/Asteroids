@@ -59,11 +59,16 @@ namespace Runtime.Abstract.Movement
 
             if (_config.IsWrappedByWorldBounds)
             {
-                _pos = WrapUtility.Wrap(_pos, _world.WorldRect, _world.WrapOffset);
+                _pos = GeometryMethods.Wrap(_pos, _world.WorldRect, _world.WrapOffset);
             }
 
             rigidbody.MovePosition(_pos);
-            rigidbody.MoveRotation(_angRad * Mathf.Rad2Deg);
+            ApplyRotation(rigidbody, _angRad);
+        }
+
+        protected virtual void ApplyRotation(Rigidbody2D rb, float angleRad)
+        {
+            rb.MoveRotation(angleRad * Mathf.Rad2Deg);
         }
 
         protected virtual void UpdateControls(float dt)

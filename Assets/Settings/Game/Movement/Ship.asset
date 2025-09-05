@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ship
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ShipConfig
   _acceleration: 4
-  _maxSpeed: 12
+  _maxSpeed: 20.2
   _turnSpeed: 2
   _linearDamping: 0.3
   _isWrappedByWorldBounds: 1

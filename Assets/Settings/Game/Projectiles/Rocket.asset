@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3dfb1ba04c54e78ba414e07ce197352, type: 3}
+  m_Name: Rocket
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileConfig
+  _sprites:
+  - {fileID: -8987198875676320708, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 5548178118557335035, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -5441867295254626889, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  _size: {x: 1, y: 1}
+  _speed: 70
+  _lifetime: 1.5

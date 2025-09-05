@@ -25,5 +25,10 @@ namespace Runtime.Abstract.Movement
         {
             Motor.MoveRigidbody(_rb);
         }
+        
+        public void ApplyAngularVelocity(float angleRadians)
+        {
+            _rb.angularVelocity = angleRadians * Mathf.Rad2Deg;
+        }
     }
 }

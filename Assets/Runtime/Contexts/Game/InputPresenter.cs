@@ -18,7 +18,7 @@ namespace Runtime.Contexts.Game
 
             ForwardOn<ThrustInput>();
             ForwardOn<TurnInput>();
-            ForwardOn<FireBulletPressed>(publish: true);
+            ForwardOn<FireGunPressed>(publish: true);
             ForwardOn<FireLaserPressed>(publish: true);
         }
     }

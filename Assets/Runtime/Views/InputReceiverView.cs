@@ -64,7 +64,7 @@ namespace Runtime.Views
         {
             if (context.performed)
             {
-                Fire(new FireBulletPressed());
+                Fire(new FireGunPressed());
             }
         }
 

@@ -15,5 +15,5 @@ MonoBehaviour:
   _acceleration: 0
   _maxSpeed: 1000
   _turnSpeed: 0
-  _linearDamping: 0.3
+  _linearDamping: 0
   _isWrappedByWorldBounds: 0

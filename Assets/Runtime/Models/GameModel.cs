@@ -8,7 +8,7 @@ namespace Runtime.Models
     {
         protected override void OnDataChange(IData newValue)
         {
-            Debug.Log($"GameModel.OnDataChange: {newValue.GetType()} changed");
+            // Debug.Log($"GameModel.OnDataChange: {newValue.GetType()} changed");
         }
 
         protected override void OnNotify(Action action)

@@ -11,19 +11,23 @@ namespace Runtime.Data
     
     public readonly struct AsteroidSpawnRequest : IEventData
     {
+        public readonly Sprite Sprite;
         public readonly AsteroidSize Size;
         public readonly float Scale;
         public readonly Vector2 Pos;
         public readonly Vector2 Vel;
         public readonly float AngleRad;
+        public readonly float AngRotation;
 
-        public AsteroidSpawnRequest(AsteroidSize size, float scale, Vector2 pos, Vector2 vel, float angleRad)
+        public AsteroidSpawnRequest(Sprite sprite, AsteroidSize size, float scale, Vector2 pos, Vector2 vel, float angleRad, float angRotation)
         {
+            Sprite = sprite;
             Size = size;
             Scale = scale;
             Pos = pos;
             Vel = vel;
             AngleRad = angleRad;
+            AngRotation = angRotation;
         }
     }
 

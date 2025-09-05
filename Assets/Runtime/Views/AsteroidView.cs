@@ -1,4 +1,3 @@
-using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
@@ -10,11 +9,19 @@ namespace Runtime.Views
 {
     public class AsteroidView : BaseMovableView
     {
+        private SpriteRenderer _sr;
         private AsteroidSize _size;
         private bool _entered;
         
         [Inject]
         private IWorldConfig _world;
+
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _sr = GetComponent<SpriteRenderer>();
+        }
 
         protected override void FixedUpdate()
         {
@@ -56,7 +63,10 @@ namespace Runtime.Views
         {
             _size = args.Size;
             _entered = false;
+            _sr.sprite = args.Sprite;
+            
             Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
+            ApplyAngularVelocity(args.AngRotation);
 
             transform.position = args.Pos;
             transform.localScale = new Vector3(args.Scale, args.Scale);
