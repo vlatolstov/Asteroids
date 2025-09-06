@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShipGun
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileWeaponConfig
   _weaponCooldown: 0.82
-  _muzzleOffset: 2
+  _muzzleOffset: 1
   _projectileConfig: {fileID: 11400000, guid: ab688df7655faff47a2df1a7d0df26a2, type: 2}
   _spread: 10
   _bulletsPerShot: 3

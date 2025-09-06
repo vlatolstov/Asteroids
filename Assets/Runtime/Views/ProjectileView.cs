@@ -80,8 +80,11 @@ namespace Runtime.Views
             gameObject.SetActive(true);
         }
 
-        public class Pool : MonoMemoryPool<ProjectileShoot, ProjectileView>
+        public class Pool : ViewPool<ProjectileShoot, ProjectileView>
         {
+            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            { }
+
             protected override void Reinitialize(ProjectileShoot shootData, ProjectileView item)
                 => item.Reinitialize(this, shootData);
 

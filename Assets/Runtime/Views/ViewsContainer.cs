@@ -8,9 +8,6 @@ namespace Runtime.Views
 {
     public class ViewsContainer : IViewsContainer
     {
-        public event Action<BaseView> ViewAdded;
-        public event Action<BaseView> ViewRemoved;
-
         private readonly Dictionary<Type, List<BaseView>> _views;
         private readonly Dictionary<uint, BaseView> _viewMap;
 
@@ -63,7 +60,6 @@ namespace Runtime.Views
 
             if (!list.Contains(view))
             {
-                ViewAdded?.Invoke(view);
                 list.Add(view);
                 AssignIdAndRegisterView(view);
                 // Debug.Log($"{view} with {view.ViewId} id added in container");
@@ -80,7 +76,6 @@ namespace Runtime.Views
             var type = view.GetType();
             if (_views.TryGetValue(type, out var list) && list.Remove(view))
             {
-                ViewRemoved?.Invoke(view);
                 UnregisterView(view);
                 // Debug.Log($"{view} with {view.ViewId} id removed from container");
 
@@ -93,17 +88,34 @@ namespace Runtime.Views
 
         private void AssignIdAndRegisterView(BaseView view)
         {
-            if (!_viewMap.ContainsKey(view.ViewId))
+            if (!view)
             {
-                view.SetId(GetId());
-                _viewMap.Add(view.ViewId, view);
+                return;
             }
+
+            if (_viewMap.TryGetValue(view.ViewId, out var existing) && ReferenceEquals(existing, view))
+            {
+                return;
+            }
+
+            uint id;
+            do
+            {
+                id = GetId();
+            } while (_viewMap.ContainsKey(id));
+
+            view.SetId(id);
+            _viewMap[id] = view;
         }
 
         private void UnregisterView(BaseView view)
         {
-            _availableId.Enqueue(view.ViewId);
-            _viewMap.Remove(view.ViewId);
+            if (_viewMap.Remove(view.ViewId))
+            {
+                _availableId.Enqueue(view.ViewId);
+            }
+
+            view.SetId(0);
         }
 
         private uint GetId()
