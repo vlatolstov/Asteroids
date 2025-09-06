@@ -15,7 +15,7 @@ namespace Runtime.Presenters
             ForwardOn<ThrustInput>();
             ForwardOn<TurnInput>();
             ForwardOn<FireGunPressed>(publish: true);
-            ForwardOn<FireLaserPressed>(publish: true);
+            ForwardOn<AoeWeaponAttackPressed>(publish: true);
         }
     }
 }

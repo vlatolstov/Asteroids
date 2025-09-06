@@ -1,29 +1,33 @@
-using Runtime.Abstract.Configs;
+using Runtime.Abstract.Visualization;
 using Runtime.Abstract.Weapons;
 using UnityEngine;
 
 namespace Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "LaserConfig", menuName = "Settings/Weapons/Laser Weapon", order = 0)]
-    public class AoeWeaponConfig : WeaponConfig, IAoeWeaponConfig
+    [CreateAssetMenu(fileName = "AoeWeaponConfig", menuName = "Settings/Weapons/AOE Weapon", order = 0)]
+    public class AoeWeaponConfig : WeaponConfig, IAoeWeaponConfig, IWeaponRepresentation
     {
-
+        [Header("Logic")]
         [SerializeField]
-        private float _laserLength = 2f;
-
-        [SerializeField]
-        private float _laserWidth = 0.5f;
-
+        private AoeAttackConfig _attack;
+        
         [SerializeField]
         private int _charges = 3;
 
         [SerializeField]
         private float _chargeRate = 5f;
-        public float Length => _laserLength;
-        public float StartWidth => _laserWidth;
-        public float EndWidth { get; }
-        public float Duration { get; }
+
+        [Header("Representation")]
+        [SerializeField]
+        private Sprite _weaponSprite;
+
+        [SerializeField]
+        private AudioClip _attackSound;
+
+        public AoeAttackConfig Attack => _attack;
         public int Charges => _charges;
         public float ChargeRate => _chargeRate;
+        public Sprite WeaponSprite => _weaponSprite;
+        public AudioClip AttackSound => _attackSound;
     }
 }

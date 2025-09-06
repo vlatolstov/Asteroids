@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3dfb1ba04c54e78ba414e07ce197352, type: 3}
+  m_Name: Rocket
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileConfig
+  _size: {x: 1, y: 1}
+  _speed: 60
+  _lifetime: 1.5
+  _sprites:
+  - {fileID: -8987198875676320708, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 5548178118557335035, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -5441867295254626889, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  _hitSounds:
+  - {fileID: 8300000, guid: 6eac60267f388e94d9894e609cedcb9d, type: 3}
+  - {fileID: 8300000, guid: 7fd33ec6c23423b4a8e7f500b76a7708, type: 3}
+  - {fileID: 8300000, guid: 942e8a60fb9aea24f9ba71bbee552316, type: 3}
+  - {fileID: 8300000, guid: 0c192847c7f130942819d90b484761c4, type: 3}
+  - {fileID: 8300000, guid: cbc413d3101b50e4689f2b02d9955953, type: 3}
+  - {fileID: 8300000, guid: 757b1b7606dd8584bbb5a9804917bccb, type: 3}
+  - {fileID: 8300000, guid: 9622bab2acdeb7345a7cfe11084d1078, type: 3}

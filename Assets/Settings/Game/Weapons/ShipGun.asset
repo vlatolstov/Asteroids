@@ -18,3 +18,5 @@ MonoBehaviour:
   _spread: 10
   _bulletsPerShot: 3
   _bulletsInterval: 0.08
+  _weaponSprite: {fileID: 0}
+  _attackSound: {fileID: 8300000, guid: d816504c1acbb3e4fa0e8f91743e537f, type: 3}

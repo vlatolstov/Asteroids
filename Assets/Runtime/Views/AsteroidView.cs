@@ -49,6 +49,14 @@ namespace Runtime.Views
             }
         }
 
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.layer != gameObject.layer)
+            {
+                ReportDestroyedByHit();
+            }
+        }
+
         private void ReportOffscreen()
         {
             Fire(new AsteroidViewOffscreen(ViewId, _size));

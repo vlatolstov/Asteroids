@@ -33,6 +33,7 @@ namespace Runtime.Presenters
             ForwardOn<ShipDestroyed>(publish: true);
 
             AddUnsub(_inputModel.Subscribe<FireGunPressed>(OnGunAttackSignal));
+            AddUnsub(_inputModel.Subscribe<AoeWeaponAttackPressed>(OnAoeWeaponAttackSignal));
             AddUnsub(_inputModel.Subscribe<ThrustInput>(OnThrustChanged));
             AddUnsub(_inputModel.Subscribe<TurnInput>(OnTurnAxisChanged));
             
@@ -76,10 +77,10 @@ namespace Runtime.Presenters
             switch (turn.Value)
             {
                 case > 0:
-                    _activeShip.SetupSideEngines(true, false);
+                    _activeShip.SetupSideEngines(false, true);
                     break;
                 case < 0:
-                    _activeShip.SetupSideEngines(false, true);
+                    _activeShip.SetupSideEngines(true, false);
                     break;
                 default:
                     _activeShip.SetupSideEngines(false, false);
@@ -95,6 +96,15 @@ namespace Runtime.Presenters
                 && _activeShip)
             {
                 _activeShip.Gun.TryAttack();
+            }
+        }
+
+        private void OnAoeWeaponAttackSignal()
+        {
+            if (_inputModel.TryGet(out AoeWeaponAttackPressed fire)
+                && _activeShip)
+            {
+                _activeShip.AoeWeapon.TryAttack();
             }
         }
 

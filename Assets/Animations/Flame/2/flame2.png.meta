@@ -1,0 +1,249 @@
+fileFormatVersion: 2
+guid: e86335eea723e2a43bf994bfab43ff05
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -304953393007000448
+    second: flame2_0
+  - first:
+      213: -7131293626441087243
+    second: flame2_1
+  - first:
+      213: 6773110408103421805
+    second: flame2_2
+  - first:
+      213: -3568499214214808671
+    second: flame2_3
+  - first:
+      213: 5640962269336916790
+    second: flame2_4
+  - first:
+      213: -7894009520888220718
+    second: flame2_5
+  - first:
+      213: 842105434496424909
+    second: flame2_6
+  - first:
+      213: 3531095050446549499
+    second: flame2_7
+  - first:
+      213: -3957926539544722574
+    second: flame2_8
+  - first:
+      213: -2021797383795751919
+    second: flame2_9
+  - first:
+      213: 5199109810047585013
+    second: flame2_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: flame2_1
+      rect:
+        serializedVersion: 2
+        x: 618
+        y: 675
+        width: 319
+        height: 167
+      alignment: 9
+      pivot: {x: 0.9983103, y: 0.42899054}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f6c8feda3e880d90800000000000000
+      internalID: -7131293626441087243
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flame2_4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 692
+        width: 304
+        height: 104
+      alignment: 5
+      pivot: {x: 1, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 633553ffb49b84e40800000000000000
+      internalID: 5640962269336916790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flame2_8
+      rect:
+        serializedVersion: 2
+        x: 104
+        y: 171
+        width: 324
+        height: 138
+      alignment: 9
+      pivot: {x: 0.9974676, y: 0.5079273}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 273885348ce9219c0800000000000000
+      internalID: -3957926539544722574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: flame2_9
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 152
+        width: 352
+        height: 195
+      alignment: 9
+      pivot: {x: 0.99881417, y: 0.45502827}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1144a0bcdf121f3e0800000000000000
+      internalID: -2021797383795751919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: e578bf9436b49db4ab73a7f3c95bd614
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      flame2_0: -304953393007000448
+      flame2_1: -7131293626441087243
+      flame2_10: 5199109810047585013
+      flame2_2: 6773110408103421805
+      flame2_3: -3568499214214808671
+      flame2_4: 5640962269336916790
+      flame2_5: -7894009520888220718
+      flame2_6: 842105434496424909
+      flame2_7: 3531095050446549499
+      flame2_8: -3957926539544722574
+      flame2_9: -2021797383795751919
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -184,26 +184,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -6418479508506065329, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: _wrapOffset
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3133355858462131119, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: m_ClearFlags
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3133355858462131119, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3133355858462131119, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3133355858462131119, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6577831279494103176, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -247,10 +227,6 @@ PrefabInstance:
     - target: {fileID: 6780868429105795317, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
       propertyPath: m_Name
       value: Main Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 6780868429105795317, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -362,33 +338,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _maxOffset
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _parallaxMax
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _slowAmplitude
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _parallaxStrength
-      value: 0.3
-      objectReference: {fileID: 0}
     - target: {fileID: 3645710375531822287, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
       propertyPath: m_Name
-      value: Background
-      objectReference: {fileID: 0}
-    - target: {fileID: 4097645908287447342, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: m_Size.x
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4097645908287447342, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: m_Size.y
-      value: 1000
+      value: BackgroundView
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

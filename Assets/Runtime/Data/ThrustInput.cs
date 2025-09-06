@@ -22,7 +22,7 @@ namespace Runtime.Data
         }
     }
 
-    public struct FireLaserPressed : IEventData
+    public struct AoeWeaponAttackPressed : IEventData
     { }
 
     public struct FireGunPressed : IEventData

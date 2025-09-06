@@ -1,10 +1,10 @@
-using Runtime.Abstract.Configs;
+using Runtime.Settings;
 
 namespace Runtime.Abstract.Weapons
 {
     public interface IProjectileWeaponConfig : IWeaponConfig
     {
-        IProjectileConfig Projectile { get; }
+        ProjectileConfig Projectile { get; }
         float Spread { get; }
         int BulletsPerShot { get; }
         float BulletsInterval { get; }

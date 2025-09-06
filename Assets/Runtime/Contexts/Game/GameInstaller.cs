@@ -22,6 +22,12 @@ namespace Runtime.Contexts.Game
         
         [SerializeField]
         private GameObject _projectilePrefab;
+        
+        [SerializeField]
+        private GameObject _audioSourcePrefab;
+        
+        [SerializeField]
+        private GameObject _aoeAttackPrefab;
 
         public override void InstallBindings()
         {
@@ -66,6 +72,18 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_projectilePrefab)
                 .UnderTransformGroup("Projectiles")
                 .NonLazy();
+            
+            Container.BindMemoryPool<AoeAttackView, AoeAttackView.Pool>()
+                .WithInitialSize(10)
+                .FromComponentInNewPrefab(_aoeAttackPrefab)
+                .UnderTransformGroup("AoeViewsPool")
+                .NonLazy();
+            
+            Container.BindMemoryPool<AudioSourceView, AudioSourceView.Pool>()
+                .WithInitialSize(100)
+                .FromComponentInNewPrefab(_audioSourcePrefab)
+                .UnderTransformGroup("Sound")
+                .NonLazy();
         }
 
         private void PresentersBindings()
@@ -96,6 +114,10 @@ namespace Runtime.Contexts.Game
             
             Container
                 .BindInterfacesAndSelfTo<GameStatePresenter>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<AudioPresenter>()
                 .AsSingle();
         }
 

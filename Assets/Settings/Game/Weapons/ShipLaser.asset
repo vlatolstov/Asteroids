@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da7ec8d6d76e476bab75ab174351f05f, type: 3}
+  m_Name: ShipLaser
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeWeaponConfig
+  _weaponCooldown: 1
+  _muzzleOffset: 0.3
+  _attack: {fileID: 11400000, guid: 853fa93e5fe07c44cac56ca9ef3ee80b, type: 2}
+  _charges: 1
+  _chargeRate: 20
+  _weaponSprite: {fileID: 0}
+  _attackSound: {fileID: 8300000, guid: d356495a4bc749e44a8690eb458ffbcd, type: 3}

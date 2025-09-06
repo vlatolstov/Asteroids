@@ -3,6 +3,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
 using Runtime.Contexts.Global;
 using Runtime.Data;
+using Runtime.Settings;
 using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
@@ -20,18 +21,25 @@ namespace Runtime.Views
         [SerializeField]
         private GameObject _rightEngine;
 
-        [Inject(Id = WeaponsInstaller.WeaponId.ShipGun)]
-        private IProjectileWeaponConfig _gunConfig;
+        [Inject]
+        private ProjectileWeaponConfig _gunConfig;
+
+        [Inject]
+        private AoeWeaponConfig _aoeWeaponConfig;
 
         public ProjectileWeapon Gun;
+        public AoeWeapon AoeWeapon;
 
-        private bool _destriyed;
+        private bool _destroyed;
 
         protected override void Awake()
         {
             base.Awake();
             Gun = new ProjectileWeapon(_gunConfig, this);
+            AoeWeapon = new AoeWeapon(_aoeWeaponConfig, this);
+            
             Gun.AttackGenerated += OnWeaponAttack;
+            AoeWeapon.AttackGenerated += OnWeaponAttack;
         }
 
         protected override void FixedUpdate()
@@ -39,8 +47,10 @@ namespace Runtime.Views
             base.FixedUpdate();
 
             Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
-
+            Fire(AoeWeapon.ProvideAoeWeaponState());
+            
             Gun.FixedTick();
+            AoeWeapon.FixedTick();
         }
 
         private void OnWeaponAttack(IData attackData)
@@ -50,7 +60,7 @@ namespace Runtime.Views
                 case ProjectileShoot p:
                     Fire(p);
                     break;
-                case AoeAttack l:
+                case AoeAttackReleased l:
                     Fire(l);
                     break;
                 default:
@@ -82,17 +92,16 @@ namespace Runtime.Views
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (gameObject.layer != other.gameObject.layer && !_destriyed)
+            if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
-                _destriyed = true;
+                _destroyed = true;
                 Fire(new ShipDestroyed(ViewId, Motor.Position));
             }
         }
 
         private void Reinitialize(Vector2 position)
         {
-            
-            _destriyed = false;
+            _destroyed = false;
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);
             Fire(new ShipSpawned(ViewId, Motor.Position));

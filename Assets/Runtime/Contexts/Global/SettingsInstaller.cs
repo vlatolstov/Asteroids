@@ -17,6 +17,10 @@ namespace Runtime.Contexts.Global
         [Header("Score")]
         [SerializeField]
         private ScoreConfig _scoreConfig;
+        
+        [Header("Score")]
+        [SerializeField]
+        private GeneralSoundsConfig _generalSoundsConfig;
 
         public override void InstallBindings()
         {
@@ -28,6 +32,11 @@ namespace Runtime.Contexts.Global
             Container
                 .Bind<IAsteroidsSpawnConfig>()
                 .FromInstance(_asteroidsSpawnConfig)
+                .AsSingle();
+            
+            Container
+                .Bind<IGeneralSoundsConfig>()
+                .FromInstance(_generalSoundsConfig)
                 .AsSingle();
         }
     }

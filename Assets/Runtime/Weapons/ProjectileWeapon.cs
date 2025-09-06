@@ -1,17 +1,18 @@
 using Runtime.Abstract.Weapons;
 using Runtime.Data;
+using Runtime.Settings;
 using Runtime.Utils;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Runtime.Weapons
 {
-    public class ProjectileWeapon : BaseWeapon<IProjectileWeaponConfig>
+    public class ProjectileWeapon : BaseWeapon<ProjectileWeaponConfig>
     {
         private int _pendingInBurst;
         private float _burstTimer;
-        
-        public ProjectileWeapon(IProjectileWeaponConfig config, IFireParamsSource source) : base(config, source)
+
+        public ProjectileWeapon(ProjectileWeaponConfig config, IFireParamsSource source) : base(config, source)
         { }
 
         public override bool TryAttack()
@@ -83,11 +84,11 @@ namespace Runtime.Weapons
         private ProjectileShoot ComposeShot(Vector2 origin, Vector2 dir, Vector2 inherit, int layer)
         {
             return new ProjectileShoot(
-                Config.Projectile,
                 origin,
                 dir,
                 inherit,
-                layer
+                layer,
+                Config
             );
         }
     }

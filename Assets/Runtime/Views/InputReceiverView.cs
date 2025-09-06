@@ -20,7 +20,7 @@ namespace Runtime.Views
 
             if (_isLaserButtonHeld)
             {
-                Fire(new FireLaserPressed());
+                Fire(new AoeWeaponAttackPressed());
             }
         }
 

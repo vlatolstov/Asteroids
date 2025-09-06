@@ -6,5 +6,5 @@
         <ui:Label text="Angle" name="Angle" class="dataText" />
     </ui:VisualElement>
     <ui:Button text="Spawn player" name="SpawnPlayer" style="white-space: nowrap; max-width: 50px; max-height: 20px; min-width: 20px; min-height: 20px; font-size: 6px; -unity-text-align: middle-center;" />
-    <ui:Label text="Label" name="GameStateLabel" class="dataText" style="white-space: pre-wrap; position: relative; top: 0; left: auto; right: 0; bottom: auto; align-self: stretch;" />
+    <ui:Label text="Game state" name="GameStateLabel" class="dataText" style="white-space: pre-wrap; position: relative; top: 0; left: auto; right: 0; bottom: auto; align-self: stretch;" />
 </ui:UXML>

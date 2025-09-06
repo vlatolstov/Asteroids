@@ -8,27 +8,46 @@ namespace Runtime.Presenters
 {
     public class WeaponPresenter : BasePresenter<GameModel>
     {
-        private ProjectileView.Pool _pool;
+        private readonly ProjectileView.Pool _projectilePool;
+        private AoeAttackView.Pool _aoePool;
 
         public WeaponPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus,
-            ProjectileView.Pool pool) : base(model, viewsContainer, signalBus)
+            ProjectileView.Pool projectilePool, AoeAttackView.Pool aoePool) : base(model, viewsContainer, signalBus)
         {
-            _pool = pool;
+            _projectilePool = projectilePool;
+            _aoePool = aoePool;
         }
 
         public override void Initialize()
         {
             base.Initialize();
+
+            ForwardOn<AoeWeaponState>();
             
-            ForwardOn<ProjectileShoot>();
+            
+            ForwardOn<ProjectileShoot>(publish: true);
+            ForwardOn<ProjectileHit>(publish: true);
+            
+            ForwardOn<AoeAttackReleased>(publish: true);
+            ForwardOn<AoeHit>(publish: true);
+            
             AddUnsub(Model.Subscribe<ProjectileShoot>(OnProjectileShoot));
+            AddUnsub(Model.Subscribe<AoeAttackReleased>(OnAoeAttackReleased));
         }
 
         private void OnProjectileShoot()
         {
             if (Model.TryGet(out ProjectileShoot shoot))
             {
-                _pool.Spawn(shoot);
+                _projectilePool.Spawn(shoot);
+            }
+        }
+
+        private void OnAoeAttackReleased()
+        {
+            if (Model.TryGet(out AoeAttackReleased shoot))
+            {
+                _aoePool.Spawn(shoot.Origin, shoot.Weapon);
             }
         }
     }

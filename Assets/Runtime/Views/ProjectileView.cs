@@ -1,5 +1,6 @@
 using Runtime.Abstract.MVP;
 using Runtime.Data;
+using Runtime.Settings;
 using UnityEngine;
 using Zenject;
 
@@ -11,6 +12,7 @@ namespace Runtime.Views
         [SerializeField]
         private float _defaultLife = 1f;
 
+        private ProjectileConfig _conf;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
         private Pool _pool;
@@ -37,10 +39,11 @@ namespace Runtime.Views
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnCollisionEnter2D()
         {
             if (_spawned)
             {
+                Fire(new ProjectileHit(_conf, transform.position));
                 Despawn();
             }
         }
@@ -55,22 +58,22 @@ namespace Runtime.Views
         {
             _pool = pool;
 
-            var conf = shootData.Projectile;
+            _conf = shootData.Weapon.Projectile;
 
             transform.position = shootData.Position;
-            transform.localScale = conf.Size;
+            transform.localScale = _conf.Size;
 
             var dir = shootData.Direction;
-            var projectileVelocity = conf.Speed * dir;
+            var projectileVelocity = _conf.Speed * dir;
 
             transform.up = dir;
 
             _rb.linearVelocity = shootData.InheritVelocity + projectileVelocity;
 
-            float lifeTime = conf.Lifetime;
+            float lifeTime = _conf.Lifetime;
             _life = lifeTime > 0 ? lifeTime : _defaultLife;
 
-            _sr.sprite = conf.Sprite;
+            _sr.sprite = _conf.AttackSprite;
 
             gameObject.layer = shootData.Layer;
             _spawned = true;

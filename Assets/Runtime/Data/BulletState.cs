@@ -12,15 +12,17 @@ namespace Runtime.Data
         }
     }
 
-    public struct LaserState : IStateData
+    public struct AoeWeaponState : IStateData
     {
         public int Charges;
+        public float RechargeRatio;
         public float Cooldown;
 
-        public LaserState(int charges, float cooldown)
+        public AoeWeaponState(int charges, float cooldown, float rechargeRatio)
         {
             Charges = charges;
             Cooldown = cooldown;
+            RechargeRatio = rechargeRatio;
         }
     }
 }

@@ -4,6 +4,19 @@ namespace Runtime.Utils
 {
     public static class GeometryMethods
     {
+        public static void SetWorldSizeOfChildObject(SpriteRenderer sr, float worldWidth, float worldLength)
+        {
+            if (!sr || !sr.sprite) return;
+
+            Vector2 baseSize = sr.sprite.bounds.size;
+            Vector3 parentScale = sr.transform.parent ? sr.transform.parent.lossyScale : Vector3.one;
+
+            float sx = worldWidth  / (baseSize.x * parentScale.x);
+            float sy = worldLength / (baseSize.y * parentScale.y);
+
+            sr.transform.localScale = new Vector3(sx, sy, 1f);
+        }
+        
         public static Vector2 Wrap(Vector2 p, Rect worldRect)
         {
             p.x = Mod(p.x - worldRect.xMin, worldRect.width)  + worldRect.xMin;
