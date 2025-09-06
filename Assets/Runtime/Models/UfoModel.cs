@@ -37,19 +37,17 @@ namespace Runtime.Models
         {
             _time += Time.deltaTime;
 
-            if (_alive >= _spawnConfig.MaxAlive)
-            {
-                return;
-            }
-
             if (_time < _nextAt)
             {
                 return;
             }
-            
-            SpawnOne();
 
-            _nextAt += _spawnConfig.Interval;
+            if (_alive < _spawnConfig.MaxAlive)
+            {
+                SpawnOne();
+            }
+
+            _nextAt = _time + _spawnConfig.Interval;
         }
 
         public void OnUfoSpawned()
@@ -105,19 +103,15 @@ namespace Runtime.Models
             var pos = new Vector2(x, y);
 
             var toCenter = rect.center - pos;
-            var dir = (toCenter.sqrMagnitude > 1e-6f) ? toCenter.normalized : Vector2.up;
+            var dir = toCenter.sqrMagnitude > 1e-6f ? toCenter.normalized : Vector2.up;
 
-            var rng = Random.Range(0, 1f) * 2 - 1;
-            
-            
-            float jitterRad = Mathf.Deg2Rad * rng * _spawnConfig.EntryAngleJitterDeg;
-            dir = GeometryMethods.RotateVector(dir, jitterRad);
+            float jitterDeg = Random.Range(-_spawnConfig.EntryAngleJitterDeg, _spawnConfig.EntryAngleJitterDeg);
+            dir = GeometryMethods.RotateVector(dir, Mathf.Deg2Rad * jitterDeg);
 
             Vector2 vel = dir * _spawnConfig.Speed;
+            float angRad = GeometryMethods.DirToAngle(dir);
 
-            float angRad = Mathf.Atan2(-dir.x, dir.y);
-
-            Publish(new UfoSpawnCommand(_spawnConfig.Sprite,_spawnConfig.Scale, pos, vel, angRad));
+            Publish(new UfoSpawnCommand(_spawnConfig.Sprite, _spawnConfig.Scale, pos, vel, angRad));
         }
     }
 }

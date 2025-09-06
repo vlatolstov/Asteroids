@@ -58,6 +58,7 @@ namespace Runtime.Views
 
                 if (inside)
                 {
+                    Motor.SetWrapMode(true);
                     _entered = true;
                 }
 
@@ -80,7 +81,7 @@ namespace Runtime.Views
             float dErr = (angErr - _prevErr) / Mathf.Max(dt, 1e-5f);
             _prevErr = angErr;
 
-            float turnAxis = Mathf.Clamp(_chase.TurnKp * angErr + _chase.TurnKd * dErr, -1f, 1f);
+            float turnAxis = Mathf.Clamp(-(_chase.TurnKp * angErr + _chase.TurnKd * dErr), -1f, 1f);
 
             // таран: чем дальше — тем больше тяга (без «комфортной зоны»)
             float thrust = Mathf.Clamp(_chase.ThrustKp * dist, 0f, _chase.MaxThrust);
@@ -166,6 +167,7 @@ namespace Runtime.Views
 
         private void Reinitialize(in UfoSpawnCommand args)
         {
+            Motor.SetWrapMode(false);
             _entered = false;
             _destroyed = false;
             transform.localScale = new Vector3(args.Scale, args.Scale);

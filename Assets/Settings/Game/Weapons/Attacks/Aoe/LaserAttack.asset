@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: LaserAttack
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeAttackConfig
   _length: 100
-  _width: 1
-  _duration: 5
+  _width: 0.25
+  _duration: 0.7
   _sprites: []
   _hitSounds:
-  - {fileID: 8300000, guid: 42397598f9eaa9a4090132a8f501a700, type: 3}
-  - {fileID: 8300000, guid: 80382b49aca3bcf4aa4ffa44e406240c, type: 3}
-  - {fileID: 8300000, guid: d356495a4bc749e44a8690eb458ffbcd, type: 3}
+  - {fileID: 8300000, guid: afe9234e1f6295b4a97a6f338a97c65f, type: 3}
+  - {fileID: 8300000, guid: 44933b308c133ff478c00995ff880c99, type: 3}
   _animationController: {fileID: 9100000, guid: b46054fe2a1ea1d47be768516162e7c9, type: 2}

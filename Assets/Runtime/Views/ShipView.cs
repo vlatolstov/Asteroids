@@ -104,6 +104,7 @@ namespace Runtime.Views
             _destroyed = false;
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);
+            Motor.SetWrapMode(true);
             Fire(new ShipSpawned(true, ViewId, Motor.Position));
         }
 

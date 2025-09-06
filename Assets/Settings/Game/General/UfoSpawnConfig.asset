@@ -13,11 +13,16 @@ MonoBehaviour:
   m_Name: UfoSpawnConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.UfoSpawnConfig
   _sprites:
-  - {fileID: -1328672755279173264, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -6943943784618129602, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
+  - {fileID: 897318961094254164, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
+  - {fileID: 7467732554413395897, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
+  - {fileID: 331181592111578567, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
+  - {fileID: -1084394553811439122, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
+  - {fileID: -4931366292851836932, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
   _scale: 1
-  _initialDelay: 0
+  _initialDelay: 5
   _interval: 1
-  _maxAlive: 1
-  _edgeOffset: 3.26
+  _maxAlive: 0
+  _edgeOffset: 3
   _speed: 3
-  _entryAngleJitterDeg: 8
+  _entryAngleJitterDeg: 15

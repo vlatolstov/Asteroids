@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3dfb1ba04c54e78ba414e07ce197352, type: 3}
   m_Name: Rocket
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileConfig
-  _size: {x: 1, y: 1}
-  _speed: 60
+  _size: {x: 0.5, y: 0.5}
+  _speed: 22
   _lifetime: 1.5
   _sprites:
   - {fileID: -8987198875676320708, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}

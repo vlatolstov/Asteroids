@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d5e59fe4f084942993b140472c48078, type: 3}
   m_Name: UfoChasingSettings
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ChasingEnemyConfig
-  _turnProportionalGainKp: 0.5
-  _turnDerivativeGainKd: 0.5
+  _turnProportionalGainKp: 2.2
+  _turnDerivativeGainKd: 0.8
   _thrustProportionalGainKp: 0.35
   _thrustMaxNormalized: 1
-  _aimToleranceDegrees: 10
-  _aimMaxPredictionLeadSeconds: 0.2
+  _aimToleranceDegrees: 6
+  _aimMaxPredictionLeadSeconds: 1.2
   _maxFireDistanceUnits: 20

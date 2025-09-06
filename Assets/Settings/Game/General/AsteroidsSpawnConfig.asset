@@ -22,16 +22,22 @@ MonoBehaviour:
   - {fileID: -4384568171156119087, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
   - {fileID: 2679123809562312862, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
   - {fileID: 3142108872925249854, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: 9066842949930953805, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
+  - {fileID: -6012539448827994848, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
+  - {fileID: 505397410380018414, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
+  - {fileID: -8004291233290667402, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
+  - {fileID: 2885159125378994594, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
+  - {fileID: -994149480133846428, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
   _rotationMin: -5
   _rotationMax: 5
   _interval: 100
-  _largeScale: 1.2
-  _edgeOffset: 7
-  _entrySpeedMin: 3
-  _entrySpeedMax: 7
+  _largeScale: 1
+  _edgeOffset: 3
+  _entrySpeedMin: 2
+  _entrySpeedMax: 5
   _entryAngleJitterDeg: 40
   _smallScale: 0.5
   _smallSplitMin: 3
-  _smallSplitMax: 6
-  _smallSpeedMin: 6
-  _smallSpeedMax: 8
+  _smallSplitMax: 5
+  _smallSpeedMin: 4
+  _smallSpeedMax: 7

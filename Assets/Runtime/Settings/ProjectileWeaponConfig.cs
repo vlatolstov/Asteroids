@@ -21,18 +21,18 @@ namespace Runtime.Settings
         private float _bulletsInterval = 1f;
 
         [Header("Representation")]
-        [SerializeField]
-        private Sprite _weaponSprite;
+        // [SerializeField]
+        // private Sprite _weaponSprite;
 
         [SerializeField]
-        private AudioClip _attackSound;
+        private AudioClip[] _attackSounds;
 
         public ProjectileConfig Projectile => _projectileConfig;
 
         public float Spread => _spread;
         public int BulletsPerShot => _bulletsPerShot;
         public float BulletsInterval => _bulletsInterval;
-        public Sprite WeaponSprite => _weaponSprite;
-        public AudioClip AttackSound => _attackSound;
+        // public Sprite WeaponSprite => _weaponSprite;
+        public AudioClip AttackSound => _attackSounds[Random.Range(0, _attackSounds.Length)];
     }
 }

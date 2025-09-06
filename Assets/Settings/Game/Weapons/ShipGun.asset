@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4408cf981814402b9509cca1b4a3aa7b, type: 3}
   m_Name: ShipGun
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileWeaponConfig
-  _weaponCooldown: 0.82
-  _muzzleOffset: 1
+  _weaponCooldown: 1.5
+  _muzzleOffset: 0.5
   _projectileConfig: {fileID: 11400000, guid: ab688df7655faff47a2df1a7d0df26a2, type: 2}
-  _spread: 10
+  _spread: 4
   _bulletsPerShot: 3
-  _bulletsInterval: 0.08
-  _weaponSprite: {fileID: 0}
-  _attackSound: {fileID: 8300000, guid: d816504c1acbb3e4fa0e8f91743e537f, type: 3}
+  _bulletsInterval: 0.06
+  _attackSounds:
+  - {fileID: 8300000, guid: d816504c1acbb3e4fa0e8f91743e537f, type: 3}
+  - {fileID: 8300000, guid: f580e31d0cc59084e8c36bf1cbb219fb, type: 3}
+  - {fileID: 8300000, guid: bec67af07be0d2345a997275bfa1adb9, type: 3}
+  - {fileID: 8300000, guid: 7b71751d2daafa747acd0e0f48e5f5f5, type: 3}

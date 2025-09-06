@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Runtime.Abstract.Movement
 {
-    public abstract class BaseMotor2D<TConfig> : IMove, IMotorInput where TConfig : class, IMovementConfig
+    public abstract class BaseMotor2D<TConfig> : IMove, IMotorInput, IWrapByWorldBounds where TConfig : class, IMovementConfig
     {
         private readonly TConfig _config;
         private readonly IWorldConfig _world;
@@ -18,6 +18,8 @@ namespace Runtime.Abstract.Movement
         private Vector2 _pos;
         private Vector2 _vel;
         private float _angRad;
+
+        private bool _wrapEnabled;
 
         private float _thrust = 0f;
         private float _turnAxis = 0f;
@@ -57,7 +59,7 @@ namespace Runtime.Abstract.Movement
 
             _pos += _vel * dt;
 
-            if (_config.IsWrappedByWorldBounds)
+            if (_config.IsWrappedByWorldBounds && _wrapEnabled)
             {
                 _pos = GeometryMethods.Wrap(_pos, _world.WorldRect, _world.WrapOffset);
             }
@@ -82,6 +84,11 @@ namespace Runtime.Abstract.Movement
         public void SetTurnAxis(float turnAxis)
         {
             _turnAxis = turnAxis;
+        }
+        
+        public void SetWrapMode(bool wrap)
+        {
+            _wrapEnabled = wrap;
         }
     }
 }

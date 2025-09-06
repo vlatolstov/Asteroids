@@ -51,6 +51,7 @@ namespace Runtime.Utils
         }
         
         public static Vector2 AngleToDir(float angRad) => new(-Mathf.Sin(angRad), Mathf.Cos(angRad));
+        public static float DirToAngle(Vector2 dir) => Mathf.Atan2(-dir.x, dir.y);
         
         public static float SignedAngleRad(Vector2 from, Vector2 to)
         {

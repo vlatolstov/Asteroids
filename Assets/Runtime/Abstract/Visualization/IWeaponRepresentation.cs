@@ -4,7 +4,7 @@ namespace Runtime.Abstract.Visualization
 {
     public interface IWeaponRepresentation
     {
-        Sprite WeaponSprite { get; }
+        // Sprite WeaponSprite { get; }
         AudioClip AttackSound { get; }
     }
 }

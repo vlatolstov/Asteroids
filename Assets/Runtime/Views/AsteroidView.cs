@@ -34,6 +34,7 @@ namespace Runtime.Views
             switch (_entered)
             {
                 case false when inside:
+                    Motor.SetWrapMode(true);
                     _entered = true;
                     break;
                 case true when !inside:
@@ -74,6 +75,7 @@ namespace Runtime.Views
             _entered = false;
             _sr.sprite = args.Sprite;
             
+            Motor.SetWrapMode(false);
             Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
             ApplyAngularVelocity(args.AngRotation);
 
