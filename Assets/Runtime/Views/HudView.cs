@@ -28,7 +28,7 @@ namespace Runtime.Views
             var root = _doc.rootVisualElement;
             
             _shipDataContainer = root.Q<VisualElement>("ShipDataContainer");
-            _shipDataContainer.visible = false;
+            // _shipDataContainer.visible = false;
             _posLabel = root.Q<Label>("Pos");
             _spdLabel = root.Q<Label>("Speed");
             _angLabel = root.Q<Label>("Angle");

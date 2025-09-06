@@ -49,6 +49,28 @@ namespace Runtime.Utils
             float c = Mathf.Cos(angRad);
             return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
         }
+        
+        public static Vector2 AngleToDir(float angRad) => new(-Mathf.Sin(angRad), Mathf.Cos(angRad));
+        
+        public static float SignedAngleRad(Vector2 from, Vector2 to)
+        {
+            float s = from.x * to.y - from.y * to.x;
+            float c = Vector2.Dot(from, to);
+            return Mathf.Atan2(s, c);
+        }
+
+        public static Vector2 ShortestWrappedDelta(Vector2 from, Vector2 to, Rect world)
+        {
+            float w = world.width;
+            float h = world.height;
+            float dx = to.x - from.x;
+            float dy = to.y - from.y;
+
+            if (dx >  w * 0.5f) dx -= w; else if (dx < -w * 0.5f) dx += w;
+            if (dy >  h * 0.5f) dy -= h; else if (dy < -h * 0.5f) dy += h;
+
+            return new Vector2(dx, dy);
+        }
 
         private static float Mod(float v, float m)
         {

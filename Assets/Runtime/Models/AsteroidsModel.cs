@@ -55,7 +55,7 @@ namespace Runtime.Models
                 return;
             }
 
-            ChangeData(new AsteroidDespawnRequest(eventData.ViewId));
+            ChangeData(new AsteroidDespawnCommand(eventData.ViewId));
         }
 
         private void OnDestroyed()
@@ -65,7 +65,7 @@ namespace Runtime.Models
                 return;
             }
 
-            ChangeData(new AsteroidDespawnRequest(eventData.ViewId));
+            ChangeData(new AsteroidDespawnCommand(eventData.ViewId));
 
             if (eventData.Size == AsteroidSize.Large)
             {
@@ -96,7 +96,7 @@ namespace Runtime.Models
             var vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
             float nose = Mathf.Atan2(-vel.x, vel.y);
 
-            ChangeData(new AsteroidSpawnRequest(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel, nose, _config.AngleRotationDeg));
+            ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel, nose, _config.AngleRotationDeg));
         }
 
         private void SpawnSmallAsteroids(AsteroidDestroyed ev)
@@ -114,7 +114,7 @@ namespace Runtime.Models
                 Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
                 float nose = Mathf.Atan2(-vel.x, vel.y);
 
-                ChangeData(new AsteroidSpawnRequest(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Pos, vel, nose, _config.AngleRotationDeg));
+                ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Pos, vel, nose, _config.AngleRotationDeg));
             }
         }
     }

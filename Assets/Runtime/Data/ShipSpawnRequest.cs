@@ -38,13 +38,15 @@ namespace Runtime.Data
 
     public readonly struct ShipSpawned : IStateData
     {
+        public readonly bool Status;
         public readonly uint ViewId;
         public readonly Vector2 Position;
 
-        public ShipSpawned(uint viewId, Vector2 position)
+        public ShipSpawned(bool status, uint viewId, Vector2 position)
         {
             ViewId = viewId;
             Position = position;
+            Status = status;
         }
     }
 

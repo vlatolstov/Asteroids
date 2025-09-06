@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeAttackConfig
   _length: 100
   _width: 1
-  _duration: 0.7
+  _duration: 5
   _sprites: []
   _hitSounds:
   - {fileID: 8300000, guid: 42397598f9eaa9a4090132a8f501a700, type: 3}

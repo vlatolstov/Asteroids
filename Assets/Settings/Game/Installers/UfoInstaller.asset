@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f430c3a171b4490a3cd0bc27da17d33, type: 3}
+  m_Name: UfoInstaller
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Contexts.Ufo.UfoInstaller
+  MovementConfig: {fileID: 11400000, guid: 5437bc3d26a26fa44b7390e7978f3953, type: 2}
+  ChaseConfig: {fileID: 11400000, guid: 6b83cb5c852640f4f82a7939e3e191e2, type: 2}
+  UfoGun: {fileID: 11400000, guid: e9a0aca1123923944972f0daa8dcff81, type: 2}

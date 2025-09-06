@@ -104,7 +104,7 @@ namespace Runtime.Views
             _destroyed = false;
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);
-            Fire(new ShipSpawned(ViewId, Motor.Position));
+            Fire(new ShipSpawned(true, ViewId, Motor.Position));
         }
 
         public class Pool : ViewPool<Vector2, ShipView>

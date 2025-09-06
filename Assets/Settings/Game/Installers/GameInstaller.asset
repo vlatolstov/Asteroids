@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: GameInstaller
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Contexts.Game.GameInstaller
   _shipPrefab: {fileID: 2529211537695395251, guid: d40a1825267e6194a9a71be152fa5b51, type: 3}
+  _ufoPrefab: {fileID: 6252819512936043675, guid: 1ea96ea7bd2318741a9817c77dc4a11a, type: 3}
   _asteroidPrefab: {fileID: 268265408073184916, guid: 6bc5979aea5da33489e383d4d08de30f, type: 3}
   _projectilePrefab: {fileID: 480921689810823492, guid: 9ba627481552a3741bf4b2d14471e1aa, type: 3}
   _audioSourcePrefab: {fileID: 275401732973123380, guid: fc241df9852e94c43bd5cddad6075056, type: 3}

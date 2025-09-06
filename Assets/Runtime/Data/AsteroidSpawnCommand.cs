@@ -9,7 +9,7 @@ namespace Runtime.Data
         Small
     }
     
-    public readonly struct AsteroidSpawnRequest : IEventData
+    public readonly struct AsteroidSpawnCommand : IEventData
     {
         public readonly Sprite Sprite;
         public readonly AsteroidSize Size;
@@ -19,7 +19,7 @@ namespace Runtime.Data
         public readonly float AngleRad;
         public readonly float AngRotation;
 
-        public AsteroidSpawnRequest(Sprite sprite, AsteroidSize size, float scale, Vector2 pos, Vector2 vel, float angleRad, float angRotation)
+        public AsteroidSpawnCommand(Sprite sprite, AsteroidSize size, float scale, Vector2 pos, Vector2 vel, float angleRad, float angRotation)
         {
             Sprite = sprite;
             Size = size;
@@ -31,11 +31,11 @@ namespace Runtime.Data
         }
     }
 
-    public readonly struct AsteroidDespawnRequest : IEventData
+    public readonly struct AsteroidDespawnCommand : IEventData
     {
         public readonly uint ViewId;
 
-        public AsteroidDespawnRequest(uint viewId)
+        public AsteroidDespawnCommand(uint viewId)
         {
             ViewId = viewId;
         }

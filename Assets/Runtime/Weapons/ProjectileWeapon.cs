@@ -36,7 +36,9 @@ namespace Runtime.Weapons
             if (Config.BulletsInterval <= 0f || count == 1)
             {
                 for (var i = 0; i < count; i++)
+                {
                     NotifyAttack(ComposeShot(origin, ApplySpread(dir), inheritVelocity, layer));
+                }
             }
             else
             {

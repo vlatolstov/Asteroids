@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcbb251dc5a4f1cb0eabbd0413b8ed0, type: 3}
   m_Name: Ship
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ShipConfig
-  _acceleration: 4
-  _maxSpeed: 13.6
+  _acceleration: 7
+  _maxSpeed: 12
   _turnSpeed: 2
-  _linearDamping: 0.3
+  _linearDamping: 1
   _isWrappedByWorldBounds: 1

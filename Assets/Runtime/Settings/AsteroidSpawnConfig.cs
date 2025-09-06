@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "AsteroidsSpawnConfig", menuName = "Settings/AsteroidsSpawnConfig")]
+    [CreateAssetMenu(fileName = "AsteroidsSpawnConfig", menuName = "Settings/Asteroids Spawn Config")]
     public class AsteroidsSpawnConfig : ScriptableObject, IAsteroidsSpawnConfig
     {
         [Header("Common settings")]

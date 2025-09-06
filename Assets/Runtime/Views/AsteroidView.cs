@@ -7,6 +7,7 @@ using Zenject;
 
 namespace Runtime.Views
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class AsteroidView : BaseMovableView
     {
         private SpriteRenderer _sr;
@@ -67,7 +68,7 @@ namespace Runtime.Views
             Fire(new AsteroidDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
         }
 
-        private void Reinitialize(AsteroidSpawnRequest args)
+        private void Reinitialize(AsteroidSpawnCommand args)
         {
             _size = args.Size;
             _entered = false;
@@ -80,12 +81,12 @@ namespace Runtime.Views
             transform.localScale = new Vector3(args.Scale, args.Scale);
         }
 
-        public class Pool : ViewPool<AsteroidSpawnRequest, AsteroidView>
+        public class Pool : ViewPool<AsteroidSpawnCommand, AsteroidView>
         {
             public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
-            protected override void Reinitialize(AsteroidSpawnRequest args, AsteroidView item)
+            protected override void Reinitialize(AsteroidSpawnCommand args, AsteroidView item)
             {
                 item.Reinitialize(args);
                 base.Reinitialize(args, item);

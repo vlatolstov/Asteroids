@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "ScoreConfig", menuName = "Settings/ScoreConfig", order = 0)]
+    [CreateAssetMenu(fileName = "ScoreConfig", menuName = "Settings/Score Config", order = 0)]
     public class ScoreConfig : ScriptableObject, IScoreConfig
     {
         [SerializeField]

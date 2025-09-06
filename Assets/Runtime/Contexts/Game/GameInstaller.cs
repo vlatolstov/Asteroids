@@ -18,6 +18,9 @@ namespace Runtime.Contexts.Game
         private GameObject _shipPrefab;
 
         [SerializeField]
+        private GameObject _ufoPrefab;
+        
+        [SerializeField]
         private GameObject _asteroidPrefab;
         
         [SerializeField]
@@ -60,9 +63,15 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_shipPrefab)
                 .UnderTransformGroup("Ship")
                 .NonLazy();
+            
+            Container.BindMemoryPool<UfoView, UfoView.Pool>()
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_ufoPrefab)
+                .UnderTransformGroup("Ufo's")
+                .NonLazy();
 
             Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
-                .WithInitialSize(50)
+                .WithInitialSize(80)
                 .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
@@ -99,6 +108,10 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<ShipPresenter>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<UfoPresenter>()
+                .AsSingle();
 
             Container
                 .BindInterfacesAndSelfTo<AsteroidsPresenter>()
@@ -133,6 +146,10 @@ namespace Runtime.Contexts.Game
             
             Container
                 .BindInterfacesAndSelfTo<ShipModel>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<UfoModel>()
                 .AsSingle();
 
             Container

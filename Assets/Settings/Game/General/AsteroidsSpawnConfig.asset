@@ -24,7 +24,7 @@ MonoBehaviour:
   - {fileID: 3142108872925249854, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
   _rotationMin: -5
   _rotationMax: 5
-  _interval: 1.61
+  _interval: 100
   _largeScale: 1.2
   _edgeOffset: 7
   _entrySpeedMin: 3

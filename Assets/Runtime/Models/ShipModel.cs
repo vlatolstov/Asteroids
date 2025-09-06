@@ -23,6 +23,7 @@ namespace Runtime.Models
                     {
                         Publish(new ShipSpawnCommand(_worldConfig.WorldRect.center));
                     }
+
                     break;
                 case ShipDespawnRequest despawn:
                     Publish(new ShipDespawnCommand(despawn.ViewId));
@@ -30,10 +31,11 @@ namespace Runtime.Models
                     break;
                 case ShipDestroyed destroyed:
                     Publish(new ShipDespawnCommand(destroyed.ViewId));
+                    ChangeData<ShipSpawned>(spawned => new ShipSpawned(false, spawned.ViewId, spawned.Position));
                     _shipInGame = false;
                     break;
-                case ShipSpawned:
-                    _shipInGame = true;
+                case ShipSpawned info:
+                        _shipInGame = info.Status;
                     break;
             }
         }

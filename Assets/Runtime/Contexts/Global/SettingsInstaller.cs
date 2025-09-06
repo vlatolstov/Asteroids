@@ -13,6 +13,9 @@ namespace Runtime.Contexts.Global
         [Header("Spawn")]
         [SerializeField]
         private AsteroidsSpawnConfig _asteroidsSpawnConfig;
+        
+        [SerializeField]
+        private UfoSpawnConfig _ufoSpawnConfig;
 
         [Header("Score")]
         [SerializeField]
@@ -32,6 +35,11 @@ namespace Runtime.Contexts.Global
             Container
                 .Bind<IAsteroidsSpawnConfig>()
                 .FromInstance(_asteroidsSpawnConfig)
+                .AsSingle();
+            
+            Container
+                .Bind<IUfoSpawnConfig>()
+                .FromInstance(_ufoSpawnConfig)
                 .AsSingle();
             
             Container

@@ -23,13 +23,13 @@ namespace Runtime.Presenters
             ForwardOn<AsteroidViewOffscreen>(publish: true);
             ForwardOn<AsteroidDestroyed>(publish: true);
 
-            AddUnsub(Model.Subscribe<AsteroidSpawnRequest>(OnSpawnRequest));
-            AddUnsub(Model.Subscribe<AsteroidDespawnRequest>(OnDespawnRequest));
+            AddUnsub(Model.Subscribe<AsteroidSpawnCommand>(OnSpawnCommand));
+            AddUnsub(Model.Subscribe<AsteroidDespawnCommand>(OnDespawnCommand));
         }
 
-        private void OnSpawnRequest()
+        private void OnSpawnCommand()
         {
-            if (!Model.TryGet(out AsteroidSpawnRequest request))
+            if (!Model.TryGet(out AsteroidSpawnCommand request))
             {
                 return;
             }
@@ -37,9 +37,9 @@ namespace Runtime.Presenters
             _pool.Spawn(request);
         }
 
-        private void OnDespawnRequest()
+        private void OnDespawnCommand()
         {
-            if (!Model.TryGet(out AsteroidDespawnRequest request))
+            if (!Model.TryGet(out AsteroidDespawnCommand request))
             {
                 return;
             }
