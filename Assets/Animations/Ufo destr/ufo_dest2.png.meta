@@ -1,0 +1,270 @@
+fileFormatVersion: 2
+guid: 101bea6bbb2d29f4a8600be0a0f6881f
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4477193474079660048
+    second: ufo_dest2_0
+  - first:
+      213: 7321240598947354054
+    second: ufo_dest2_1
+  - first:
+      213: 3860037244896673709
+    second: ufo_dest2_2
+  - first:
+      213: -6807709632697661345
+    second: ufo_dest2_3
+  - first:
+      213: 9148072087422765573
+    second: ufo_dest2_4
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ufo_dest2_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 430
+        width: 402
+        height: 383
+      alignment: 9
+      pivot: {x: 0.47089326, y: 0.2699703}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01817355ebf222e30800000000000000
+      internalID: 4477193474079660048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ufo_dest2_1
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 437
+        width: 373
+        height: 377
+      alignment: 9
+      pivot: {x: 0.49446428, y: 0.35029194}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5dc6ff8854a9560800000000000000
+      internalID: 7321240598947354054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ufo_dest2_2
+      rect:
+        serializedVersion: 2
+        x: 884
+        y: 434
+        width: 378
+        height: 386
+      alignment: 9
+      pivot: {x: 0.5236713, y: 0.3448668}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daff7d14c6b919530800000000000000
+      internalID: 3860037244896673709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ufo_dest2_3
+      rect:
+        serializedVersion: 2
+        x: 908
+        y: 19
+        width: 317
+        height: 331
+      alignment: 9
+      pivot: {x: 0.48045874, y: 0.4292993}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f580d0968282681a0800000000000000
+      internalID: -6807709632697661345
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ufo_dest2_4
+      rect:
+        serializedVersion: 2
+        x: 464
+        y: 25
+        width: 334
+        height: 346
+      alignment: 9
+      pivot: {x: 0.4835141, y: 0.35677153}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a008e481b74fe70800000000000000
+      internalID: 9148072087422765573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ufo_dest2_5
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 17
+        width: 354
+        height: 341
+      alignment: 9
+      pivot: {x: 0.46111345, y: 0.38292965}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ef5e627e55073d45a03a0478ee12c9a
+      internalID: 2119360719
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: c364a73de3d9e8d42856d94def4aa473
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ufo_dest2_0: 4477193474079660048
+      ufo_dest2_1: 7321240598947354054
+      ufo_dest2_2: 3860037244896673709
+      ufo_dest2_3: -6807709632697661345
+      ufo_dest2_4: 9148072087422765573
+      ufo_dest2_5: 2119360719
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

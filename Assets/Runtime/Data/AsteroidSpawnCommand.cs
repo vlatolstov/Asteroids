@@ -59,13 +59,15 @@ namespace Runtime.Data
         public readonly AsteroidSize Size;
         public readonly Vector2 Position;
         public readonly Vector2 Velocity;
+        public readonly Vector2 Scale;
 
-        public AsteroidDestroyed(uint viewId, AsteroidSize size, Vector2 position, Vector2 velocity)
+        public AsteroidDestroyed(uint viewId, AsteroidSize size, Vector2 position, Vector2 velocity, Vector2 scale)
         {
             ViewId = viewId;
             Size = size;
             Position = position;
             Velocity = velocity;
+            Scale = scale;
         }
     }
 }

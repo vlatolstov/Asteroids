@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: SquareStaticLava
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Weapons.AoeAttackConfig
   _length: 2
-  _width: 0.5
-  _duration: 0.5
-  _mode: 0
+  _width: 7
+  _duration: 4
+  _mode: 1
   _sprites: []
-  _hitSounds: []
-  _attackAnimation: {fileID: 0}
+  _hitSounds:
+  - {fileID: 8300000, guid: afe9234e1f6295b4a97a6f338a97c65f, type: 3}
+  - {fileID: 8300000, guid: 44933b308c133ff478c00995ff880c99, type: 3}
+  _attackAnimation: {fileID: 9100000, guid: da1480dfa41c38b4aba1e3a65b373e73, type: 2}

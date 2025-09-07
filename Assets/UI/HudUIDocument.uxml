@@ -1,7 +1,7 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
     <ui:VisualElement name="MainContainer" enabled="true" style="flex-grow: 1; position: absolute; top: 25%; left: 25%; right: 25%; bottom: 25%; visibility: visible;">
-        <ui:Label text="controls" name="Controls" enabled="true" enable-rich-text="true" class="dataText" style="-unity-text-align: upper-left; align-self: flex-start;" />
+        <ui:Label text="controls" name="Controls" enabled="true" enable-rich-text="true" class="dataText" style="-unity-text-align: upper-center; align-self: center;" />
         <ui:Label text="GAME OVER" name="GameOverLabel" class="dataText" style="font-size: 90px; -unity-text-align: middle-center; align-self: center; justify-content: center;" />
         <ui:Label text="final score" name="FinalScore" class="dataText" style="-unity-text-align: upper-center; justify-content: center; align-self: center; font-size: 34px;" />
         <ui:Button text="Spawn" name="SpawnPlayer" style="white-space: nowrap; max-width: none; max-height: none; min-width: auto; min-height: auto; font-size: 31px; -unity-text-align: middle-center; width: auto; height: auto; align-items: flex-start; align-self: center; color: rgb(56, 56, 56); bottom: 0%; margin-top: 64px;" />

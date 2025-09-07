@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6671350635889328384}
   - component: {fileID: 6704945520206330636}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: InputReceiverView
   m_TagString: Untagged
   m_Icon: {fileID: 0}

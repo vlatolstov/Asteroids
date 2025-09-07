@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2241395995358788943}
   - component: {fileID: 6410444244383883086}
   - component: {fileID: 4747026078133580775}
-  m_Layer: 0
+  m_Layer: 1
   m_Name: AudioSourceView
   m_TagString: Untagged
   m_Icon: {fileID: 0}

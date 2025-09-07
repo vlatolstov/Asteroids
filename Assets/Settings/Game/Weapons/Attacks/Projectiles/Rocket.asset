@@ -27,3 +27,4 @@ MonoBehaviour:
   - {fileID: 8300000, guid: cbc413d3101b50e4689f2b02d9955953, type: 3}
   - {fileID: 8300000, guid: 757b1b7606dd8584bbb5a9804917bccb, type: 3}
   - {fileID: 8300000, guid: 9622bab2acdeb7345a7cfe11084d1078, type: 3}
+  _hitAnimation: {fileID: 9100000, guid: da1480dfa41c38b4aba1e3a65b373e73, type: 2}

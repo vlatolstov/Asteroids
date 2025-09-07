@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShipLaser
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeWeaponConfig
   _weaponCooldown: 2
-  _muzzleOffset: 0.3
+  _muzzleOffset: 0
   _attack: {fileID: 11400000, guid: 853fa93e5fe07c44cac56ca9ef3ee80b, type: 2}
   _charges: 2
   _chargeRate: 8

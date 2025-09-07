@@ -27,25 +27,26 @@ namespace Runtime.Views
             _pool.Despawn(this);
         }
 
-        private void Reinitialize(RuntimeAnimatorController anim, Vector2 pos, Pool pool)
+        private void Reinitialize(RuntimeAnimatorController anim, Vector2 pos, Vector2 scale, Pool pool)
         {
             _pool = pool;
             var ac = _animator.runtimeAnimatorController = anim;
             transform.position = pos;
+            transform.localScale = scale;
             _clipIndex = Random.Range(0, ac.animationClips.Length);
             _life = ac.animationClips[_clipIndex].length;
         }
 
-        public class Pool : ViewPool<RuntimeAnimatorController, Vector2, AnimationView>
+        public class Pool : ViewPool<RuntimeAnimatorController, Vector2, Vector2, AnimationView>
         {
             public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
-            protected override void Reinitialize(RuntimeAnimatorController anim, Vector2 pos,
+            protected override void Reinitialize(RuntimeAnimatorController anim, Vector2 pos, Vector2 scale,
                 AnimationView item)
             {
-                base.Reinitialize(anim, pos, item);
-                item.Reinitialize(anim, pos, this);
+                base.Reinitialize(anim, pos, scale, item);
+                item.Reinitialize(anim, pos, scale, this);
             }
         }
     }

@@ -54,11 +54,13 @@ namespace Runtime.Data
     {
         public readonly uint ViewId;
         public readonly Vector2 Position;
+        public readonly Vector2 Scale;
 
-        public ShipDestroyed(uint viewId, Vector2 position)
+        public ShipDestroyed(uint viewId, Vector2 position, Vector2 scale)
         {
             ViewId = viewId;
             Position = position;
+            Scale = scale;
         }
     }
 }

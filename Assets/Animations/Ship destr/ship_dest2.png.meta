@@ -1,0 +1,383 @@
+fileFormatVersion: 2
+guid: 62c4bf36591cd1c419daa8b779dabb19
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4893730652645577169
+    second: ship_dest2_0
+  - first:
+      213: 2260471130967640916
+    second: ship_dest2_1
+  - first:
+      213: 6911043111954578567
+    second: ship_dest2_2
+  - first:
+      213: -7751432588963448533
+    second: ship_dest2_3
+  - first:
+      213: 5094634994549393322
+    second: ship_dest2_4
+  - first:
+      213: -5441208281367335322
+    second: ship_dest2_5
+  - first:
+      213: 591193116672000840
+    second: ship_dest2_6
+  - first:
+      213: 1882796272050124995
+    second: ship_dest2_7
+  - first:
+      213: 7093870606631972536
+    second: ship_dest2_8
+  - first:
+      213: -362597278291622297
+    second: ship_dest2_9
+  - first:
+      213: 637391206597142570
+    second: ship_dest2_10
+  - first:
+      213: 5546068959718630662
+    second: ship_dest2_11
+  - first:
+      213: -3814372265463365974
+    second: ship_dest2_12
+  - first:
+      213: 290165097541722810
+    second: ship_dest2_13
+  - first:
+      213: 770045605674020595
+    second: ship_dest2_14
+  - first:
+      213: 2115956187345724325
+    second: ship_dest2_15
+  - first:
+      213: 797008462132713351
+    second: ship_dest2_16
+  - first:
+      213: 7923773105201478070
+    second: ship_dest2_17
+  - first:
+      213: -2933604884586170600
+    second: ship_dest2_18
+  - first:
+      213: 2304431305471404887
+    second: ship_dest2_19
+  - first:
+      213: 2681864706068398150
+    second: ship_dest2_20
+  - first:
+      213: 7642567155100783410
+    second: ship_dest2_21
+  - first:
+      213: 1217274021811675316
+    second: ship_dest2_22
+  - first:
+      213: -5701384091212068622
+    second: ship_dest2_23
+  - first:
+      213: -5320303220958939827
+    second: ship_dest2_24
+  - first:
+      213: 1418530874127732615
+    second: ship_dest2_25
+  - first:
+      213: -5753742808091772950
+    second: ship_dest2_26
+  - first:
+      213: -6735870379112069582
+    second: ship_dest2_27
+  - first:
+      213: 6538378637704311683
+    second: ship_dest2_28
+  - first:
+      213: 7051739235054553595
+    second: ship_dest2_29
+  - first:
+      213: 6894592601793871894
+    second: ship_dest2_30
+  - first:
+      213: 9157261224797425924
+    second: ship_dest2_31
+  - first:
+      213: -4754251339677163867
+    second: ship_dest2_32
+  - first:
+      213: -3244661279591859454
+    second: ship_dest2_33
+  - first:
+      213: -621819690227776371
+    second: ship_dest2_34
+  - first:
+      213: 447178103761634094
+    second: ship_dest2_35
+  - first:
+      213: -6681258603314689261
+    second: ship_dest2_36
+  - first:
+      213: 5728211120648841558
+    second: ship_dest2_37
+  - first:
+      213: -4784313800877020526
+    second: ship_dest2_38
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 300
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ship_dest2_0
+      rect:
+        serializedVersion: 2
+        x: 49
+        y: 404
+        width: 459
+        height: 430
+      alignment: 9
+      pivot: {x: 0.501493, y: 0.46494815}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d15169b9160ae340800000000000000
+      internalID: 4893730652645577169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ship_dest2_1
+      rect:
+        serializedVersion: 2
+        x: 648
+        y: 463
+        width: 343
+        height: 371
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b0a52648ece5f10800000000000000
+      internalID: 2260471130967640916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ship_dest2_2
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 151
+        width: 225
+        height: 211
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78c76731815f8ef50800000000000000
+      internalID: 6911043111954578567
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ship_dest2_3
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 122
+        width: 239
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b29727211216d6490800000000000000
+      internalID: -7751432588963448533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ship_dest2_4
+      rect:
+        serializedVersion: 2
+        x: 995
+        y: 175
+        width: 83
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa70466f887c3b640800000000000000
+      internalID: 5094634994549393322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: a086f8b3bdeb2c045a4ac4511fdb67d8
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ship_dest2_0: 4893730652645577169
+      ship_dest2_1: 2260471130967640916
+      ship_dest2_10: 637391206597142570
+      ship_dest2_11: 5546068959718630662
+      ship_dest2_12: -3814372265463365974
+      ship_dest2_13: 290165097541722810
+      ship_dest2_14: 770045605674020595
+      ship_dest2_15: 2115956187345724325
+      ship_dest2_16: 797008462132713351
+      ship_dest2_17: 7923773105201478070
+      ship_dest2_18: -2933604884586170600
+      ship_dest2_19: 2304431305471404887
+      ship_dest2_2: 6911043111954578567
+      ship_dest2_20: 2681864706068398150
+      ship_dest2_21: 7642567155100783410
+      ship_dest2_22: 1217274021811675316
+      ship_dest2_23: -5701384091212068622
+      ship_dest2_24: -5320303220958939827
+      ship_dest2_25: 1418530874127732615
+      ship_dest2_26: -5753742808091772950
+      ship_dest2_27: -6735870379112069582
+      ship_dest2_28: 6538378637704311683
+      ship_dest2_29: 7051739235054553595
+      ship_dest2_3: -7751432588963448533
+      ship_dest2_30: 6894592601793871894
+      ship_dest2_31: 9157261224797425924
+      ship_dest2_32: -4754251339677163867
+      ship_dest2_33: -3244661279591859454
+      ship_dest2_34: -621819690227776371
+      ship_dest2_35: 447178103761634094
+      ship_dest2_36: -6681258603314689261
+      ship_dest2_37: 5728211120648841558
+      ship_dest2_38: -4784313800877020526
+      ship_dest2_4: 5094634994549393322
+      ship_dest2_5: -5441208281367335322
+      ship_dest2_6: 591193116672000840
+      ship_dest2_7: 1882796272050124995
+      ship_dest2_8: 7093870606631972536
+      ship_dest2_9: -362597278291622297
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

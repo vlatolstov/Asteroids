@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
@@ -23,6 +24,10 @@ namespace Runtime.Views
         private Pool _pool;
 
         private readonly List<ContactPoint2D> _contactPoints = new();
+        
+        private bool _follow;
+        private Transform _emitter;
+        private float _centerOffset;
 
         private void Awake()
         {
@@ -42,13 +47,13 @@ namespace Runtime.Views
             _life -= Time.deltaTime;
         }
 
-        public void TurnOff()
+        private void LateUpdate()
         {
-            _collider.enabled = false;
-            _spriteRenderer.sprite = null;
-            _animator.runtimeAnimatorController = null;
-            transform.SetParent(null, false);
-            _pool.Despawn(this);
+            if (_follow && _emitter)
+            {
+                var worldPos = _emitter.TransformPoint(0f, _centerOffset, 0f);
+                transform.SetPositionAndRotation(worldPos, _emitter.rotation);
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -62,6 +67,15 @@ namespace Runtime.Views
             }
 
             _contactPoints.Clear();
+        }
+        
+        public void TurnOff()
+        {
+            _collider.enabled = false;
+            _spriteRenderer.sprite = null;
+            _animator.runtimeAnimatorController = null;
+            transform.SetParent(null, false);
+            _pool.Despawn(this);
         }
 
         private void Reinitialize(Transform par, AoeWeaponConfig aoe, Pool pool)
@@ -79,22 +93,19 @@ namespace Runtime.Views
                 _animator.runtimeAnimatorController = _conf.AttackAnimation;
             }
 
-            transform.SetParent(par, false);
-
-            float distFromParent = aoe.MuzzleOffset + _conf.Length / 2;
-            transform.localPosition = new Vector3(0f, distFromParent / par.lossyScale.y, 0f);
-
-            GeometryMethods.SetWorldSizeOfChildObject(_spriteRenderer, _conf.Width, _conf.Length);
+            _emitter = par;
+            _centerOffset = aoe.MuzzleOffset + _conf.Length / 2;
             
-            if (aoe.Attack.Mode == AoeAttachMode.Static)
-            {
-                transform.SetParent(null, true);
-            }
-
+            var worldPos = _emitter.TransformPoint(0f, _centerOffset, 0f);
+            
+            transform.SetPositionAndRotation(worldPos, _emitter.rotation);
+            GeometryMethods.SetWorldSizeOfChildObject(_spriteRenderer, _conf.Width, _conf.Length);
             gameObject.layer = par.gameObject.layer;
-
+            
             _collider.enabled = true;
             Physics2D.SyncTransforms();
+
+            _follow = aoe.Attack.Mode == AoeAttachMode.FollowEmitter;
         }
 
         public class Pool : ViewPool<Transform, AoeWeaponConfig, AoeAttackView>

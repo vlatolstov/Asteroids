@@ -105,7 +105,7 @@ namespace Runtime.Views
             if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
                 _destroyed = true;
-                Fire(new UfoDestroyed(ViewId, Motor.Position));
+                Fire(new UfoDestroyed(ViewId, Motor.Position, transform.localScale));
             }
         }
 
@@ -116,7 +116,7 @@ namespace Runtime.Views
                 && !_destroyed)
             {
                 _destroyed = true;
-                Fire(new UfoDestroyed(ViewId, Motor.Position));
+                Fire(new UfoDestroyed(ViewId, Motor.Position, transform.localScale));
             }
         }
 

@@ -108,7 +108,7 @@ namespace Runtime.Views
             }
             
             _destroyed = true;
-            Fire(new ShipDestroyed(ViewId, Motor.Position));
+            Fire(new ShipDestroyed(ViewId, Motor.Position, transform.localScale));
         }
 
         public void SetupMainEngine(bool main)

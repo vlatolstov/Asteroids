@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c7e2f69018e4d57bd5acb3b6952ba21, type: 3}
   m_Name: GeneralVisualsConfig
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.GeneralVisualsConfig
-  _shipDestroyed: {fileID: 0}
-  _ufoDestroyed: {fileID: 0}
+  _shipDestroyed: {fileID: 9100000, guid: 31a3ccf3d4b62d043ab09c5707e3b9cc, type: 2}
+  _ufoDestroyed: {fileID: 9100000, guid: c8f054c0ed678c04f92cc078a59eac14, type: 2}
   _asteroidDestroyed: {fileID: 9100000, guid: 4dc9d91ee67bd9042a3112aef54aaf38, type: 2}
