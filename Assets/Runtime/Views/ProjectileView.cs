@@ -38,10 +38,10 @@ namespace Runtime.Views
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.CompareTag(gameObject.tag))
-            {
-                return;
-            }
+            // if (other.gameObject.CompareTag(gameObject.tag))
+            // {
+            //     return;
+            // }
                 
             if (_spawned)
             {

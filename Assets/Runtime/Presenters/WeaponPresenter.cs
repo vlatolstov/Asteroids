@@ -46,7 +46,7 @@ namespace Runtime.Presenters
         {
             if (Model.TryGet(out AoeAttackReleased shoot))
             {
-                _aoePool.Spawn(shoot.Origin, shoot.Weapon);
+                _aoePool.Spawn(shoot.Emitter, shoot.Weapon);
             }
         }
     }

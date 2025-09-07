@@ -15,7 +15,7 @@ MonoBehaviour:
   _weaponCooldown: 1
   _muzzleOffset: 0.6
   _projectileConfig: {fileID: 11400000, guid: 5cbc4340fdb8c1545853f19aee8916da, type: 2}
-  _spread: 20
+  _spread: 5
   _bulletsPerShot: 1
   _bulletsInterval: 0.1
   _attackSounds:

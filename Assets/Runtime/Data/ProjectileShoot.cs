@@ -36,14 +36,16 @@ namespace Runtime.Data
         }
     }
 
+   
+    
     public readonly struct AoeAttackReleased : IEventData
     {
-        public readonly Transform Origin;
+        public readonly Transform Emitter;
         public readonly AoeWeaponConfig Weapon;
 
-        public AoeAttackReleased(Transform origin, AoeWeaponConfig weapon)
+        public AoeAttackReleased(Transform emitter, AoeWeaponConfig weapon)
         {
-            Origin = origin;
+            Emitter = emitter;
             Weapon = weapon;
         }
     }

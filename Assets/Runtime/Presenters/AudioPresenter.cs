@@ -55,7 +55,7 @@ namespace Runtime.Presenters
         {
             if (Model.TryGet(out AoeAttackReleased attack))
             {
-                _audioPool.Spawn(attack.Origin.position, attack.Weapon.AttackSound);
+                _audioPool.Spawn(attack.Emitter.position, attack.Weapon.AttackSound);
             }
         }
 
