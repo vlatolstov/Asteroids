@@ -12,13 +12,18 @@ namespace Runtime.Weapons
 
         public AoeWeapon(AoeWeaponConfig config, IFireParamsSource source) : base(config, source)
         {
-            _charges = config.Charges;
+            Reinforce();
+        }
+
+        public void Reinforce()
+        {
+            _charges = Config.Charges;
             _rechargeTime = Config.ChargeRate;
         }
 
         public override bool TryAttack()
         {
-            if (Cooldown > 0f && _charges <= 0)
+            if (Cooldown > 0f || _charges <= 0)
             {
                 return false;
             }
@@ -65,7 +70,8 @@ namespace Runtime.Weapons
 
         public AoeWeaponState ProvideAoeWeaponState()
         {
-            return new AoeWeaponState(_charges, _rechargeTime / Config.ChargeRate, Cooldown);
+            var recharge = 1f - Mathf.Clamp01(_rechargeTime / Mathf.Max(Config.ChargeRate, 1e-6f));
+            return new AoeWeaponState(Config.Charges, _charges, Cooldown,recharge);
         }
     }
 }

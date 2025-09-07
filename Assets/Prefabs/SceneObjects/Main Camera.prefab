@@ -70,7 +70,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e032e6dbce2c4b8a9120ac47f04a95d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.CameraWorldBounds
-  _wrapOffset: 0.8
+  _wrapOffset: 0.5
 --- !u!81 &4641104534341512254
 AudioListener:
   m_ObjectHideFlags: 0

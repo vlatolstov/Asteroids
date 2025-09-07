@@ -1,3 +1,4 @@
+using System;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
@@ -46,11 +47,14 @@ namespace Runtime.Views
         {
             base.FixedUpdate();
 
-            Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
-            Fire(AoeWeapon.ProvideAoeWeaponState());
-            
             Gun.FixedTick();
             AoeWeapon.FixedTick();
+        }
+
+        private void Update()
+        {
+            Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
+            Fire(AoeWeapon.ProvideAoeWeaponState());
         }
 
         private void OnWeaponAttack(IData attackData)
@@ -99,12 +103,22 @@ namespace Runtime.Views
             }
         }
 
+        private void TurnSystemsOff()
+        {
+            AoeWeapon.Reinforce();
+            _destroyed = false;
+            Motor.SetThrust(0f);
+            Motor.SetTurnAxis(0f);
+            Motor.SetWrapMode(true);
+        }
+        
         private void Reinitialize(Vector2 position)
         {
-            _destroyed = false;
+            TurnSystemsOff();
+            
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);
-            Motor.SetWrapMode(true);
+            
             Fire(new ShipSpawned(true, ViewId, Motor.Position));
         }
 

@@ -102,7 +102,7 @@ namespace Runtime.Models
         private void SpawnSmallAsteroids(AsteroidDestroyed ev)
         {
             int count = _config.SmallSplit;
-            float baseA = Mathf.Atan2(ev.Vel.y, ev.Vel.x);
+            float baseA = Mathf.Atan2(ev.Velocity.y, ev.Velocity.x);
 
             for (int i = 0; i < count; i++)
             {
@@ -114,7 +114,7 @@ namespace Runtime.Models
                 Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
                 float nose = Mathf.Atan2(-vel.x, vel.y);
 
-                ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Pos, vel, nose, _config.AngleRotationDeg));
+                ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Position, vel, nose, _config.AngleRotationDeg));
             }
         }
     }

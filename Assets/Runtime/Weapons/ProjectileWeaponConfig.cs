@@ -2,7 +2,7 @@ using Runtime.Abstract.Visualization;
 using Runtime.Abstract.Weapons;
 using UnityEngine;
 
-namespace Runtime.Settings
+namespace Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "ProjectileWeapon", menuName = "Settings/Weapons/Projectile Weapon", order = 0)]
     public class ProjectileWeaponConfig : WeaponConfig, IProjectileWeaponConfig, IWeaponRepresentation

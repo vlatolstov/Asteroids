@@ -1,5 +1,6 @@
 using Runtime.Abstract.MVP;
 using Runtime.Settings;
+using Runtime.Weapons;
 using UnityEngine;
 
 namespace Runtime.Data

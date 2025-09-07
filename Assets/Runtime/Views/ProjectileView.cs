@@ -1,6 +1,7 @@
 using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Settings;
+using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
@@ -39,13 +40,19 @@ namespace Runtime.Views
             }
         }
 
-        private void OnCollisionEnter2D()
+        private void OnCollisionEnter2D(Collision2D other)
         {
+            if (other.gameObject.tag == gameObject.tag)
+            {
+                return;
+            }
+                
             if (_spawned)
             {
                 Fire(new ProjectileHit(_conf, transform.position));
                 Despawn();
             }
+            
         }
 
         private void Despawn()
@@ -87,13 +94,6 @@ namespace Runtime.Views
 
             protected override void Reinitialize(ProjectileShoot shootData, ProjectileView item)
                 => item.Reinitialize(this, shootData);
-
-            protected override void OnDespawned(ProjectileView item)
-            {
-                item._rb.linearVelocity = Vector2.zero;
-                item.gameObject.SetActive(false);
-                base.OnDespawned(item);
-            }
         }
     }
 }

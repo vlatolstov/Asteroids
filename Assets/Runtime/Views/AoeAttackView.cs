@@ -3,6 +3,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Data;
 using Runtime.Settings;
 using Runtime.Utils;
+using Runtime.Weapons;
 using UnityEngine;
 
 namespace Runtime.Views
@@ -15,6 +16,8 @@ namespace Runtime.Views
         private SpriteRenderer _spriteRenderer;
         private Animator _animator;
         private AoeAttackConfig _conf;
+        private Collider2D _collider;
+        
         private float _life;
         private Pool _pool;
 
@@ -22,6 +25,7 @@ namespace Runtime.Views
         {
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
+            _collider = GetComponent<Collider2D>();
         }
 
         private void Update()
@@ -61,6 +65,7 @@ namespace Runtime.Views
 
             float distFromParent = aoe.MuzzleOffset + _conf.Length / 2;
             transform.localPosition = new Vector3(0f, distFromParent / par.lossyScale.y, 0f);
+            
             GeometryMethods.SetWorldSizeOfChildObject(_spriteRenderer, _conf.Width, _conf.Length);
         }
 

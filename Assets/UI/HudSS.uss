@@ -19,3 +19,7 @@
     padding-left: -3px;
     color: rgb(168, 168, 168);
 }
+
+.unity-button {
+    font-size: 29px;
+}

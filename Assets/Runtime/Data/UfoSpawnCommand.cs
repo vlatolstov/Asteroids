@@ -57,14 +57,12 @@ namespace Runtime.Data
     public readonly struct UfoDestroyed : IEventData
     {
         public readonly uint ViewId;
-        public readonly Vector2 Pos;
-        public readonly Vector2 Vel;
+        public readonly Vector2 Position;
 
-        public UfoDestroyed(uint viewId, Vector2 pos, Vector2 vel)
+        public UfoDestroyed(uint viewId, Vector2 position)
         {
             ViewId = viewId;
-            Pos = pos;
-            Vel = vel;
+            Position = position;
         }
     }
     

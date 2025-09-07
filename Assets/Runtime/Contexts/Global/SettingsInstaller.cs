@@ -10,20 +10,20 @@ namespace Runtime.Contexts.Global
     [CreateAssetMenu(fileName = "SettingsInstaller", menuName = "Installers/Settings Installer")]
     public class SettingsInstaller : ScriptableObjectInstaller
     {
-        [Header("Spawn")]
         [SerializeField]
         private AsteroidsSpawnConfig _asteroidsSpawnConfig;
         
         [SerializeField]
         private UfoSpawnConfig _ufoSpawnConfig;
 
-        [Header("Score")]
         [SerializeField]
         private ScoreConfig _scoreConfig;
         
-        [Header("Score")]
         [SerializeField]
         private GeneralSoundsConfig _generalSoundsConfig;
+        
+        [SerializeField]
+        private GeneralVisualsConfig _generalVisualsConfig;
 
         public override void InstallBindings()
         {
@@ -45,6 +45,11 @@ namespace Runtime.Contexts.Global
             Container
                 .Bind<IGeneralSoundsConfig>()
                 .FromInstance(_generalSoundsConfig)
+                .AsSingle();
+            
+            Container
+                .Bind<IGeneralVisualsConfig>()
+                .FromInstance(_generalVisualsConfig)
                 .AsSingle();
         }
     }

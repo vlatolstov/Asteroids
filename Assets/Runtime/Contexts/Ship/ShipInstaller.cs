@@ -3,6 +3,7 @@ using Runtime.Abstract.Movement;
 using Runtime.Abstract.Weapons;
 using Runtime.Movement;
 using Runtime.Settings;
+using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 

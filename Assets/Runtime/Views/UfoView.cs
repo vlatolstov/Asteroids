@@ -1,3 +1,4 @@
+using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
@@ -83,16 +84,13 @@ namespace Runtime.Views
 
             float turnAxis = Mathf.Clamp(-(_chase.TurnKp * angErr + _chase.TurnKd * dErr), -1f, 1f);
 
-            // таран: чем дальше — тем больше тяга (без «комфортной зоны»)
             float thrust = Mathf.Clamp(_chase.ThrustKp * dist, 0f, _chase.MaxThrust);
-            // немного гасим тягу, если сильно не туда смотрим (чтобы не улетал по касательной)
             float aimFactor = Mathf.Clamp01(1f - Mathf.Abs(angErr) / (45f * Mathf.Deg2Rad));
             thrust *= Mathf.Lerp(0.35f, 1f, aimFactor);
 
             Motor.SetThrust(thrust);
             Motor.SetTurnAxis(turnAxis);
 
-            // --- ОГОНЬ (упреждение; LOS не используем) ---
             _gun.FixedTick();
 
             float projSpeed = _gunConfig.Projectile.Speed;
@@ -115,7 +113,16 @@ namespace Runtime.Views
             if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
                 _destroyed = true;
-                Fire(new ShipDestroyed(ViewId, Motor.Position));
+                Fire(new UfoDestroyed(ViewId, Motor.Position));
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (gameObject.layer != other.gameObject.layer && !_destroyed)
+            {
+                _destroyed = true;
+                Fire(new UfoDestroyed(ViewId, Motor.Position));
             }
         }
 

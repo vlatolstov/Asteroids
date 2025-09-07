@@ -9,7 +9,7 @@ namespace Runtime.Presenters
     public class WeaponPresenter : BasePresenter<GameModel>
     {
         private readonly ProjectileView.Pool _projectilePool;
-        private AoeAttackView.Pool _aoePool;
+        private readonly AoeAttackView.Pool _aoePool;
 
         public WeaponPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus,
             ProjectileView.Pool projectilePool, AoeAttackView.Pool aoePool) : base(model, viewsContainer, signalBus)
@@ -23,7 +23,6 @@ namespace Runtime.Presenters
             base.Initialize();
 
             ForwardOn<AoeWeaponState>();
-            
             
             ForwardOn<ProjectileShoot>(publish: true);
             ForwardOn<ProjectileHit>(publish: true);

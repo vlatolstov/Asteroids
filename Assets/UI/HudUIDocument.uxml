@@ -1,10 +1,19 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
-    <ui:VisualElement name="ShipDataContainer" style="flex-grow: 1;">
+    <ui:VisualElement name="MainContainer" enabled="true" style="flex-grow: 1; position: absolute; top: 25%; left: 25%; right: 25%; bottom: 25%; visibility: visible;">
+        <ui:Label text="controls" name="Controls" enabled="true" enable-rich-text="true" class="dataText" style="-unity-text-align: upper-left; align-self: flex-start;" />
+        <ui:Label text="GAME OVER" name="GameOverLabel" class="dataText" style="font-size: 90px; -unity-text-align: middle-center; align-self: center; justify-content: center;" />
+        <ui:Label text="final score" name="FinalScore" class="dataText" style="-unity-text-align: upper-center; justify-content: center; align-self: center; font-size: 34px;" />
+        <ui:Button text="Spawn" name="SpawnPlayer" style="white-space: nowrap; max-width: none; max-height: none; min-width: auto; min-height: auto; font-size: 31px; -unity-text-align: middle-center; width: auto; height: auto; align-items: flex-start; align-self: center; color: rgb(56, 56, 56); bottom: 0%; margin-top: 64px;" />
+        <ui:Button text="Restart" name="RestartGame" style="white-space: nowrap; max-width: none; max-height: 41px; min-width: auto; min-height: auto; font-size: 31px; -unity-text-align: middle-center; width: auto; height: auto; align-items: flex-start; align-self: center; color: rgb(56, 56, 56); bottom: 0%; margin-top: 30px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="ShipDataContainer" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
         <ui:Label text="Pos" name="Pos" class="dataText" />
         <ui:Label text="Speed" name="Speed" class="dataText" />
         <ui:Label text="Angle" name="Angle" class="dataText" />
+        <ui:Label text="Charges" name="LaserCharges" class="dataText" style="padding-top: 42px;" />
+        <ui:ProgressBar value="0.33" name="Recharge" high-value="1" style="width: 89px; margin-top: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(56, 56, 56);" />
+        <ui:Label text="Score" name="Score" class="dataText" style="right: 0; position: absolute;" />
     </ui:VisualElement>
-    <ui:Button text="Spawn player" name="SpawnPlayer" style="white-space: nowrap; max-width: 50px; max-height: 20px; min-width: 20px; min-height: 20px; font-size: 6px; -unity-text-align: middle-center;" />
-    <ui:Label text="Game state" name="GameStateLabel" class="dataText" style="white-space: pre-wrap; position: relative; top: 0; left: auto; right: 0; bottom: auto; align-self: stretch;" />
+    <ui:Label text="Game state" name="GameStateLabel" enabled="true" class="dataText" style="white-space: pre-wrap; position: relative; top: 0; left: auto; right: 0; bottom: auto; align-self: stretch; font-size: 11px; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;" />
 </ui:UXML>

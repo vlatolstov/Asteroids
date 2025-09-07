@@ -19,18 +19,21 @@ namespace Runtime.Contexts.Game
 
         [SerializeField]
         private GameObject _ufoPrefab;
-        
+
         [SerializeField]
         private GameObject _asteroidPrefab;
-        
+
         [SerializeField]
         private GameObject _projectilePrefab;
-        
-        [SerializeField]
-        private GameObject _audioSourcePrefab;
-        
+
         [SerializeField]
         private GameObject _aoeAttackPrefab;
+
+        [SerializeField]
+        private GameObject _audioSourcePrefab;
+
+        [SerializeField]
+        private GameObject _animationPrefab;
 
         public override void InstallBindings()
         {
@@ -63,7 +66,7 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_shipPrefab)
                 .UnderTransformGroup("Ship")
                 .NonLazy();
-            
+
             Container.BindMemoryPool<UfoView, UfoView.Pool>()
                 .WithInitialSize(20)
                 .FromComponentInNewPrefab(_ufoPrefab)
@@ -75,23 +78,29 @@ namespace Runtime.Contexts.Game
                 .FromComponentInNewPrefab(_asteroidPrefab)
                 .UnderTransformGroup("Asteroids")
                 .NonLazy();
-            
+
             Container.BindMemoryPool<ProjectileView, ProjectileView.Pool>()
                 .WithInitialSize(100)
                 .FromComponentInNewPrefab(_projectilePrefab)
                 .UnderTransformGroup("Projectiles")
                 .NonLazy();
-            
+
             Container.BindMemoryPool<AoeAttackView, AoeAttackView.Pool>()
                 .WithInitialSize(10)
                 .FromComponentInNewPrefab(_aoeAttackPrefab)
                 .UnderTransformGroup("AoeViewsPool")
                 .NonLazy();
-            
+
             Container.BindMemoryPool<AudioSourceView, AudioSourceView.Pool>()
                 .WithInitialSize(100)
                 .FromComponentInNewPrefab(_audioSourcePrefab)
                 .UnderTransformGroup("Sound")
+                .NonLazy();
+
+            Container.BindMemoryPool<AnimationView, AnimationView.Pool>()
+                .WithInitialSize(20)
+                .FromComponentInNewPrefab(_animationPrefab)
+                .UnderTransformGroup("Animations")
                 .NonLazy();
         }
 
@@ -108,7 +117,7 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<ShipPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<UfoPresenter>()
                 .AsSingle();
@@ -116,21 +125,29 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<AsteroidsPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<WeaponPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<BackgroundPresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<GameStatePresenter>()
+                .AsSingle();
+
+            Container
+                .BindInterfacesAndSelfTo<ScorePresenter>()
                 .AsSingle();
             
             Container
                 .BindInterfacesAndSelfTo<AudioPresenter>()
+                .AsSingle();
+
+            Container
+                .BindInterfacesAndSelfTo<AnimationPresenter>()
                 .AsSingle();
         }
 
@@ -139,15 +156,15 @@ namespace Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<GameModel>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<InputModel>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<ShipModel>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<UfoModel>()
                 .AsSingle();

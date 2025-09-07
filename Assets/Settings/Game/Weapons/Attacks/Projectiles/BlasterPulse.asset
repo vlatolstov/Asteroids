@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3dfb1ba04c54e78ba414e07ce197352, type: 3}
   m_Name: BlasterPulse
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileConfig
-  _size: {x: 0.5, y: 0.5}
+  _size: {x: 0.2, y: 0.2}
   _speed: 8
   _lifetime: 2
   _sprites:
-  - {fileID: 5092760521539766399, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
+  - {fileID: -740572066336284176, guid: b4beb8753ef4e4d448d8fdb5aa50bd5f, type: 3}
+  - {fileID: 7171309026304090510, guid: b4beb8753ef4e4d448d8fdb5aa50bd5f, type: 3}
+  - {fileID: -6834614294322002950, guid: b4beb8753ef4e4d448d8fdb5aa50bd5f, type: 3}
+  - {fileID: -8051725134741351304, guid: b4beb8753ef4e4d448d8fdb5aa50bd5f, type: 3}
   _hitSounds:
   - {fileID: 8300000, guid: 1f3c204fd66b2384b8f79d19cc66d263, type: 3}
   - {fileID: 8300000, guid: a2f6eddcd07a0924fa4c5a4ab74aab02, type: 3}
   - {fileID: 8300000, guid: bb14b3ac0d87b3e458d4ad6e6f37f88f, type: 3}
   - {fileID: 8300000, guid: e5bc8026d2133a2458180957e5bc53fe, type: 3}
+  _hitAnimation: {fileID: 0}

@@ -30,7 +30,7 @@ MonoBehaviour:
   - {fileID: -994149480133846428, guid: 2f6ac716c88e60e45871c645cb18ede7, type: 3}
   _rotationMin: -5
   _rotationMax: 5
-  _interval: 100
+  _interval: 1.6
   _largeScale: 1
   _edgeOffset: 3
   _entrySpeedMin: 2

@@ -1,7 +1,7 @@
 using Runtime.Abstract.Configs;
 using UnityEngine;
 
-namespace Runtime.Settings
+namespace Runtime.Movement
 {
     [CreateAssetMenu(fileName = "MovementConfig", menuName = "Settings/MovementConfig", order = 0)]
     public class MovementConfig : ScriptableObject, IMovementConfig

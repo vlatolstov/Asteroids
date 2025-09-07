@@ -14,12 +14,14 @@ namespace Runtime.Data
 
     public struct AoeWeaponState : IStateData
     {
+        public int MaxCharges;
         public int Charges;
         public float RechargeRatio;
         public float Cooldown;
 
-        public AoeWeaponState(int charges, float cooldown, float rechargeRatio)
+        public AoeWeaponState(int maxCharges, int charges, float cooldown, float rechargeRatio)
         {
+            MaxCharges = maxCharges;
             Charges = charges;
             Cooldown = cooldown;
             RechargeRatio = rechargeRatio;

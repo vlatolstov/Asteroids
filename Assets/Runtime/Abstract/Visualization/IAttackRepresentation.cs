@@ -7,5 +7,6 @@ namespace Runtime.Abstract.Visualization
         Sprite AttackSprite { get; }
         RuntimeAnimatorController AttackAnimation { get; }
         AudioClip HitSound { get; }
+        RuntimeAnimatorController HitAnimation { get; }
     }
 }
