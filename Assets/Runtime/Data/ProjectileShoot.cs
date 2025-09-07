@@ -51,12 +51,12 @@ namespace Runtime.Data
     public readonly struct AoeHit : IEventData
     {
         public readonly AoeAttackConfig Attack;
-        // public readonly Vector2 Position;
+        public readonly Vector2 Position;
 
-        public AoeHit(AoeAttackConfig attack)
+        public AoeHit(AoeAttackConfig attack, Vector2 position)
         {
             Attack = attack;
-            // Position = position;
+            Position = position;
         }
     }
 }

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcbb251dc5a4f1cb0eabbd0413b8ed0, type: 3}
   m_Name: Ufo
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.MovementConfig
-  _acceleration: 5
-  _maxSpeed: 5
-  _turnSpeed: 8.11
-  _linearDamping: 0.61
+  _acceleration: 2.5
+  _maxSpeed: 6
+  _turnSpeed: 5
+  _linearDamping: 0.3
   _isWrappedByWorldBounds: 1

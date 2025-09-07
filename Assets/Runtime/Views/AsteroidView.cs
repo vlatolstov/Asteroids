@@ -2,18 +2,19 @@ using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
+using Runtime.Movement;
 using UnityEngine;
 using Zenject;
 
 namespace Runtime.Views
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class AsteroidView : BaseMovableView
+    public class AsteroidView : BaseMovableView<InertialMotor>
     {
         private SpriteRenderer _sr;
         private AsteroidSize _size;
         private bool _entered;
-        
+
         [Inject]
         private IWorldConfig _world;
 
@@ -27,10 +28,10 @@ namespace Runtime.Views
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            
+
             float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
             bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
-            
+
             switch (_entered)
             {
                 case false when inside:
@@ -53,7 +54,8 @@ namespace Runtime.Views
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.layer != gameObject.layer)
+            if (gameObject.layer != other.gameObject.layer
+                && other.CompareTag("Attack"))
             {
                 ReportDestroyedByHit();
             }
@@ -63,7 +65,7 @@ namespace Runtime.Views
         {
             Fire(new AsteroidViewOffscreen(ViewId, _size));
         }
-        
+
         public void ReportDestroyedByHit()
         {
             Fire(new AsteroidDestroyed(ViewId, _size, Motor.Position, Motor.Velocity));
@@ -74,7 +76,7 @@ namespace Runtime.Views
             _size = args.Size;
             _entered = false;
             _sr.sprite = args.Sprite;
-            
+
             Motor.SetWrapMode(false);
             Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
             ApplyAngularVelocity(args.AngRotation);

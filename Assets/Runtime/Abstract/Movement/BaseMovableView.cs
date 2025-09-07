@@ -6,12 +6,12 @@ using Zenject;
 namespace Runtime.Abstract.Movement
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public abstract class BaseMovableView : BaseView
+    public abstract class BaseMovableView<TMotor> : BaseView where TMotor : BaseMotor2D<IMovementConfig>
     {
         private Rigidbody2D _rb;
 
         [Inject]
-        public BaseMotor2D<IMovementConfig> Motor;
+        public TMotor Motor;
         
         protected virtual void Awake()
         {

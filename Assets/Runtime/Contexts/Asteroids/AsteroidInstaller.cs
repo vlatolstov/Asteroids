@@ -1,7 +1,5 @@
 using Runtime.Abstract.Configs;
-using Runtime.Abstract.Movement;
 using Runtime.Movement;
-using Runtime.Settings;
 using UnityEngine;
 using Zenject;
 
@@ -20,8 +18,7 @@ namespace Runtime.Contexts.Asteroids
                 .AsSingle();
 
             Container
-                .Bind<BaseMotor2D<IMovementConfig>>()
-                .To<AsteroidMotor>()
+                .BindInterfacesAndSelfTo<InertialMotor>()
                 .AsTransient();
         }
     }

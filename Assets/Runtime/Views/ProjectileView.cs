@@ -23,10 +23,6 @@ namespace Runtime.Views
         void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
-            // _rb.bodyType = RigidbodyType2D.Dynamic;
-            // _rb.gravityScale = 0f;
-            // _rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-
             _sr = GetComponent<SpriteRenderer>();
         }
 
@@ -40,9 +36,9 @@ namespace Runtime.Views
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.tag == gameObject.tag)
+            if (other.gameObject.CompareTag(gameObject.tag))
             {
                 return;
             }

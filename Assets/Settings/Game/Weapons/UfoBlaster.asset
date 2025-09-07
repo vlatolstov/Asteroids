@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4408cf981814402b9509cca1b4a3aa7b, type: 3}
   m_Name: UfoBlaster
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileWeaponConfig
-  _weaponCooldown: 0.54
+  _weaponCooldown: 1
   _muzzleOffset: 0.6
   _projectileConfig: {fileID: 11400000, guid: 5cbc4340fdb8c1545853f19aee8916da, type: 2}
-  _spread: 21.4
+  _spread: 20
   _bulletsPerShot: 1
   _bulletsInterval: 0.1
   _attackSounds:

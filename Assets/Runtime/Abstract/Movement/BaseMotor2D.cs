@@ -4,15 +4,16 @@ using UnityEngine;
 
 namespace Runtime.Abstract.Movement
 {
-    public abstract class BaseMotor2D<TConfig> : IMove, IMotorInput, IWrapByWorldBounds where TConfig : class, IMovementConfig
+    public abstract class BaseMotor2D<TConfig> : IMove, IMotorInput, IWrapByWorldBounds
+        where TConfig : class, IMovementConfig
     {
-        private readonly TConfig _config;
-        private readonly IWorldConfig _world;
+        protected readonly TConfig Config;
+        protected readonly IWorldConfig World;
 
         protected BaseMotor2D(TConfig config, IWorldConfig world)
         {
-            _config = config;
-            _world = world;
+            Config = config;
+            World = world;
         }
 
         private Vector2 _pos;
@@ -41,27 +42,27 @@ namespace Runtime.Abstract.Movement
             UpdateControls(dt);
 
             Vector2 fwd = new(-Mathf.Sin(_angRad), Mathf.Cos(_angRad));
-            _vel += fwd * (_config.Acceleration * Mathf.Clamp01(_thrust) * dt);
+            _vel += fwd * (Config.Acceleration * Mathf.Clamp01(_thrust) * dt);
 
             float spd = _vel.magnitude;
 
-            if (spd > _config.MaxSpeed)
+            if (spd > Config.MaxSpeed)
             {
-                _vel *= (_config.MaxSpeed / spd);
+                _vel *= (Config.MaxSpeed / spd);
             }
 
-            _angRad -= _config.TurnSpeed * Mathf.Clamp(_turnAxis, -1f, 1f) * dt;
+            _angRad -= Config.TurnSpeed * Mathf.Clamp(_turnAxis, -1f, 1f) * dt;
 
-            if (_config.LinearDamping > 0f)
+            if (Config.LinearDamping > 0f)
             {
-                _vel = Vector2.MoveTowards(_vel, Vector2.zero, _config.LinearDamping * dt);
+                _vel = Vector2.MoveTowards(_vel, Vector2.zero, Config.LinearDamping * dt);
             }
 
             _pos += _vel * dt;
 
-            if (_config.IsWrappedByWorldBounds && _wrapEnabled)
+            if (Config.IsWrappedByWorldBounds && _wrapEnabled)
             {
-                _pos = GeometryMethods.Wrap(_pos, _world.WorldRect, _world.WrapOffset);
+                _pos = GeometryMethods.Wrap(_pos, World.WorldRect, World.WrapOffset);
             }
 
             rigidbody.MovePosition(_pos);
@@ -85,10 +86,15 @@ namespace Runtime.Abstract.Movement
         {
             _turnAxis = turnAxis;
         }
-        
+
         public void SetWrapMode(bool wrap)
         {
             _wrapEnabled = wrap;
+        }
+
+        public bool IsInsideWorldRect(float? selfOffset = null)
+        {
+            return World.ExpandedRect(selfOffset).Contains(Position);
         }
     }
 }

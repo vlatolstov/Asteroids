@@ -17,6 +17,7 @@ namespace Runtime.Weapons
 
         public void Reinforce()
         {
+            Cooldown = 0; 
             _charges = Config.Charges;
             _rechargeTime = Config.ChargeRate;
         }

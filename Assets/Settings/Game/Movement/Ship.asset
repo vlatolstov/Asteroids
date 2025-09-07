@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ShipConfig
   _acceleration: 4
   _maxSpeed: 5
-  _turnSpeed: 1.5
+  _turnSpeed: 2.5
   _linearDamping: 0.8
   _isWrappedByWorldBounds: 1

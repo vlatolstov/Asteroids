@@ -23,8 +23,7 @@ namespace Runtime.Contexts.Ufo
                 .AsSingle();
 
             Container
-                .Bind<BaseMotor2D<IMovementConfig>>()
-                .To<UfoMotor>()
+                .BindInterfacesAndSelfTo<ChasingMotor>()
                 .AsTransient();
 
             Container

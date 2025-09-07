@@ -63,7 +63,7 @@ namespace Runtime.Presenters
         {
             if (Model.TryGet(out AoeHit hit))
             {
-                _audioPool.Spawn(Vector2.zero, hit.Attack.HitSound);
+                _audioPool.Spawn(hit.Position, hit.Attack.HitSound);
             }
         }
 

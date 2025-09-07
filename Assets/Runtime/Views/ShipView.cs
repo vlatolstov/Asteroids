@@ -4,6 +4,7 @@ using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
 using Runtime.Contexts.Global;
 using Runtime.Data;
+using Runtime.Movement;
 using Runtime.Settings;
 using Runtime.Weapons;
 using UnityEngine;
@@ -11,7 +12,7 @@ using Zenject;
 
 namespace Runtime.Views
 {
-    public class ShipView : BaseMovableView, IFireParamsSource
+    public class ShipView : BaseMovableView<PlayerMotor>, IFireParamsSource
     {
         [SerializeField]
         private GameObject _mainEngine;
@@ -56,6 +57,24 @@ namespace Runtime.Views
             Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
             Fire(AoeWeapon.ProvideAoeWeaponState());
         }
+        
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (gameObject.layer != other.gameObject.layer && !_destroyed)
+            {
+                Die();
+            }
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (gameObject.layer != other.gameObject.layer 
+                && other.CompareTag("Attack")
+                && !_destroyed)
+            {
+                Die();
+            }
+        }
 
         private void OnWeaponAttack(IData attackData)
         {
@@ -71,6 +90,25 @@ namespace Runtime.Views
                     Debug.LogWarning($"Unknown attack data: {attackData?.GetType().Name}");
                     break;
             }
+        }
+
+        private void Die()
+        {
+            SetupMainEngine(false);
+            SetupSideEngines(false, false);
+            
+            Motor.SetThrust(0f);
+            Motor.SetTurnAxis(0f);
+            
+            AoeWeapon.Reinforce();
+
+            foreach (var aoe in GetComponentsInChildren<AoeAttackView>())
+            {
+                aoe.TurnOff();
+            }
+            
+            _destroyed = true;
+            Fire(new ShipDestroyed(ViewId, Motor.Position));
         }
 
         public void SetupMainEngine(bool main)
@@ -94,27 +132,10 @@ namespace Runtime.Views
             return true;
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (gameObject.layer != other.gameObject.layer && !_destroyed)
-            {
-                _destroyed = true;
-                Fire(new ShipDestroyed(ViewId, Motor.Position));
-            }
-        }
-
-        private void TurnSystemsOff()
-        {
-            AoeWeapon.Reinforce();
-            _destroyed = false;
-            Motor.SetThrust(0f);
-            Motor.SetTurnAxis(0f);
-            Motor.SetWrapMode(true);
-        }
-        
         private void Reinitialize(Vector2 position)
         {
-            TurnSystemsOff();
+            _destroyed = false;
+            Motor.SetWrapMode(true);
             
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);

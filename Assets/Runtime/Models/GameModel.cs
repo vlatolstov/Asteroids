@@ -1,6 +1,7 @@
 using System;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
+using UnityEngine;
 using Zenject;
 
 namespace Runtime.Models
@@ -28,6 +29,7 @@ namespace Runtime.Models
                     Preparing();
                     break;
                 case GameState.Gameplay:
+                    OnGameplay();
                     break;
                 case GameState.GameOver:
                     break;
@@ -36,6 +38,8 @@ namespace Runtime.Models
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            
+            Debug.Log("Game state changed: " + data.State);
         }
 
         private void Preparing()

@@ -24,8 +24,9 @@ namespace Runtime.Contexts.Ship
                 .AsSingle();
 
             Container
-                .Bind<BaseMotor2D<IMovementConfig>>()
-                .To<ShipMotor>()
+                .BindInterfacesAndSelfTo<PlayerMotor>()
+                // .Bind<BaseMotor2D<IMovementConfig>>()
+                // .To<PlayerMotor>()
                 .AsTransient();
 
             Container
