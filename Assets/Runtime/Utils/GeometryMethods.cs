@@ -50,6 +50,13 @@ namespace Runtime.Utils
             return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
         }
         
+        public static Vector2 ClampPointToRect(Vector2 p, Rect r)
+        {
+            float x = Mathf.Clamp(p.x, r.xMin, r.xMax);
+            float y = Mathf.Clamp(p.y, r.yMin, r.yMax);
+            return new Vector2(x, y);
+        }
+        
         public static Vector2 AngleToDir(float angRad) => new(-Mathf.Sin(angRad), Mathf.Cos(angRad));
         public static float DirToAngle(Vector2 dir) => Mathf.Atan2(-dir.x, dir.y);
         

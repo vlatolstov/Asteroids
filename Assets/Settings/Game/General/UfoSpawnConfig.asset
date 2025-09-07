@@ -24,5 +24,5 @@ MonoBehaviour:
   _interval: 6
   _maxAlive: 3
   _edgeOffset: 6
-  _speed: 3
+  _speed: 10
   _entryAngleJitterDeg: 15

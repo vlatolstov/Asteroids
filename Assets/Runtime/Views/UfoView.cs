@@ -55,7 +55,7 @@ namespace Runtime.Views
             if (!_entered)
             {
                 float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
-                bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
+                bool inside = _world.WorldRect.Contains(Motor.Position);
 
                 if (inside)
                 {

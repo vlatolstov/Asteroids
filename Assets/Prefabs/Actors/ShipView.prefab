@@ -221,7 +221,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 677930016426107378, guid: 472cb520187246347846683fe254e8c2, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2603241137070442697, guid: 472cb520187246347846683fe254e8c2, type: 3}
       propertyPath: m_LocalScale.x
@@ -362,6 +362,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: main
       objectReference: {fileID: 0}
+    - target: {fileID: 5342385155784529181, guid: 5786e2cf02bff684c947107e31daa01a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -388,6 +392,10 @@ PrefabInstance:
     - target: {fileID: 677930016426107378, guid: 472cb520187246347846683fe254e8c2, type: 3}
       propertyPath: m_Name
       value: left
+      objectReference: {fileID: 0}
+    - target: {fileID: 677930016426107378, guid: 472cb520187246347846683fe254e8c2, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2603241137070442697, guid: 472cb520187246347846683fe254e8c2, type: 3}
       propertyPath: m_LocalScale.x
