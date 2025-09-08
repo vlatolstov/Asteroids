@@ -1,4 +1,3 @@
-using System;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
 using UnityEngine;

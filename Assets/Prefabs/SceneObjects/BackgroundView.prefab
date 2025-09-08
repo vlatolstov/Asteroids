@@ -104,9 +104,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Views.BackgroundView
   _slowAmplitude: 0.6
-  _slowFrequency: 0.1
-  _jitterAmplitude: 0.05
-  _jitterFrequency: 2
+  _slowFrequency: 0.05
+  _jitterAmplitude: 0.03
+  _jitterFrequency: 8
   _parallaxStrength: 0.3
   _parallaxResponse: 6
   _parallaxMax: 500

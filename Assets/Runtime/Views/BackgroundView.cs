@@ -1,6 +1,5 @@
 using Runtime.Abstract.MVP;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Runtime.Views
 {
@@ -39,20 +38,20 @@ namespace Runtime.Views
         [SerializeField]
         private bool _useUnscaledTime = false;
 
-        Vector3 _baseLocalPos;
-        Vector2 _current, _currentVel;
-        Vector2 _parallax;
-        Vector2 _playerVelocity;
-        float _t, sx, sy, jx, jy;
+        private Vector3 _baseLocalPos;
+        private Vector2 _current, _currentVel;
+        private Vector2 _parallax;
+        private Vector2 _playerVelocity;
+        private float _t, _sx, _sy, _jx, _jy;
 
         void Awake()
         {
             _baseLocalPos = transform.localPosition;
 
-            sx = Random.value * 1000f;
-            sy = Random.value * 1000f;
-            jx = Random.value * 2000f;
-            jy = Random.value * 2000f;
+            _sx = Random.value * 1000f;
+            _sy = Random.value * 1000f;
+            _jx = Random.value * 2000f;
+            _jy = Random.value * 2000f;
         }
 
         void Update()
@@ -66,13 +65,13 @@ namespace Runtime.Views
             _t += dt;
 
             Vector2 slow =
-                new Vector2(Mathf.PerlinNoise(sx + _t * _slowFrequency, sy) - 0.5f,
-                    Mathf.PerlinNoise(sy + _t * _slowFrequency, sx) - 0.5f)
+                new Vector2(Mathf.PerlinNoise(_sx + _t * _slowFrequency, _sy) - 0.5f,
+                    Mathf.PerlinNoise(_sy + _t * _slowFrequency, _sx) - 0.5f)
                 * (_slowAmplitude * 2f);
 
             Vector2 jit =
-                new Vector2(Mathf.PerlinNoise(jx + _t * _jitterFrequency, jy) - 0.5f,
-                    Mathf.PerlinNoise(jy + _t * _jitterFrequency, jx) - 0.5f)
+                new Vector2(Mathf.PerlinNoise(_jx + _t * _jitterFrequency, _jy) - 0.5f,
+                    Mathf.PerlinNoise(_jy + _t * _jitterFrequency, _jx) - 0.5f)
                 * (_jitterAmplitude * 2f);
 
             Vector2 v = _playerVelocity;

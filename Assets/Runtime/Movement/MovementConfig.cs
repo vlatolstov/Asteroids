@@ -1,4 +1,4 @@
-using Runtime.Abstract.Configs;
+using Runtime.Abstract.Movement;
 using UnityEngine;
 
 namespace Runtime.Movement

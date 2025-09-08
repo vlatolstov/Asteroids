@@ -1,4 +1,3 @@
-using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
 using UnityEngine;
 using Zenject;

@@ -1,15 +1,14 @@
-using System;
 using System.Collections.Generic;
 
 namespace Runtime.Abstract.MVP
 {
     public interface IViewsContainer
     {
-        public TView GetView<TView>() where TView : BaseView;
-        public List<TView> GetViews<TView>() where TView : BaseView;
-        public BaseView GetViewById(uint viewId);
+        TView GetView<TView>() where TView : BaseView;
+        List<TView> GetViews<TView>() where TView : BaseView;
+        BaseView GetViewById(uint viewId);
 
-        public void AddView(BaseView view);
-        public void RemoveView(BaseView view);
+        void AddView(BaseView view);
+        void RemoveView(BaseView view);
     }
 }

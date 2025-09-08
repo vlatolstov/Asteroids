@@ -1,7 +1,5 @@
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
-using Runtime.Contexts.Asteroids;
-using Runtime.Contexts.Ship;
 using Runtime.Models;
 using Runtime.Presenters;
 using Runtime.Utils;
@@ -34,6 +32,7 @@ namespace Runtime.Contexts.Game
 
         [SerializeField]
         private GameObject _animationPrefab;
+        
 
         public override void InstallBindings()
         {

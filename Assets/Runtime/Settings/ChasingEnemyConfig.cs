@@ -1,4 +1,3 @@
-using Runtime.Abstract.Configs;
 using Runtime.Abstract.Weapons;
 using UnityEngine;
 

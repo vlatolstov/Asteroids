@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Runtime.Abstract.Configs;
 using Runtime.Abstract.MVP;
 using Runtime.Data;
@@ -16,6 +15,7 @@ namespace Runtime.Models
         private float _time;
         private float _nextAt;
         private int _alive;
+        private GameState _gameState = GameState.Gameplay;
 
         public UfoModel(IUfoSpawnConfig spawnConfig, IWorldConfig world)
         {
@@ -41,6 +41,11 @@ namespace Runtime.Models
             {
                 return;
             }
+            
+            if (_gameState != GameState.Gameplay)
+            {
+                return;
+            }
 
             if (_alive < _spawnConfig.MaxAlive)
             {
@@ -50,7 +55,7 @@ namespace Runtime.Models
             _nextAt = _time + _spawnConfig.Interval;
         }
 
-        public void OnUfoSpawned()
+        private void OnUfoSpawned()
         {
             if (!TryGet(out UfoSpawned spawned))
             {
@@ -60,7 +65,7 @@ namespace Runtime.Models
             _alive++;
         }
 
-        public void OnUfoDestroyed()
+        private void OnUfoDestroyed()
         {
             if (!TryGet(out UfoDestroyed destroyed))
             {
@@ -112,6 +117,11 @@ namespace Runtime.Models
             float angRad = GeometryMethods.DirToAngle(dir);
 
             Publish(new UfoSpawnCommand(_spawnConfig.Sprite, _spawnConfig.Scale, pos, vel, angRad));
+        }
+        
+        public void SetGameState(GameState gameState)
+        {
+            _gameState = gameState;
         }
     }
 }

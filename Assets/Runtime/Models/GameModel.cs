@@ -26,7 +26,6 @@ namespace Runtime.Models
             switch (data.State)
             {
                 case GameState.Preparing:
-                    Preparing();
                     break;
                 case GameState.Gameplay:
                     OnGameplay();
@@ -38,13 +37,6 @@ namespace Runtime.Models
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
-            Debug.Log("Game state changed: " + data.State);
-        }
-
-        private void Preparing()
-        {
-            
         }
 
         private void OnGameplay()

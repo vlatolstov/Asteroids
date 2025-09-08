@@ -1,11 +1,8 @@
-using System;
 using Runtime.Abstract.Movement;
 using Runtime.Abstract.MVP;
 using Runtime.Abstract.Weapons;
-using Runtime.Contexts.Global;
 using Runtime.Data;
 using Runtime.Movement;
-using Runtime.Settings;
 using Runtime.Weapons;
 using UnityEngine;
 using Zenject;

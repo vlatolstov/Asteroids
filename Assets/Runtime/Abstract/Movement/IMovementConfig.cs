@@ -1,4 +1,4 @@
-namespace Runtime.Abstract.Configs
+namespace Runtime.Abstract.Movement
 {
     public interface IMovementConfig
     {

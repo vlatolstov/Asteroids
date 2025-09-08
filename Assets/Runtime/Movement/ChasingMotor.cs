@@ -9,9 +9,10 @@ namespace Runtime.Movement
 {
     public class ChasingMotor : BaseMotor2D<IMovementConfig>
     {
+        private readonly IChasingEnemyConfig _chase;
+        
         private float _prevErr;
         private ShipPose _target;
-        private IChasingEnemyConfig _chase;
 
         public ChasingMotor(IMovementConfig config, IWorldConfig world, IChasingEnemyConfig chase) : base(config, world)
         {
@@ -21,7 +22,17 @@ namespace Runtime.Movement
         protected override void UpdateControls(float dt)
         {
             var fwd = GM.AngleToDir(AngleRadians);
-            var deltaMove = GM.ShortestWrappedDelta(Position, _target.Position, World.WorldRect);
+
+            Vector2 deltaMove;
+            if (Config.IsWrappedByWorldBounds)
+            {
+                deltaMove = GM.ShortestWrappedDelta(Position, _target.Position, World.WorldRect);
+            }
+            else
+            {
+                deltaMove = _target.Position - Position;
+            }
+            
             float distMove = deltaMove.magnitude;
             var aimDir = distMove > 1e-5f ? deltaMove / distMove : fwd;
 

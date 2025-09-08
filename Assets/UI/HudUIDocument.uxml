@@ -15,5 +15,4 @@
         <ui:ProgressBar value="0.33" name="Recharge" high-value="1" style="width: 89px; margin-top: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(56, 56, 56);" />
         <ui:Label text="Score" name="Score" class="dataText" style="right: 0; position: absolute;" />
     </ui:VisualElement>
-    <ui:Label text="Game state" name="GameStateLabel" enabled="true" class="dataText" style="white-space: pre-wrap; position: relative; top: 0; left: auto; right: 0; bottom: auto; align-self: stretch; font-size: 11px; margin-top: 4px; margin-right: 4px; margin-bottom: 4px; margin-left: 4px;" />
 </ui:UXML>

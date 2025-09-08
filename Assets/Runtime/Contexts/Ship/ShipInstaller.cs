@@ -1,8 +1,5 @@
-using Runtime.Abstract.Configs;
 using Runtime.Abstract.Movement;
-using Runtime.Abstract.Weapons;
 using Runtime.Movement;
-using Runtime.Settings;
 using Runtime.Weapons;
 using UnityEngine;
 using Zenject;
@@ -25,8 +22,6 @@ namespace Runtime.Contexts.Ship
 
             Container
                 .BindInterfacesAndSelfTo<PlayerMotor>()
-                // .Bind<BaseMotor2D<IMovementConfig>>()
-                // .To<PlayerMotor>()
                 .AsTransient();
 
             Container

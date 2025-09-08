@@ -1,13 +1,13 @@
 using Runtime.Abstract.MVP;
 using Runtime.Data;
-using Runtime.Settings;
 using Runtime.Weapons;
 using UnityEngine;
-using Zenject;
 
 namespace Runtime.Views
 {
-    [RequireComponent(typeof(Rigidbody2D), typeof(Collider2D), typeof(SpriteRenderer))]
+    [RequireComponent(typeof(Rigidbody2D), 
+        typeof(Collider2D), 
+        typeof(SpriteRenderer))]
     public sealed class ProjectileView : BaseView
     {
         [SerializeField]
@@ -38,11 +38,6 @@ namespace Runtime.Views
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            // if (other.gameObject.CompareTag(gameObject.tag))
-            // {
-            //     return;
-            // }
-                
             if (_spawned)
             {
                 Fire(new ProjectileHit(_conf, transform.position));

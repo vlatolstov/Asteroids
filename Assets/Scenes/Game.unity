@@ -338,18 +338,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _slowFrequency
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _jitterAmplitude
-      value: 0.03
-      objectReference: {fileID: 0}
-    - target: {fileID: 1990910475381964620, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
-      propertyPath: _jitterFrequency
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 3645710375531822287, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
       propertyPath: m_Name
       value: BackgroundView
@@ -367,10 +355,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3371237271228406194, guid: c98d7168a96d7e04db80f76cad42536c, type: 3}
-      propertyPath: m_Volume
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 5759838522233463315, guid: c98d7168a96d7e04db80f76cad42536c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -1,5 +1,4 @@
 using System;
-using Runtime.Settings;
 
 namespace Runtime.Abstract.Weapons
 {

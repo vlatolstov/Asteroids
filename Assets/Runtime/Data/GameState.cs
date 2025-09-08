@@ -10,9 +10,9 @@ namespace Runtime.Data
         Pause
     }
     
-    public struct GameStateData : IStateData
+    public readonly struct GameStateData : IStateData
     {
-        public GameState State;
+        public readonly GameState State;
 
         public GameStateData(GameState state)
         {

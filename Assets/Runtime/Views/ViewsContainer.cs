@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Runtime.Abstract.MVP;
-using UnityEngine;
 
 namespace Runtime.Views
 {
@@ -62,7 +61,6 @@ namespace Runtime.Views
             {
                 list.Add(view);
                 AssignIdAndRegisterView(view);
-                // Debug.Log($"{view} with {view.ViewId} id added in container");
             }
         }
 
@@ -77,7 +75,6 @@ namespace Runtime.Views
             if (_views.TryGetValue(type, out var list) && list.Remove(view))
             {
                 UnregisterView(view);
-                // Debug.Log($"{view} with {view.ViewId} id removed from container");
 
                 if (list.Count == 0)
                 {

@@ -11,7 +11,7 @@ namespace Runtime.Presenters
         private readonly ShipModel _shipModel;
         private readonly GameModel _gameModel;
         private readonly UfoView.Pool _pool;
-        
+
         private ShipPose _targetShip;
         private GameState _gameState;
 
@@ -34,9 +34,6 @@ namespace Runtime.Presenters
 
             AddUnsub(Model.Subscribe<UfoSpawnCommand>(OnUfoSpawnCommand));
             AddUnsub(Model.Subscribe<UfoDespawnCommand>(OnUfoDespawnCommand));
-
-            OnShipPoseChanged();
-            OnGameStateChanged();
         }
 
         private void OnShipPoseChanged()
@@ -55,6 +52,7 @@ namespace Runtime.Presenters
         {
             if (_gameModel.TryGet(out GameStateData data))
             {
+                Model.SetGameState(data.State);
                 foreach (var ufoView in ViewsContainer.GetViews<UfoView>())
                 {
                     _gameState = data.State;

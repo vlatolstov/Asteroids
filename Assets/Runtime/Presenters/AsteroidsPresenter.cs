@@ -25,6 +25,8 @@ namespace Runtime.Presenters
 
             AddUnsub(Model.Subscribe<AsteroidSpawnCommand>(OnSpawnCommand));
             AddUnsub(Model.Subscribe<AsteroidDespawnCommand>(OnDespawnCommand));
+            
+            AddUnsub(_gameModel.Subscribe<GameStateData>(OnGameStateChanged));
         }
 
         private void OnSpawnCommand()
@@ -52,6 +54,14 @@ namespace Runtime.Presenters
             }
 
             _pool.Despawn(asteroidView);
+        }
+
+        private void OnGameStateChanged()
+        {
+            if (_gameModel.TryGet(out GameStateData stateData))
+            {
+                Model.SetGameState(stateData.State);
+            }
         }
     }
 }

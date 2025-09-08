@@ -18,16 +18,12 @@ namespace Runtime.Weapons
         private float _chargeRate = 5f;
 
         [Header("Representation")]
-        // [SerializeField]
-        // private Sprite _weaponSprite;
-
         [SerializeField]
         private AudioClip[] _attackSounds;
 
         public AoeAttackConfig Attack => _attack;
         public int Charges => _charges;
         public float ChargeRate => _chargeRate;
-        // public Sprite WeaponSprite => _weaponSprite;
         public AudioClip AttackSound => _attackSounds[Random.Range(0, _attackSounds.Length)];
     }
 }

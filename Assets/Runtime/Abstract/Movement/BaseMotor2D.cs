@@ -20,7 +20,7 @@ namespace Runtime.Abstract.Movement
         private Vector2 _vel;
         private float _angRad;
 
-        private bool _wrapEnabled;
+        protected bool WrapEnabled;
 
         private float _thrust = 0f;
         private float _turnAxis = 0f;
@@ -60,7 +60,7 @@ namespace Runtime.Abstract.Movement
 
             _pos += _vel * dt;
 
-            if (Config.IsWrappedByWorldBounds && _wrapEnabled)
+            if (Config.IsWrappedByWorldBounds && WrapEnabled)
             {
                 _pos = GeometryMethods.Wrap(_pos, World.WorldRect, World.WrapOffset);
             }
@@ -89,7 +89,7 @@ namespace Runtime.Abstract.Movement
 
         public void SetWrapMode(bool wrap)
         {
-            _wrapEnabled = wrap;
+            WrapEnabled = wrap;
         }
 
         public bool IsInsideWorldRect(float? selfOffset = null)

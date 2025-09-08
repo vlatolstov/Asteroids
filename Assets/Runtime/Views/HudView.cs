@@ -32,8 +32,6 @@ namespace Runtime.Views
         private Button _playerSpawnButton;
         private Button _restartGameButton;
 
-        private Label _gameStateLabel;
-
         private GameState _gameState;
 
         private void Awake()
@@ -59,8 +57,6 @@ namespace Runtime.Views
             _playerSpawnButton.clicked += OnSpawnPlayerButtonClicked;
             _restartGameButton = root.Q<Button>("RestartGame");
             _restartGameButton.clicked += OnRestartGameButtonClicked;
-
-            _gameStateLabel = root.Q<Label>("GameStateLabel");
         }
 
         private void Preparing()
@@ -97,8 +93,6 @@ namespace Runtime.Views
 
         public void UpdateGameState(GameState gameState)
         {
-            _gameStateLabel.text = gameState.ToString();
-
             switch (gameState)
             {
                 case GameState.Preparing:

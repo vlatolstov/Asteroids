@@ -21,8 +21,8 @@ MonoBehaviour:
   - {fileID: -4931366292851836932, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
   _scale: 1
   _initialDelay: 2
-  _interval: 6
-  _maxAlive: 3
+  _interval: 4
+  _maxAlive: 4
   _edgeOffset: 6
   _speed: 5
   _entryAngleJitterDeg: 15

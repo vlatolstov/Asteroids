@@ -1,6 +1,5 @@
 using Runtime.Abstract.Weapons;
 using Runtime.Data;
-using Runtime.Settings;
 using UnityEngine;
 
 namespace Runtime.Weapons

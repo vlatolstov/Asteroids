@@ -14,6 +14,7 @@ namespace Runtime.Models
         private readonly IAsteroidsSpawnConfig _config;
 
         private float _timer;
+        private GameState _gameState;
 
         public AsteroidsModel(IWorldConfig world, IAsteroidsSpawnConfig config)
         {
@@ -44,6 +45,11 @@ namespace Runtime.Models
                 return;
             }
 
+            if (_gameState != GameState.Gameplay)
+            {
+                return;
+            }
+            
             SpawnLargeAsteroid();
             _timer = _config.Interval;
         }
@@ -116,6 +122,11 @@ namespace Runtime.Models
 
                 ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Position, vel, nose, _config.AngleRotationDeg));
             }
+        }
+
+        public void SetGameState(GameState gameState)
+        {
+            _gameState = gameState;
         }
     }
 }
