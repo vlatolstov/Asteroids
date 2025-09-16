@@ -1,0 +1,34 @@
+using _Project.Runtime.Abstract.Visualization;
+using _Project.Runtime.Abstract.Weapons;
+using UnityEngine;
+
+namespace _Project.Runtime.Weapons
+{
+    [CreateAssetMenu(fileName = "ProjectileWeapon", menuName = "Settings/Weapons/Projectile Weapon", order = 0)]
+    public class ProjectileWeaponConfig : WeaponConfig, IProjectileWeaponConfig, IWeaponRepresentation
+    {
+        [Header("Logic")]
+        [SerializeField]
+        private ProjectileConfig _projectileConfig;
+
+        [SerializeField]
+        private float _spread = 1f;
+
+        [SerializeField]
+        private int _bulletsPerShot = 1;
+
+        [SerializeField]
+        private float _bulletsInterval = 1f;
+
+        [Header("Representation")]
+        [SerializeField]
+        private AudioClip[] _attackSounds;
+
+        public ProjectileConfig Projectile => _projectileConfig;
+
+        public float Spread => _spread;
+        public int BulletsPerShot => _bulletsPerShot;
+        public float BulletsInterval => _bulletsInterval;
+        public AudioClip AttackSound => _attackSounds[Random.Range(0, _attackSounds.Length)];
+    }
+}
