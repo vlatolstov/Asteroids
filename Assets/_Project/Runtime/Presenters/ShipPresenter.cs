@@ -31,17 +31,21 @@ namespace _Project.Runtime.Presenters
             ForwardOn<ShipSpawned>(publish: true);
             ForwardOn<ShipDestroyed>(publish: true);
 
-            AddUnsub(_inputModel.Subscribe<FireGunPressed>(OnGunAttackSignal));
-            AddUnsub(_inputModel.Subscribe<AoeWeaponAttackPressed>(OnAoeWeaponAttackSignal));
-            AddUnsub(_inputModel.Subscribe<ThrustInput>(OnThrustChanged));
-            AddUnsub(_inputModel.Subscribe<TurnInput>(OnTurnAxisChanged));
-            
+            _inputModel.FireGunPressed += OnGunAttackSignal;
+            _inputModel.AoeAttackPressed += OnAoeWeaponAttackSignal;
+            _inputModel.ThrustChanged += OnThrustChanged;
+            _inputModel.TurnChanged += OnTurnAxisChanged;
+
             AddUnsub(Model.Subscribe<ShipSpawnCommand>(OnShipSpawnCommand));
             AddUnsub(Model.Subscribe<ShipDespawnCommand>(OnShipDespawnCommand));
         }
 
         public override void Dispose()
         {
+            _inputModel.FireGunPressed -= OnGunAttackSignal;
+            _inputModel.AoeAttackPressed -= OnAoeWeaponAttackSignal;
+            _inputModel.ThrustChanged -= OnThrustChanged;
+            _inputModel.TurnChanged -= OnTurnAxisChanged;
             DetachShip();
         }
 
@@ -55,25 +59,25 @@ namespace _Project.Runtime.Presenters
             _activeShip = null;
         }
 
-        private void OnThrustChanged()
+        private void OnThrustChanged(float value)
         {
-            if (_inputModel.TryGet(out ThrustInput thrust) &&
-                _activeShip)
-            {
-                _activeShip.SetupMainEngine(thrust.Value != 0);
-                _activeShip.Motor.SetThrust(thrust.Value);
-            }
-        }
-
-        private void OnTurnAxisChanged()
-        {
-            if (!_inputModel.TryGet(out TurnInput turn) ||
-                !_activeShip)
+            if (!_activeShip)
             {
                 return;
             }
 
-            switch (turn.Value)
+            _activeShip.SetupMainEngine(value != 0);
+            _activeShip.Motor.SetThrust(value);
+        }
+
+        private void OnTurnAxisChanged(float value)
+        {
+            if (!_activeShip)
+            {
+                return;
+            }
+
+            switch (value)
             {
                 case > 0:
                     _activeShip.SetupSideEngines(false, true);
@@ -86,25 +90,27 @@ namespace _Project.Runtime.Presenters
                     break;
             }
 
-            _activeShip.Motor.SetTurnAxis(turn.Value);
+            _activeShip.Motor.SetTurnAxis(value);
         }
 
         private void OnGunAttackSignal()
         {
-            if (_inputModel.TryGet(out FireGunPressed fire)
-                && _activeShip)
+            if (!_activeShip)
             {
-                _activeShip.Gun.TryAttack();
+                return;
             }
+
+            _activeShip.Gun.TryAttack();
         }
 
         private void OnAoeWeaponAttackSignal()
         {
-            if (_inputModel.TryGet(out AoeWeaponAttackPressed fire)
-                && _activeShip)
+            if (!_activeShip)
             {
-                _activeShip.AoeWeapon.TryAttack();
+                return;
             }
+
+            _activeShip.AoeWeapon.TryAttack();
         }
 
         private void OnShipSpawnCommand()
