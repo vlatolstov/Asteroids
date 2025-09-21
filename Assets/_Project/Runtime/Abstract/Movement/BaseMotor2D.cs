@@ -1,11 +1,11 @@
 using _Project.Runtime.Abstract.Configs;
+using _Project.Runtime.Movement;
 using _Project.Runtime.Utils;
 using UnityEngine;
 
 namespace _Project.Runtime.Abstract.Movement
 {
-    public abstract class BaseMotor2D<TConfig> : IMove, IMotorInput, IWrapByWorldBounds
-        where TConfig : class, IMovementConfig
+    public abstract class BaseMotor2D<TConfig> where TConfig : MovementConfig
     {
         protected readonly TConfig Config;
         protected readonly IWorldConfig World;

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4408cf981814402b9509cca1b4a3aa7b, type: 3}
   m_Name: UfoBlaster
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileWeaponConfig
-  _weaponCooldown: 1
-  _muzzleOffset: 0.6
-  _projectileConfig: {fileID: 11400000, guid: 5cbc4340fdb8c1545853f19aee8916da, type: 2}
-  _spread: 5
-  _bulletsPerShot: 1
-  _bulletsInterval: 0
+  <WeaponCooldown>k__BackingField: 1
+  <MuzzleOffset>k__BackingField: 0.6
+  <Projectile>k__BackingField: {fileID: 11400000, guid: 5cbc4340fdb8c1545853f19aee8916da, type: 2}
+  <Spread>k__BackingField: 5
+  <BulletsPerShot>k__BackingField: 1
+  <BulletsInterval>k__BackingField: 0
   _attackSounds:
   - {fileID: 8300000, guid: e6330ab6f572a5246b3092102340a796, type: 3}
   - {fileID: 8300000, guid: d08cdbe66b072ce449dc6cbb74f21331, type: 3}

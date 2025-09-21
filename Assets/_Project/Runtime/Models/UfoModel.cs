@@ -1,6 +1,7 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Utils;
 using UnityEngine;
 using Zenject;
@@ -9,7 +10,7 @@ namespace _Project.Runtime.Models
 {
     public class UfoModel : BaseModel, IInitializable, ITickable
     {
-        private readonly IUfoSpawnConfig _spawnConfig;
+        private readonly UfoSpawnConfig _spawnConfig;
         private readonly IWorldConfig _world;
 
         private float _time;
@@ -17,7 +18,7 @@ namespace _Project.Runtime.Models
         private int _alive;
         private GameState _gameState = GameState.Gameplay;
 
-        public UfoModel(IUfoSpawnConfig spawnConfig, IWorldConfig world)
+        public UfoModel(UfoSpawnConfig spawnConfig, IWorldConfig world)
         {
             _spawnConfig = spawnConfig;
             _world = world;

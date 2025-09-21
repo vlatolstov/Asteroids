@@ -4,11 +4,9 @@ using UnityEngine;
 namespace _Project.Runtime.Settings
 {
     [CreateAssetMenu(fileName = "GeneralSoundsConfig", menuName = "Settings/General Sounds Config", order = 0)]
-    public class GeneralSoundsConfig : ScriptableObject, IGeneralSoundsConfig
+    public class GeneralSoundsConfig : ScriptableObject
     {
-        [SerializeField]
-        private AudioClip _shipSpawn;
-
-        public AudioClip ShipSpawn => _shipSpawn;
+        [field: SerializeField]
+        public AudioClip ShipSpawn { get; private set; }
     }
 }

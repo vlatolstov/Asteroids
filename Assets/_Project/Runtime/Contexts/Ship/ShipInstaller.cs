@@ -16,7 +16,7 @@ namespace _Project.Runtime.Contexts.Ship
         public override void InstallBindings()
         {
             Container
-                .Bind<IMovementConfig>()
+                .Bind<MovementConfig>()
                 .FromInstance(MovementConfig)
                 .AsSingle();
 

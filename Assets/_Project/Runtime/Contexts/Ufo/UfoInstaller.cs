@@ -17,7 +17,7 @@ namespace _Project.Runtime.Contexts.Ufo
         public override void InstallBindings()
         {
             Container
-                .Bind<IMovementConfig>()
+                .Bind<MovementConfig>()
                 .FromInstance(MovementConfig)
                 .AsSingle();
 

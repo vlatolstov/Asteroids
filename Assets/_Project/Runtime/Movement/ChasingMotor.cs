@@ -1,20 +1,20 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.Movement;
-using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
+using _Project.Runtime.Settings;
 using UnityEngine;
 using GM = _Project.Runtime.Utils.GeometryMethods;
 
 namespace _Project.Runtime.Movement
 {
-    public class ChasingMotor : BaseMotor2D<IMovementConfig>
+    public class ChasingMotor : BaseMotor2D<MovementConfig>
     {
-        private readonly IChasingEnemyConfig _chase;
+        private readonly ChasingEnemyConfig _chase;
         
         private float _prevErr;
         private ShipPose _target;
 
-        public ChasingMotor(IMovementConfig config, IWorldConfig world, IChasingEnemyConfig chase) : base(config, world)
+        public ChasingMotor(MovementConfig config, IWorldConfig world, ChasingEnemyConfig chase) : base(config, world)
         {
             _chase = chase;
         }

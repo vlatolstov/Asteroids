@@ -5,25 +5,22 @@ using UnityEngine;
 namespace _Project.Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "AoeWeaponConfig", menuName = "Settings/Weapons/AOE Weapon", order = 0)]
-    public class AoeWeaponConfig : WeaponConfig, IAoeWeaponConfig, IWeaponRepresentation
+    public class AoeWeaponConfig : WeaponConfig, IWeaponRepresentation
     {
         [Header("Logic")]
-        [SerializeField]
-        private AoeAttackConfig _attack;
-        
-        [SerializeField]
-        private int _charges = 3;
+        [field:SerializeField]
+        public AoeAttackConfig Attack { get; private set; }
 
-        [SerializeField]
-        private float _chargeRate = 5f;
+        [field:SerializeField]
+        public int Charges { get; private set; }
+
+        [field:SerializeField]
+        public float ChargeRate { get; private set; }
 
         [Header("Representation")]
         [SerializeField]
         private AudioClip[] _attackSounds;
 
-        public AoeAttackConfig Attack => _attack;
-        public int Charges => _charges;
-        public float ChargeRate => _chargeRate;
         public AudioClip AttackSound => _attackSounds[Random.Range(0, _attackSounds.Length)];
     }
 }

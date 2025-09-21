@@ -5,7 +5,7 @@ using Zenject;
 
 namespace _Project.Runtime.Abstract.Weapons
 {
-    public abstract class BaseWeapon<TWeaponConfig> : IFixedTickable where TWeaponConfig : IWeaponConfig
+    public abstract class BaseWeapon<TWeaponConfig> : IFixedTickable where TWeaponConfig : WeaponConfig
     {
         protected readonly TWeaponConfig Config;
         protected readonly IFireParamsSource Source;

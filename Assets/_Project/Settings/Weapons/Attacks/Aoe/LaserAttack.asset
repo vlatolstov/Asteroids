@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1ac20010991481cb8d1e8b37c9993e9, type: 3}
   m_Name: LaserAttack
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeAttackConfig
-  _length: 40
-  _width: 0.5
-  _duration: 0.33
-  _mode: 0
+  <Length>k__BackingField: 40
+  <Width>k__BackingField: 0.5
+  <Duration>k__BackingField: 0.33
+  <Mode>k__BackingField: 0
   _sprites:
   - {fileID: -1842263095179682986, guid: 11b5475ab9cb1d7439e85b8ab4d20353, type: 3}
   _hitSounds:
   - {fileID: 8300000, guid: afe9234e1f6295b4a97a6f338a97c65f, type: 3}
   - {fileID: 8300000, guid: 44933b308c133ff478c00995ff880c99, type: 3}
-  _attackAnimation: {fileID: 9100000, guid: b46054fe2a1ea1d47be768516162e7c9, type: 2}
+  <AttackAnimation>k__BackingField: {fileID: 9100000, guid: b46054fe2a1ea1d47be768516162e7c9, type: 2}
+  <HitAnimation>k__BackingField: {fileID: 0}

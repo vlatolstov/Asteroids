@@ -2,6 +2,7 @@ using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Views;
 using Zenject;
 
@@ -14,10 +15,10 @@ namespace _Project.Runtime.Presenters
         private readonly UfoModel _ufo;
 
         private readonly AnimationView.Pool _pool;
-        private readonly IGeneralVisualsConfig _general;
+        private readonly GeneralVisualsConfig _general;
 
         public AnimationPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipModel ship,
-            AsteroidsModel asteroids, UfoModel ufo, IGeneralVisualsConfig general, AnimationView.Pool pool) : base(
+            AsteroidsModel asteroids, UfoModel ufo, GeneralVisualsConfig general, AnimationView.Pool pool) : base(
             model, viewsContainer, signalBus)
         {
             _ship = ship;

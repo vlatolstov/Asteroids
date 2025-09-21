@@ -1,22 +1,17 @@
-using _Project.Runtime.Abstract.Configs;
 using UnityEngine;
 
 namespace _Project.Runtime.Settings
 {
     [CreateAssetMenu(fileName = "ScoreConfig", menuName = "Settings/Score Config", order = 0)]
-    public class ScoreConfig : ScriptableObject, IScoreConfig
+    public class ScoreConfig : ScriptableObject
     {
-        [SerializeField]
-        private int _bigAsteroidScore;
+        [field: SerializeField]
+        public int LargeAsteroidScore { get; private set; }
 
-        [SerializeField]
-        private int _smallAsteroidScore;
+        [field: SerializeField]
+        public int SmallAsteroidScore { get; private set; }
 
-        [SerializeField]
-        private int _ufoScore;
-
-        public int LargeAsteroidScore => _bigAsteroidScore;
-        public int SmallAsteroidScore => _smallAsteroidScore;
-        public int UfoScore => _ufoScore;
+        [field: SerializeField]
+        public int UfoScore { get; private set; }
     }
 }

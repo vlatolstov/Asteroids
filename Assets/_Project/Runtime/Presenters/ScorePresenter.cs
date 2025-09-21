@@ -3,6 +3,7 @@ using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Settings;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -11,10 +12,10 @@ namespace _Project.Runtime.Presenters
     {
         private readonly AsteroidsModel _asteroidsModel;
         private readonly UfoModel _ufoModel;
-        private IScoreConfig _scoreConfig;
+        private readonly ScoreConfig _scoreConfig;
 
         public ScorePresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus,
-            AsteroidsModel asteroidsModel, UfoModel ufoModel, IScoreConfig scoreConfig)
+            AsteroidsModel asteroidsModel, UfoModel ufoModel, ScoreConfig scoreConfig)
             : base(model, viewsContainer, signalBus)
         {
             _asteroidsModel = asteroidsModel;

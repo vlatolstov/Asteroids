@@ -1,20 +1,17 @@
-using _Project.Runtime.Abstract.Configs;
 using UnityEngine;
 
 namespace _Project.Runtime.Settings
 {
     [CreateAssetMenu(fileName = "GeneralVisualsConfig", menuName = "Settings/General Visuals Config", order = 0)]
-    public class GeneralVisualsConfig : ScriptableObject, IGeneralVisualsConfig
+    public class GeneralVisualsConfig : ScriptableObject
     {
-        [SerializeField]
-        private RuntimeAnimatorController _shipDestroyed;
-        [SerializeField]
-        private RuntimeAnimatorController _ufoDestroyed;
-        [SerializeField]
-        private RuntimeAnimatorController _asteroidDestroyed;
+        [field: SerializeField]
+        public RuntimeAnimatorController ShipDestroyed { get; private set; }
 
-        public RuntimeAnimatorController ShipDestroyed => _shipDestroyed;
-        public RuntimeAnimatorController UfoDestroyed => _ufoDestroyed;
-        public RuntimeAnimatorController AsteroidDestroyed => _asteroidDestroyed;
+        [field: SerializeField]
+        public RuntimeAnimatorController UfoDestroyed { get; private set; }
+
+        [field: SerializeField]
+        public RuntimeAnimatorController AsteroidDestroyed { get; private set; }
     }
 }

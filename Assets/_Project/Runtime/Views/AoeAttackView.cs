@@ -104,7 +104,7 @@ namespace _Project.Runtime.Views
             _collider.enabled = true;
             Physics2D.SyncTransforms();
 
-            _follow = aoe.Attack.Mode == AoeAttachMode.FollowEmitter;
+            _follow = aoe.Attack.Mode == AoeAttackConfig.AttachMode.FollowEmitter;
         }
 
         public class Pool : ViewPool<Transform, AoeWeaponConfig, AoeAttackView>

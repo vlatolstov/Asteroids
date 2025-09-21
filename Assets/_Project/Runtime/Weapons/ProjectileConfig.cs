@@ -1,41 +1,38 @@
 using _Project.Runtime.Abstract.Visualization;
-using _Project.Runtime.Abstract.Weapons;
 using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "ProjectileConfig", menuName = "Settings/Weapons/Projectile")]
-    public class ProjectileConfig : ScriptableObject, IProjectileConfig, IAttackRepresentation
+    public class ProjectileConfig : ScriptableObject, IAttackRepresentation
     {
         [Header("Logic")]
-        [SerializeField]
-        private Vector2 _size;
+        [field: SerializeField]
+        public Vector2 Size { get; private set; }
 
-        [SerializeField]
-        private float _speed;
+        [field: SerializeField]
+        public float Speed { get; private set; }
 
-        [SerializeField]
-        private float _lifetime;
+        [field: SerializeField]
+        public float Lifetime { get; private set; }
 
         [Header("Representation")]
-        [SerializeField]
-        [Tooltip("Range of the projectile appearances, randomly picked to spawn")]
+        [SerializeField,
+         Tooltip("Range of the projectile appearances, randomly picked to spawn")]
         private Sprite[] _sprites;
-        
-        [SerializeField]
-        [Tooltip("Range of the projectile hit sounds, randomly picked to play at hit")]
-        private AudioClip[] _hitSounds;
-        
-        [SerializeField]
-        private RuntimeAnimatorController _hitAnimation;
 
-        public Vector2 Size => _size;
-        public float Speed => _speed;
-        public float Lifetime => _lifetime;
         public Sprite AttackSprite => _sprites[Random.Range(0, _sprites.Length)];
-        
-        public RuntimeAnimatorController AttackAnimation { get; }
+
+        [field: SerializeField,
+                Tooltip("Range of the projectile hit sounds, randomly picked to play at hit")]
+        private AudioClip[] _hitSounds;
+
         public AudioClip HitSound => _hitSounds[Random.Range(0, _hitSounds.Length)];
-        public RuntimeAnimatorController HitAnimation => _hitAnimation;
+
+        [field: SerializeField]
+        public RuntimeAnimatorController HitAnimation { get; private set; }
+
+        [field: SerializeField]
+        public RuntimeAnimatorController AttackAnimation { get; private set; }
     }
 }

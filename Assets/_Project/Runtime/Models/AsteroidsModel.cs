@@ -2,6 +2,7 @@ using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using _Project.Runtime.Settings;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
@@ -11,12 +12,12 @@ namespace _Project.Runtime.Models
     public class AsteroidsModel : BaseModel, IInitializable, ITickable, IDisposable
     {
         private readonly IWorldConfig _world;
-        private readonly IAsteroidsSpawnConfig _config;
+        private readonly AsteroidsSpawnConfig _config;
 
         private float _timer;
         private GameState _gameState;
 
-        public AsteroidsModel(IWorldConfig world, IAsteroidsSpawnConfig config)
+        public AsteroidsModel(IWorldConfig world, AsteroidsSpawnConfig config)
         {
             _world = world;
             _config = config;

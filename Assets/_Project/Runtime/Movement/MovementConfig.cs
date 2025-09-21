@@ -1,30 +1,23 @@
-using _Project.Runtime.Abstract.Movement;
 using UnityEngine;
 
 namespace _Project.Runtime.Movement
 {
     [CreateAssetMenu(fileName = "MovementConfig", menuName = "Settings/MovementConfig", order = 0)]
-    public class MovementConfig : ScriptableObject, IMovementConfig
+    public class MovementConfig : ScriptableObject
     {
-        [SerializeField]
-        private float _acceleration = 1f;
+        [field: SerializeField]
+        public float Acceleration { get; private set; }
 
-        [SerializeField]
-        private float _maxSpeed = 10f;
+        [field: SerializeField]
+        public float MaxSpeed { get; private set; }
 
-        [SerializeField]
-        private float _turnSpeed = 1f;
+        [field: SerializeField]
+        public float TurnSpeed { get; private set; }
 
-        [SerializeField]
-        private float _linearDamping = 0.2f;
+        [field: SerializeField]
+        public float LinearDamping { get; private set; }
 
-        [SerializeField]
-        private bool _isWrappedByWorldBounds = false;
-
-        public float Acceleration => _acceleration;
-        public float MaxSpeed => _maxSpeed;
-        public float TurnSpeed => _turnSpeed;
-        public float LinearDamping => _linearDamping;
-        public bool IsWrappedByWorldBounds => _isWrappedByWorldBounds;
+        [field: SerializeField]
+        public bool IsWrappedByWorldBounds { get; private set; }
     }
 }

@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace _Project.Runtime.Movement
 {
-    public class InertialMotor : BaseMotor2D<IMovementConfig>
+    public class InertialMotor : BaseMotor2D<MovementConfig>
     {
-        public InertialMotor(IMovementConfig config, IWorldConfig world) : base(config, world)
+        public InertialMotor(MovementConfig config, IWorldConfig world) : base(config, world)
         {
             SetThrust(1f);
         }

@@ -19,10 +19,10 @@ MonoBehaviour:
   - {fileID: 331181592111578567, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
   - {fileID: -1084394553811439122, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
   - {fileID: -4931366292851836932, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
-  _scale: 1
-  _initialDelay: 2
-  _interval: 4
-  _maxAlive: 4
-  _edgeOffset: 6
-  _speed: 5
-  _entryAngleJitterDeg: 15
+  <Scale>k__BackingField: 1
+  <InitialDelay>k__BackingField: 2
+  <Interval>k__BackingField: 4
+  <MaxAlive>k__BackingField: 4
+  <EdgeOffset>k__BackingField: 6
+  <Speed>k__BackingField: 5
+  <EntryAngleJitterDeg>k__BackingField: 15

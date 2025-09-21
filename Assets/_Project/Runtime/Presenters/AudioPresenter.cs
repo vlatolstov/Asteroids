@@ -2,6 +2,7 @@ using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Views;
 using Zenject;
 
@@ -10,11 +11,12 @@ namespace _Project.Runtime.Presenters
     public class AudioPresenter : BasePresenter<GameModel>
     {
         private readonly ShipModel _shipModel;
-        
-        private readonly AudioSourceView.Pool _audioPool;
-        private readonly IGeneralSoundsConfig _generalSounds;
 
-        public AudioPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipModel shipModel, IGeneralSoundsConfig generalSounds, AudioSourceView.Pool audioPool) : base(model,
+        private readonly AudioSourceView.Pool _audioPool;
+        private readonly GeneralSoundsConfig _generalSounds;
+
+        public AudioPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipModel shipModel,
+            GeneralSoundsConfig generalSounds, AudioSourceView.Pool audioPool) : base(model,
             viewsContainer, signalBus)
         {
             _shipModel = shipModel;
@@ -26,10 +28,10 @@ namespace _Project.Runtime.Presenters
         {
             AddUnsub(Model.Subscribe<ProjectileShoot>(OnProjectileShoot));
             AddUnsub(Model.Subscribe<ProjectileHit>(OnProjectileHit));
-            
+
             AddUnsub(Model.Subscribe<AoeAttackReleased>(OnAoeAttackReleased));
             AddUnsub(Model.Subscribe<AoeHit>(OnAoeHit));
-            
+
             AddUnsub(_shipModel.Subscribe<ShipSpawned>(OnShipSpawned));
         }
 
@@ -40,7 +42,7 @@ namespace _Project.Runtime.Presenters
                 _audioPool.Spawn(shoot.Position, shoot.Weapon.AttackSound);
             }
         }
-        
+
         private void OnProjectileHit()
         {
             if (Model.TryGet(out ProjectileHit hit))
@@ -48,7 +50,7 @@ namespace _Project.Runtime.Presenters
                 _audioPool.Spawn(hit.Position, hit.Projectile.HitSound);
             }
         }
-        
+
 
         private void OnAoeAttackReleased()
         {

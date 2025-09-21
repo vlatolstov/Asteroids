@@ -1,4 +1,3 @@
-using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Movement;
 using UnityEngine;
 using Zenject;
@@ -13,7 +12,7 @@ namespace _Project.Runtime.Contexts.Asteroids
         public override void InstallBindings()
         {
             Container
-                .Bind<IMovementConfig>()
+                .Bind<MovementConfig>()
                 .FromInstance(MovementConfig)
                 .AsSingle();
 

@@ -41,6 +41,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
+            _controls.Gameplay.Disable();
             _controls.Gameplay.SetCallbacks(null);
             _controls.Dispose();
             _controls = null;

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3dfb1ba04c54e78ba414e07ce197352, type: 3}
   m_Name: Rocket
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.ProjectileConfig
-  _size: {x: 0.5, y: 0.5}
-  _speed: 22
-  _lifetime: 1.5
+  <Size>k__BackingField: {x: 0.5, y: 0.5}
+  <Speed>k__BackingField: 22
+  <Lifetime>k__BackingField: 1.5
   _sprites:
   - {fileID: -8987198875676320708, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
   - {fileID: 5548178118557335035, guid: 0bc36172fc7d20a4e951805fb84eb41b, type: 3}
@@ -27,4 +27,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: cbc413d3101b50e4689f2b02d9955953, type: 3}
   - {fileID: 8300000, guid: 757b1b7606dd8584bbb5a9804917bccb, type: 3}
   - {fileID: 8300000, guid: 9622bab2acdeb7345a7cfe11084d1078, type: 3}
-  _hitAnimation: {fileID: 9100000, guid: da1480dfa41c38b4aba1e3a65b373e73, type: 2}
+  <HitAnimation>k__BackingField: {fileID: 9100000, guid: da1480dfa41c38b4aba1e3a65b373e73, type: 2}
+  <AttackAnimation>k__BackingField: {fileID: 0}

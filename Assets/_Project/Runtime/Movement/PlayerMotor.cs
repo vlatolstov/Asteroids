@@ -3,10 +3,9 @@ using _Project.Runtime.Abstract.Movement;
 
 namespace _Project.Runtime.Movement
 {
-    public class PlayerMotor : BaseMotor2D<IMovementConfig>
+    public class PlayerMotor : BaseMotor2D<MovementConfig>
     {
-        public PlayerMotor(IMovementConfig config, IWorldConfig world) : base(config, world)
+        public PlayerMotor(MovementConfig config, IWorldConfig world) : base(config, world)
         { }
-        
     }
 }

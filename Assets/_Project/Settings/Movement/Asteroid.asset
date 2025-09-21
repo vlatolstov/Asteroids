@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcbb251dc5a4f1cb0eabbd0413b8ed0, type: 3}
   m_Name: Asteroid
   m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.MovementConfig
-  _acceleration: 0
-  _maxSpeed: 1000
-  _turnSpeed: 0
-  _linearDamping: 0
-  _isWrappedByWorldBounds: 0
+  <Acceleration>k__BackingField: 0
+  <MaxSpeed>k__BackingField: 1000
+  <TurnSpeed>k__BackingField: 0
+  <LinearDamping>k__BackingField: 0
+  <IsWrappedByWorldBounds>k__BackingField: 0

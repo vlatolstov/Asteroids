@@ -2,15 +2,12 @@ using UnityEngine;
 
 namespace _Project.Runtime.Abstract.Weapons
 {
-    public abstract class WeaponConfig : ScriptableObject, IWeaponConfig
+    public abstract class WeaponConfig : ScriptableObject
     {
-        [SerializeField]
-        private float _weaponCooldown = 1f;
+        [field: SerializeField]
+        public float WeaponCooldown { get; private set; }
 
-        [SerializeField]
-        private float _muzzleOffset = 0f;
-        
-        public float WeaponCooldown => _weaponCooldown;
-        public float MuzzleOffset => _muzzleOffset;
+        [field: SerializeField]
+        public float MuzzleOffset { get; private set; }
     }
 }

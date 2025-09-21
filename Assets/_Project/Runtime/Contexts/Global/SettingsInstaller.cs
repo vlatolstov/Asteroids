@@ -26,27 +26,27 @@ namespace _Project.Runtime.Contexts.Global
         public override void InstallBindings()
         {
             Container
-                .Bind<IScoreConfig>()
+                .Bind<ScoreConfig>()
                 .FromInstance(_scoreConfig)
                 .AsSingle();
 
             Container
-                .Bind<IAsteroidsSpawnConfig>()
+                .Bind<AsteroidsSpawnConfig>()
                 .FromInstance(_asteroidsSpawnConfig)
                 .AsSingle();
             
             Container
-                .Bind<IUfoSpawnConfig>()
+                .Bind<UfoSpawnConfig>()
                 .FromInstance(_ufoSpawnConfig)
                 .AsSingle();
             
             Container
-                .Bind<IGeneralSoundsConfig>()
+                .Bind<GeneralSoundsConfig>()
                 .FromInstance(_generalSoundsConfig)
                 .AsSingle();
             
             Container
-                .Bind<IGeneralVisualsConfig>()
+                .Bind<GeneralVisualsConfig>()
                 .FromInstance(_generalVisualsConfig)
                 .AsSingle();
         }
