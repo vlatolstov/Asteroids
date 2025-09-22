@@ -4,14 +4,9 @@ namespace _Project.Runtime.Models
 {
     public class ScoreModel
     {
+        private int _totalScore;
+        
         public event Action<int> TotalScoreChanged;
-
-        public int TotalScore { get; private set; }
-
-        public ScoreModel()
-        {
-            TotalScore = 0;
-        }
 
         public void AddScore(int amount)
         {
@@ -20,14 +15,14 @@ namespace _Project.Runtime.Models
                 return;
             }
 
-            TotalScore += amount;
-            TotalScoreChanged?.Invoke(TotalScore);
+            _totalScore += amount;
+            TotalScoreChanged?.Invoke(_totalScore);
         }
 
         public void ChangeTotalScore(int newScore)
         {
-            TotalScore = newScore;
-            TotalScoreChanged?.Invoke(TotalScore);
+            _totalScore = newScore;
+            TotalScoreChanged?.Invoke(_totalScore);
         }
     }
 }

@@ -9,50 +9,47 @@ namespace _Project.Runtime.Movement
 {
     public class ChasingMotor : BaseMotor2D<MovementConfig>
     {
-        private readonly ChasingEnemyConfig _chase;
+        private readonly ChasingEnemyConfig _chaseConfig;
         
-        private float _prevErr;
+        private float _previousError;
         private ShipPose _target;
 
-        public ChasingMotor(MovementConfig config, IWorldConfig world, ChasingEnemyConfig chase) : base(config, world)
+        public ChasingMotor(MovementConfig config, IWorldConfig world, 
+            ChasingEnemyConfig chaseConfig) : base(config, world)
         {
-            _chase = chase;
+            _chaseConfig = chaseConfig;
+        }
+        
+        public void ChaseTarget(ShipPose target)
+        {
+            _target = target;
         }
 
         protected override void UpdateControls(float dt)
         {
-            var fwd = GM.AngleToDir(AngleRadians);
+            var forward = GM.AngleToDir(AngleRadians);
 
-            Vector2 deltaMove;
-            if (Config.IsWrappedByWorldBounds)
-            {
-                deltaMove = GM.ShortestWrappedDelta(Position, _target.Position, World.WorldRect);
-            }
-            else
-            {
-                deltaMove = _target.Position - Position;
-            }
+            var deltaMove = Config.IsWrappedByWorldBounds
+                ? GM.ShortestWrappedDelta(Position, _target.Position, World.WorldRect)
+                : _target.Position - Position;
             
-            float distMove = deltaMove.magnitude;
-            var aimDir = distMove > 1e-5f ? deltaMove / distMove : fwd;
+            float distanceToTarget = deltaMove.magnitude;
+            var aimDirection = distanceToTarget > 1e-5f ? deltaMove / distanceToTarget : forward;
 
-            float angErr = GM.SignedAngleRad(fwd, aimDir);
-            float dErr = (angErr - _prevErr) / Mathf.Max(dt, 1e-5f);
-            _prevErr = angErr;
+            float angleError = GM.SignedAngleRad(forward, aimDirection);
+            float angleErrorDelta = (angleError - _previousError) / Mathf.Max(dt, 1e-5f);
+            
+            _previousError = angleError;
 
-            float turnAxis = Mathf.Clamp(-(_chase.TurnKp * angErr + _chase.TurnKd * dErr), -1f, 1f);
-
-            float thrust = Mathf.Clamp(_chase.ThrustKp * distMove, 0f, _chase.MaxThrust);
-            float aimFactor = Mathf.Clamp01(1f - Mathf.Abs(angErr) / (45f * Mathf.Deg2Rad));
+            float turnAxis = Mathf.Clamp(-(_chaseConfig.TurnKp * angleError + _chaseConfig.TurnKd * angleErrorDelta), -1f, 1f);
+            float thrust = Mathf.Clamp(_chaseConfig.ThrustKp * distanceToTarget, 0f, _chaseConfig.MaxThrust);
+            
+            float aimFactor = Mathf.Clamp01(1f - Mathf.Abs(angleError) / (45f * Mathf.Deg2Rad));
+            
             thrust *= Mathf.Lerp(0.35f, 1f, aimFactor);
 
             SetThrust(thrust);
             SetTurnAxis(turnAxis);
-        }
-
-        public void ChaseTarget(ShipPose target)
-        {
-            _target = target;
         }
     }
 }

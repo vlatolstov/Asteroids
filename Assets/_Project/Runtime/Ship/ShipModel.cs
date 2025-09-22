@@ -8,9 +8,6 @@ namespace _Project.Runtime.Ship
     public class ShipModel
     {
         private bool _shipInGame;
-        private ShipPose _curShipPose;
-        private ProjectileWeaponState _curProjWeaponState;
-        private AoeWeaponState _curAoeWeaponState;
         
         private readonly IWorldConfig _worldConfig;
 
@@ -58,20 +55,17 @@ namespace _Project.Runtime.Ship
 
         public void UpdatePose(ShipPose pose)
         {
-            _curShipPose = pose;
             ShipPoseChanged?.Invoke(pose);
         }
 
         public void UpdateProjectileWeaponState(ProjectileWeaponState state)
         {
-            _curProjWeaponState = state;
-            ProjectileWeaponStateChanged?.Invoke(_curProjWeaponState);
+            ProjectileWeaponStateChanged?.Invoke(state);
         }
 
         public void UpdateAoeWeaponState(AoeWeaponState state)
         {
-            _curAoeWeaponState = state;
-            AoeWeaponStateChanged?.Invoke(_curAoeWeaponState);
+            AoeWeaponStateChanged?.Invoke(state);
         }
     }
 }

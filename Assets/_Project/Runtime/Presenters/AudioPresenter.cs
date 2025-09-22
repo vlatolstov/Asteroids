@@ -5,6 +5,7 @@ using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
+using UnityEngine;
 
 namespace _Project.Runtime.Presenters
 {
@@ -48,32 +49,27 @@ namespace _Project.Runtime.Presenters
 
         private void OnProjectileShot(ProjectileShot shot)
         {
-            var view =_audioPool.Spawn(shot.Position, shot.Weapon.AttackSound);
-            RegisterView(view);
+            SpawnAndRegister(shot.Position, shot.Weapon.AttackSound);
         }
 
         private void OnProjectileHit(ProjectileHit hit)
         {
-            var view =_audioPool.Spawn(hit.Position, hit.Projectile.HitSound);
-            RegisterView(view);
+            SpawnAndRegister(hit.Position, hit.Projectile.HitSound);
         }
 
         private void OnAoeAttackReleased(AoeAttackReleased attack)
         {
-            var view =_audioPool.Spawn(attack.Emitter.position, attack.Weapon.AttackSound);
-            RegisterView(view);
+            SpawnAndRegister(attack.Emitter.position, attack.Weapon.AttackSound);
         }
 
         private void OnAoeHit(AoeHit hit)
         {
-            var view = _audioPool.Spawn(hit.Position, hit.Attack.HitSound);
-            RegisterView(view);
+            SpawnAndRegister(hit.Position, hit.Attack.HitSound);
         }
 
         private void OnShipSpawned(ShipSpawned spawned)
         {
-            var view =_audioPool.Spawn(spawned.Position, _generalSounds.ShipSpawn);
-            RegisterView(view);
+            SpawnAndRegister(spawned.Position, _generalSounds.ShipSpawn);
         }
 
         private void OnViewExpired(uint viewId)
@@ -85,6 +81,12 @@ namespace _Project.Runtime.Presenters
             
             UnregisterView(view);
             _audioPool.Despawn(view);
+        }
+        
+        private void SpawnAndRegister(Vector2 position, AudioClip clip)
+        {
+            var view = _audioPool.Spawn(position, clip);
+            RegisterView(view);
         }
 
         private void RegisterView(AudioSourceView v)

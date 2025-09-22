@@ -7,33 +7,28 @@ namespace _Project.Runtime.Abstract.Movement
 {
     public abstract class BaseMotor2D<TConfig> where TConfig : MovementConfig
     {
+        private float _thrust;
+        private float _turnAxis;
+        private bool _wrapEnabled;
+        
         protected readonly TConfig Config;
         protected readonly IWorldConfig World;
-
+        
         protected BaseMotor2D(TConfig config, IWorldConfig world)
         {
             Config = config;
             World = world;
         }
 
-        private Vector2 _pos;
-        private Vector2 _vel;
-        private float _angRad;
+        public Vector2 Position { get; private set; }
+        public Vector2 Velocity { get; private set; }
+        public float AngleRadians { get; private set; }
 
-        protected bool WrapEnabled;
-
-        private float _thrust = 0f;
-        private float _turnAxis = 0f;
-
-        public Vector2 Position => _pos;
-        public Vector2 Velocity => _vel;
-        public float AngleRadians => _angRad;
-
-        public virtual void SetPose(Vector2 pos, Vector2 vel, float aRad)
+        public void SetPose(Vector2 pos, Vector2 vel, float aRad)
         {
-            _pos = pos;
-            _vel = vel;
-            _angRad = aRad;
+            Position = pos;
+            Velocity = vel;
+            AngleRadians = aRad;
         }
 
         public void MoveRigidbody(Rigidbody2D rigidbody)
@@ -41,32 +36,32 @@ namespace _Project.Runtime.Abstract.Movement
             float dt = Time.fixedDeltaTime;
             UpdateControls(dt);
 
-            Vector2 fwd = new(-Mathf.Sin(_angRad), Mathf.Cos(_angRad));
-            _vel += fwd * (Config.Acceleration * Mathf.Clamp01(_thrust) * dt);
+            Vector2 forward = new(-Mathf.Sin(AngleRadians), Mathf.Cos(AngleRadians));
+            Velocity += forward * (Config.Acceleration * Mathf.Clamp01(_thrust) * dt);
 
-            float spd = _vel.magnitude;
+            float speed = Velocity.magnitude;
 
-            if (spd > Config.MaxSpeed)
+            if (speed > Config.MaxSpeed)
             {
-                _vel *= (Config.MaxSpeed / spd);
+                Velocity *= (Config.MaxSpeed / speed);
             }
 
-            _angRad -= Config.TurnSpeed * Mathf.Clamp(_turnAxis, -1f, 1f) * dt;
+            AngleRadians -= Config.TurnSpeed * Mathf.Clamp(_turnAxis, -1f, 1f) * dt;
 
             if (Config.LinearDamping > 0f)
             {
-                _vel = Vector2.MoveTowards(_vel, Vector2.zero, Config.LinearDamping * dt);
+                Velocity = Vector2.MoveTowards(Velocity, Vector2.zero, Config.LinearDamping * dt);
             }
 
-            _pos += _vel * dt;
+            Position += Velocity * dt;
 
-            if (Config.IsWrappedByWorldBounds && WrapEnabled)
+            if (Config.IsWrappedByWorldBounds && _wrapEnabled)
             {
-                _pos = GeometryMethods.Wrap(_pos, World.WorldRect, World.WrapOffset);
+                Position = GeometryMethods.Wrap(Position, World.WorldRect, World.WrapOffset);
             }
 
-            rigidbody.MovePosition(_pos);
-            ApplyRotation(rigidbody, _angRad);
+            rigidbody.MovePosition(Position);
+            ApplyRotation(rigidbody, AngleRadians);
         }
 
         protected virtual void ApplyRotation(Rigidbody2D rb, float angleRad)
@@ -89,7 +84,7 @@ namespace _Project.Runtime.Abstract.Movement
 
         public void SetWrapMode(bool wrap)
         {
-            WrapEnabled = wrap;
+            _wrapEnabled = wrap;
         }
 
         public bool IsInsideWorldRect(float? selfOffset = null)

@@ -6,7 +6,8 @@ namespace _Project.Runtime.Models
     public class GameModel
     {
         public event Action<GameState> GameStateChanged;
-        public GameState CurrentState { get; private set; } = GameState.Preparing;
+        
+        public GameState CurrentState { get; private set; }
 
         public void SetGameState(GameState gameState)
         {

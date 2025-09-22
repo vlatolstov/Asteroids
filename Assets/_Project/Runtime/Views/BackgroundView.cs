@@ -8,56 +8,68 @@ namespace _Project.Runtime.Views
     public class BackgroundView : BaseView
     {
         [Inject]
-        private BackgroundJitterConfig _conf;
+        private BackgroundJitterConfig _config;
 
-        private Vector3 _baseLocalPos;
-        private Vector2 _current, _currentVel;
-        private Vector2 _parallax;
+        private Vector3 _baseLocalPosition;
+        private Vector2 _currentOffset;
+        private Vector2 _currentVelocity;
+        private Vector2 _parallaxOffset;
         private Vector2 _playerVelocity;
-        private float _t, _sx, _sy, _jx, _jy;
+        private float _time;
+        private float _slowNoiseX;
+        private float _slowNoiseY;
+        private float _jitterNoiseX;
+        private float _jitterNoiseY;
 
-        void Awake()
+        private void Awake()
         {
-            _baseLocalPos = transform.localPosition;
+            _baseLocalPosition = transform.localPosition;
 
-            _sx = Random.value * 1000f;
-            _sy = Random.value * 1000f;
-            _jx = Random.value * 2000f;
-            _jy = Random.value * 2000f;
+            _slowNoiseX = Random.value * 1000f;
+            _slowNoiseY = Random.value * 1000f;
+            _jitterNoiseX = Random.value * 2000f;
+            _jitterNoiseY = Random.value * 2000f;
         }
 
-        void Update()
+        private void Update()
         {
-            float dt = _conf.UseUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            float dt = _config.UseUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+
             if (dt <= 0f)
             {
                 return;
             }
 
-            _t += dt;
+            _time += dt;
 
-            Vector2 slow =
-                new Vector2(Mathf.PerlinNoise(_sx + _t * _conf.SlowFrequency, _sy) - 0.5f,
-                    Mathf.PerlinNoise(_sy + _t * _conf.SlowFrequency, _sx) - 0.5f)
-                * (_conf.SlowAmplitude * 2f);
+            var slowOffset =
+                new Vector2(Mathf.PerlinNoise(_slowNoiseX + _time * _config.SlowFrequency, _slowNoiseY) - 0.5f,
+                    Mathf.PerlinNoise(_slowNoiseY + _time * _config.SlowFrequency, _slowNoiseX) - 0.5f);
+            slowOffset *= _config.SlowAmplitude * 2f;
 
-            Vector2 jit =
-                new Vector2(Mathf.PerlinNoise(_jx + _t * _conf.JitterFrequency, _jy) - 0.5f,
-                    Mathf.PerlinNoise(_jy + _t * _conf.JitterFrequency, _jx) - 0.5f)
-                * (_conf.JitterAmplitude * 2f);
+            var jitterOffset =
+                new Vector2(Mathf.PerlinNoise(_jitterNoiseX + _time * _config.JitterFrequency, _jitterNoiseY) - 0.5f,
+                    Mathf.PerlinNoise(_jitterNoiseY + _time * _config.JitterFrequency, _jitterNoiseX) - 0.5f);
+            jitterOffset *= _config.JitterAmplitude * 2f;
 
-            Vector2 v = _playerVelocity;
-            Vector2 parallaxTarget = -v * _conf.ParallaxStrength;
-            parallaxTarget = Vector2.ClampMagnitude(parallaxTarget, _conf.ParallaxMax);
+            var parallaxTarget = -_playerVelocity * _config.ParallaxStrength;
+            parallaxTarget = Vector2.ClampMagnitude(parallaxTarget, _config.ParallaxMax);
 
-            float a = 1f - Mathf.Exp(-_conf.ParallaxResponse * dt);
-            _parallax = Vector2.Lerp(_parallax, parallaxTarget, a);
+            float parallaxLerpFactor = 1f - Mathf.Exp(-_config.ParallaxResponse * dt);
+            _parallaxOffset = Vector2.Lerp(_parallaxOffset, parallaxTarget, parallaxLerpFactor);
 
-            Vector2 target = slow + jit + _parallax;
-            target = Vector2.ClampMagnitude(target, _conf.MaxOffset);
+            var targetOffset = slowOffset + jitterOffset + _parallaxOffset;
+            targetOffset = Vector2.ClampMagnitude(targetOffset, _config.MaxOffset);
 
-            _current = Vector2.SmoothDamp(_current, target, ref _currentVel, _conf.SmoothTime, Mathf.Infinity, dt);
-            transform.localPosition = _baseLocalPos + (Vector3)_current;
+            _currentOffset = Vector2.SmoothDamp(
+                _currentOffset,
+                targetOffset,
+                ref _currentVelocity,
+                _config.SmoothTime,
+                Mathf.Infinity,
+                dt);
+
+            transform.localPosition = _baseLocalPosition + (Vector3)_currentOffset;
         }
 
         public void SetPlayerVelocity(Vector2 velocity)

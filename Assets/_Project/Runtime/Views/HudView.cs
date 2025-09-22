@@ -67,16 +67,16 @@ namespace _Project.Runtime.Views
             SetVisibility(_controlsLabel, true);
             _playerSpawnButton.text = "Start";
 
-            SetVisibility(_shipDataContainer,false);
-            SetVisibility(_gameOverLabel,false);
-            SetVisibility(_finalScoreLabel,false);
-            SetVisibility(_restartGameButton,false);
+            SetVisibility(_shipDataContainer, false);
+            SetVisibility(_gameOverLabel, false);
+            SetVisibility(_finalScoreLabel, false);
+            SetVisibility(_restartGameButton, false);
         }
 
         private void Gameplay()
         {
             SetVisibility(_shipDataContainer, true);
-            
+
             SetVisibility(_mainContainer, false);
         }
 
@@ -87,10 +87,10 @@ namespace _Project.Runtime.Views
             SetVisibility(_finalScoreLabel, true);
             _playerSpawnButton.text = "BACK IN GAME";
             SetVisibility(_playerSpawnButton, true);
-            SetVisibility(_restartGameButton,true);
+            SetVisibility(_restartGameButton, true);
 
-            SetVisibility(_shipDataContainer ,false);
-            SetVisibility(_controlsLabel,false);
+            SetVisibility(_shipDataContainer, false);
+            SetVisibility(_controlsLabel, false);
         }
 
         public void UpdateGameState(GameState gameState)
@@ -116,25 +116,23 @@ namespace _Project.Runtime.Views
         public void UpdatePoseData(Vector2 pos, Vector2 vel, float angleRad)
         {
             if (_posLabel != null)
-                _posLabel.text = $"POS  X:{pos.x,7:0.00}  Y:{pos.y,7:0.00}";
+                _posLabel.text = $"POS X:{pos.x,7:0.00} Y:{pos.y,7:0.00}";
 
             if (_spdLabel != null)
             {
-                float spd = vel.magnitude;
-                _spdLabel.text = $"SPD  {spd:0.00}";
+                float speed = vel.magnitude;
+                _spdLabel.text = $"SPD {speed:0.00}";
             }
 
             if (_angLabel != null)
             {
-                float angDeg = Mathf.Repeat(angleRad * Mathf.Rad2Deg, 360f);
-                _angLabel.text = $"ANG  {angDeg:0.0}°";
+                float angleDegrees = Mathf.Repeat(angleRad * Mathf.Rad2Deg, 360f);
+                _angLabel.text = $"ANG {angleDegrees:0.0}°";
             }
         }
 
         public void UpdateProjectileWeaponData(float cooldown, float reloadRatio)
-        {
-            
-        }
+        { }
 
         public void UpdateAoeWeaponData(int total, int current, float rechargeRatio)
         {
@@ -155,9 +153,10 @@ namespace _Project.Runtime.Views
         {
             PlayerSpawnButtonPressed?.Invoke();
         }
-        
+
         private void OnRestartGameButtonClicked()
         {
+            //TODO replace 
             string sceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(sceneName);
         }
