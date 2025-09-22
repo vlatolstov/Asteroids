@@ -1,12 +1,11 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Data;
-using _Project.Runtime.Settings;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace _Project.Runtime.Models
+namespace _Project.Runtime.Asteroid
 {
     public class AsteroidsModel : ITickable
     {

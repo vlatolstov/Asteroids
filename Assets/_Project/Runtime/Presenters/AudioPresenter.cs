@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
+using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
 
 namespace _Project.Runtime.Presenters

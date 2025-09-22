@@ -1,10 +1,9 @@
 using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Views;
 using UnityEngine;
 
-namespace _Project.Runtime.Presenters
+namespace _Project.Runtime.Ship
 {
     public class ShipPresenter : IDisposable
     {

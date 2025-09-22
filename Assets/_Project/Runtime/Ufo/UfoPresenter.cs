@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Views;
+using _Project.Runtime.Ship;
 
-namespace _Project.Runtime.Presenters
+namespace _Project.Runtime.Ufo
 {
     public class UfoPresenter : IDisposable
     {

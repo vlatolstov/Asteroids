@@ -1,8 +1,10 @@
+using _Project.Runtime.Asteroid;
 using _Project.Runtime.Settings;
+using _Project.Runtime.Ufo;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Runtime.Contexts.Global
+namespace _Project.Runtime.Installers
 {
     [CreateAssetMenu(fileName = "SettingsInstaller", menuName = "Installers/Settings Installer")]
     public class SettingsInstaller : ScriptableObjectInstaller

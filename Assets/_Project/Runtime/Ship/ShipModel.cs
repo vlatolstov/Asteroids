@@ -3,10 +3,22 @@ using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Data;
 using UnityEngine;
 
-namespace _Project.Runtime.Models
+namespace _Project.Runtime.Ship
 {
     public class ShipModel
     {
+        private bool _shipInGame;
+        private ShipPose _curShipPose;
+        private ProjectileWeaponState _curProjWeaponState;
+        private AoeWeaponState _curAoeWeaponState;
+        
+        private readonly IWorldConfig _worldConfig;
+
+        public ShipModel(IWorldConfig worldConfig)
+        {
+            _worldConfig = worldConfig;
+        }
+        
         public event Action<Vector3> ShipSpawnCommandRequested;
         public event Action ShipDespawnCommandRequested;
         public event Action<ShipSpawned> ShipSpawned;
@@ -15,24 +27,9 @@ namespace _Project.Runtime.Models
         public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
         public event Action<AoeWeaponState> AoeWeaponStateChanged;
 
-        public bool ShipInGame { get; private set; }
-
-        public ShipPose CurShipPose { get; private set; }
-        
-        private ProjectileWeaponState _curProjWeaponState;
-        private AoeWeaponState _curAoeWeaponState;
-
-
-        private readonly IWorldConfig _worldConfig;
-
-        public ShipModel(IWorldConfig worldConfig)
-        {
-            _worldConfig = worldConfig;
-        }
-
         public void RequestSpawn()
         {
-            if (ShipInGame)
+            if (_shipInGame)
             {
                 return;
             }
@@ -42,26 +39,26 @@ namespace _Project.Runtime.Models
 
         public void RequestDespawn()
         {
-            ShipInGame = false;
+            _shipInGame = false;
             ShipDespawnCommandRequested?.Invoke();
         }
 
         public void HandleShipSpawned(ShipSpawned shipSpawned)
         {
-            ShipInGame = true;
+            _shipInGame = true;
             ShipSpawned?.Invoke(shipSpawned);
         }
 
         public void HandleShipDestroyed(ShipDestroyed shipDestroyed)
         {
-            ShipInGame = false;
+            _shipInGame = false;
             ShipDestroyed?.Invoke(shipDestroyed);
             ShipDespawnCommandRequested?.Invoke();
         }
 
         public void UpdatePose(ShipPose pose)
         {
-            CurShipPose = pose;
+            _curShipPose = pose;
             ShipPoseChanged?.Invoke(pose);
         }
 

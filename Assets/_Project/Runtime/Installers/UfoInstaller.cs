@@ -1,17 +1,17 @@
-using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Movement;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Runtime.Contexts.Ship
+namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "ShipInstaller", menuName = "Installers/Ship Installer")]
-    public class ShipInstaller : ScriptableObjectInstaller
+    [CreateAssetMenu(fileName = "UfoInstaller", menuName = "Installers/UFO Installer")]
+    public class UfoInstaller : ScriptableObjectInstaller
     {
         public MovementConfig MovementConfig;
-        public ProjectileWeaponConfig ShipGun;
-        public AoeWeaponConfig AoeWeapon;
+        public ChasingEnemyConfig ChaseConfig;
+        public ProjectileWeaponConfig UfoGun;
 
         public override void InstallBindings()
         {
@@ -21,17 +21,17 @@ namespace _Project.Runtime.Contexts.Ship
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<PlayerMotor>()
+                .BindInterfacesAndSelfTo<ChasingMotor>()
                 .AsTransient();
 
             Container
                 .BindInterfacesAndSelfTo<ProjectileWeaponConfig>()
-                .FromInstance(ShipGun)
+                .FromInstance(UfoGun)
                 .AsSingle();
             
             Container
-                .BindInterfacesAndSelfTo<AoeWeaponConfig>()
-                .FromInstance(AoeWeapon)
+                .BindInterfacesAndSelfTo<ChasingEnemyConfig>()
+                .FromInstance(ChaseConfig)
                 .AsSingle();
         }
     }

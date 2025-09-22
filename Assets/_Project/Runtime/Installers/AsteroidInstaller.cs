@@ -2,7 +2,7 @@ using _Project.Runtime.Movement;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Runtime.Contexts.Asteroids
+namespace _Project.Runtime.Installers
 {
     [CreateAssetMenu(fileName = "AsteroidInstaller", menuName = "Installers/Asteroid Installer")]
     public class AsteroidInstaller : ScriptableObjectInstaller

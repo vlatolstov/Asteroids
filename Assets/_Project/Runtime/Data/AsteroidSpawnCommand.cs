@@ -1,4 +1,3 @@
-using _Project.Runtime.Abstract.MVP;
 using UnityEngine;
 
 namespace _Project.Runtime.Data

@@ -1,13 +1,15 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.Asteroid;
 using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
-using _Project.Runtime.Utils;
+using _Project.Runtime.Ship;
+using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Runtime.Contexts.Game
+namespace _Project.Runtime.Installers
 {
     [CreateAssetMenu(fileName = "GameInstaller", menuName = "Installers/Game Installer")]
     public class GameInstaller : ScriptableObjectInstaller

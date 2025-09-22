@@ -3,9 +3,10 @@ using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
+using _Project.Runtime.Views;
 using UnityEngine;
 
-namespace _Project.Runtime.Views
+namespace _Project.Runtime.Asteroid
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class AsteroidView : BaseMovableView<InertialMotor>

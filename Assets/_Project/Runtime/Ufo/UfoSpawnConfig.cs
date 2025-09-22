@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Runtime.Settings
+namespace _Project.Runtime.Ufo
 {
     [CreateAssetMenu(fileName = "UfoSpawnConfig", menuName = "Settings/UFO Spawn Config")]
     public sealed class UfoSpawnConfig : ScriptableObject

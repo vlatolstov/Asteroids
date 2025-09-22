@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Views;
 
-namespace _Project.Runtime.Presenters
+namespace _Project.Runtime.Asteroid
 {
     public class AsteroidsPresenter : IDisposable
     {

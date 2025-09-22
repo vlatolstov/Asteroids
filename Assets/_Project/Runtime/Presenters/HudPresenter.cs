@@ -2,6 +2,7 @@ using System;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
 using UnityEngine;
 using Zenject;

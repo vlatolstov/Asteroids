@@ -6,12 +6,13 @@ using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
 using _Project.Runtime.Settings;
+using _Project.Runtime.Views;
 using _Project.Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 using GM = _Project.Runtime.Utils.GeometryMethods;
 
-namespace _Project.Runtime.Views
+namespace _Project.Runtime.Ufo
 {
     [RequireComponent(typeof(Collider2D),
         typeof(SpriteRenderer))]

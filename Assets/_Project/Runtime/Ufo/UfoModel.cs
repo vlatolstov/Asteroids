@@ -1,13 +1,12 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Data;
-using _Project.Runtime.Settings;
 using _Project.Runtime.Utils;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
-namespace _Project.Runtime.Models
+namespace _Project.Runtime.Ufo
 {
     public class UfoModel : ITickable
     {
