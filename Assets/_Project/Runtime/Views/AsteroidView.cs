@@ -1,23 +1,23 @@
-using _Project.Runtime.Abstract.Configs;
+using System;
 using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Runtime.Views
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public class AsteroidView : BaseMovableView<InertialMotor>
     {
-        private SpriteRenderer _sr;
         private AsteroidSize _size;
+        private float _selfOffset;
         private bool _entered;
 
-        [Inject]
-        private IWorldConfig _world;
+        private SpriteRenderer _sr;
 
+        public event Action<AsteroidDestroyed> Destroyed;
+        public event Action<AsteroidOffscreen> Offscreen;
 
         protected override void Awake()
         {
@@ -29,9 +29,7 @@ namespace _Project.Runtime.Views
         {
             base.FixedUpdate();
 
-            float maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
-            bool inside = _world.ExpandedRect(maxScale / 2 + 1).Contains(Motor.Position);
-
+            bool inside = Motor.IsInsideWorldRect(_selfOffset);
             switch (_entered)
             {
                 case false when inside:
@@ -39,7 +37,7 @@ namespace _Project.Runtime.Views
                     _entered = true;
                     break;
                 case true when !inside:
-                    ReportOffscreen();
+                    Offscreen?.Invoke(new AsteroidOffscreen(ViewId, _size));
                     break;
             }
         }
@@ -48,7 +46,8 @@ namespace _Project.Runtime.Views
         {
             if (other.gameObject.layer != gameObject.layer)
             {
-                ReportDestroyedByHit();
+                Destroyed?.Invoke(new AsteroidDestroyed(ViewId, _size, transform.position, transform.rotation,
+                    transform.localScale, Motor.Velocity));
             }
         }
 
@@ -57,18 +56,9 @@ namespace _Project.Runtime.Views
             if (gameObject.layer != other.gameObject.layer
                 && other.CompareTag("Attack"))
             {
-                ReportDestroyedByHit();
+                Destroyed?.Invoke(new AsteroidDestroyed(ViewId, _size, transform.position, transform.rotation,
+                    transform.localScale, Motor.Velocity));
             }
-        }
-
-        private void ReportOffscreen()
-        {
-            Fire(new AsteroidViewOffscreen(ViewId, _size));
-        }
-
-        public void ReportDestroyedByHit()
-        {
-            Fire(new AsteroidDestroyed(ViewId, _size, Motor.Position, Motor.Velocity, transform.localScale));
         }
 
         private void Reinitialize(AsteroidSpawnCommand args)
@@ -83,11 +73,12 @@ namespace _Project.Runtime.Views
 
             transform.position = args.Pos;
             transform.localScale = new Vector3(args.Scale, args.Scale);
+            _selfOffset = Mathf.Max(transform.localScale.x, transform.localScale.y) / 2;
         }
 
         public class Pool : ViewPool<AsteroidSpawnCommand, AsteroidView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
             protected override void Reinitialize(AsteroidSpawnCommand args, AsteroidView item)

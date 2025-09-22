@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Abstract.Weapons;
@@ -20,46 +21,86 @@ namespace _Project.Runtime.Views
         [SerializeField]
         private GameObject _rightEngine;
 
-        [Inject]
         private ProjectileWeaponConfig _gunConfig;
-
-        [Inject]
         private AoeWeaponConfig _aoeWeaponConfig;
+        
+        [Inject]
+        private void Construct(ProjectileWeaponConfig gunConfig, AoeWeaponConfig aoeWeaponConfig)
+        {
+            _gunConfig = gunConfig;
+            _aoeWeaponConfig = aoeWeaponConfig;
+        }
 
-        public ProjectileWeapon Gun;
-        public AoeWeapon AoeWeapon;
+        private ProjectileWeapon _gun;
+        private ProjectileWeaponState _projState;
+        
+        private AoeWeapon _aoeWeapon;
+        private AoeWeaponState _aoeState;
+        
+        public event Action<ProjectileShot> ProjectileFired;
+        public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
+        public event Action<AoeAttackReleased> AoeAttacked;
+        public event Action<AoeWeaponState> AoeWeaponStateChanged;
+        public event Action<ShipPose> PoseChanged;
+        public event Action<ShipDestroyed> Destroyed;
 
+        private ShipPose _pose;
         private bool _destroyed;
 
         protected override void Awake()
         {
             base.Awake();
-            Gun = new ProjectileWeapon(_gunConfig, this);
-            AoeWeapon = new AoeWeapon(_aoeWeaponConfig, this);
+            _gun = new ProjectileWeapon(_gunConfig, this);
+            _aoeWeapon = new AoeWeapon(_aoeWeaponConfig, this);
             
-            Gun.AttackGenerated += OnWeaponAttack;
-            AoeWeapon.AttackGenerated += OnWeaponAttack;
+            _gun.ProjectileFired += OnProjectileAttack;
+            _aoeWeapon.AttackReleased += OnAoeAttack;
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
 
-            Gun.FixedTick();
-            AoeWeapon.FixedTick();
+            _gun.FixedTick();
+            _aoeWeapon.FixedTick();
         }
 
         private void Update()
         {
-            Fire(new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians));
-            Fire(AoeWeapon.ProvideAoeWeaponState());
+            var pose = new ShipPose(Motor.Position, Motor.Velocity, Motor.AngleRadians);
+            if (_pose != pose)
+            {
+                _pose = pose;
+                PoseChanged?.Invoke(_pose);
+            }
+
+            var projState = _gun.ProvideProjWeaponState();
+            if (projState != _projState)
+            {
+                ProjectileWeaponStateChanged?.Invoke(projState);
+            }
+
+            var aoeState = _aoeWeapon.ProvideAoeWeaponState();
+            if (aoeState != _aoeState)
+            {
+                AoeWeaponStateChanged?.Invoke(aoeState);
+            }
         }
-        
+
+        private void OnDestroy()
+        {
+            _gun.ProjectileFired -= OnProjectileAttack;
+            _aoeWeapon.AttackReleased -= OnAoeAttack;
+
+            _gun = null;
+            _aoeWeapon = null;
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
-                Die();
+                Destroyed?.Invoke(new ShipDestroyed(transform.position, transform.rotation, transform.localScale));
             }
         }
 
@@ -69,43 +110,18 @@ namespace _Project.Runtime.Views
                 && other.CompareTag("Attack")
                 && !_destroyed)
             {
-                Die();
+                Destroyed?.Invoke(new ShipDestroyed(transform.position, transform.rotation, transform.localScale));
             }
         }
-
-        private void OnWeaponAttack(IData attackData)
+        
+        public void TryShootProjectile()
         {
-            switch (attackData)
-            {
-                case ProjectileShoot p:
-                    Fire(p);
-                    break;
-                case AoeAttackReleased l:
-                    Fire(l);
-                    break;
-                default:
-                    Debug.LogWarning($"Unknown attack data: {attackData?.GetType().Name}");
-                    break;
-            }
+            _gun.TryAttack();
         }
 
-        private void Die()
+        public void TryReleaseAoeAttack()
         {
-            SetupMainEngine(false);
-            SetupSideEngines(false, false);
-            
-            Motor.SetThrust(0f);
-            Motor.SetTurnAxis(0f);
-            
-            AoeWeapon.Reinforce();
-
-            foreach (var aoe in GetComponentsInChildren<AoeAttackView>())
-            {
-                aoe.TurnOff();
-            }
-            
-            _destroyed = true;
-            Fire(new ShipDestroyed(ViewId, Motor.Position, transform.localScale));
+            _aoeWeapon.TryAttack();
         }
 
         public void SetupMainEngine(bool main)
@@ -120,15 +136,26 @@ namespace _Project.Runtime.Views
         }
         
         public bool TryGetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity,
-            out int layer)
+            out int layer, out Source sourceType)
         {
             origin = transform.position;
             direction = transform.up;
             inheritVelocity = Motor?.Velocity ?? Vector2.zero;
             layer = gameObject.layer;
+            sourceType = Source.Ship;
             return true;
         }
 
+        private void OnProjectileAttack(ProjectileShot proj)
+        {
+            ProjectileFired?.Invoke(proj);
+        }
+
+        private void OnAoeAttack(AoeAttackReleased aoe)
+        {
+            AoeAttacked?.Invoke(aoe);
+        }
+        
         private void Reinitialize(Vector2 position)
         {
             _destroyed = false;
@@ -136,19 +163,33 @@ namespace _Project.Runtime.Views
             
             transform.position = position;
             Motor.SetPose(position, Vector2.zero, 0f);
-            
-            Fire(new ShipSpawned(true, ViewId, Motor.Position));
         }
 
         public class Pool : ViewPool<Vector2, ShipView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
             protected override void Reinitialize(Vector2 p1, ShipView item)
             {
                 base.Reinitialize(p1, item);
                 item.Reinitialize(p1);
+            }
+
+            protected override void OnDespawned(ShipView item)
+            {
+                base.OnDespawned(item);
+                
+                item.SetupMainEngine(false);
+                item.SetupSideEngines(false, false);
+            
+                item.Motor.SetThrust(0f);
+                item.Motor.SetTurnAxis(0f);
+            
+                item._aoeWeapon.Reinforce();
+                item._pose = default;
+            
+                item._destroyed = true;
             }
         }
     }

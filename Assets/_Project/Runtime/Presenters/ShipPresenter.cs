@@ -1,61 +1,77 @@
-using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
+using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Views;
-using Zenject;
+using UnityEngine;
 
 namespace _Project.Runtime.Presenters
 {
-    public class ShipPresenter : BasePresenter<ShipModel>
+    public class ShipPresenter : IDisposable
     {
+        private readonly ShipModel _shipModel;
+        private readonly CombatModel _combatModel;
         private readonly InputModel _inputModel;
         private readonly ShipView.Pool _pool;
+
         private ShipView _activeShip;
 
-        private IWorldConfig _world;
-
-        public ShipPresenter(ShipModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipView.Pool pool,
-            InputModel inputModel, IWorldConfig world) : base(model, viewsContainer, signalBus)
+        public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel, ShipView.Pool pool)
         {
-            _pool = pool;
+            _shipModel = shipModel;
+            _combatModel = combatModel;
             _inputModel = inputModel;
-            _world = world;
-        }
-
-        public override void Initialize()
-        {
-            ForwardOn<ShipPose>();
-            ForwardOn<ShipSpawnRequest>(publish: true);
-            ForwardOn<ShipDespawnRequest>(publish: true);
-            ForwardOn<ShipSpawned>(publish: true);
-            ForwardOn<ShipDestroyed>(publish: true);
+            _pool = pool;
 
             _inputModel.FireGunPressed += OnGunAttackSignal;
             _inputModel.AoeAttackPressed += OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged += OnThrustChanged;
             _inputModel.TurnChanged += OnTurnAxisChanged;
 
-            AddUnsub(Model.Subscribe<ShipSpawnCommand>(OnShipSpawnCommand));
-            AddUnsub(Model.Subscribe<ShipDespawnCommand>(OnShipDespawnCommand));
+            _shipModel.ShipSpawnCommandRequested += OnShipSpawnCommand;
+            _shipModel.ShipDespawnCommandRequested += OnShipDespawnCommand;
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             _inputModel.FireGunPressed -= OnGunAttackSignal;
             _inputModel.AoeAttackPressed -= OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged -= OnThrustChanged;
             _inputModel.TurnChanged -= OnTurnAxisChanged;
+
+            _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
+            _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
             DetachShip();
         }
 
-        private void TryAttachShip(ShipView shipView)
+        private void AttachShip(ShipView shipView)
         {
+            if (!shipView)
+            {
+                return;
+            }
+
             _activeShip = shipView;
+            shipView.PoseChanged += OnShipPoseChanged;
+            shipView.ProjectileFired += OnProjectileFired;
+            shipView.ProjectileWeaponStateChanged += OnProjectileWeaponStateChanged;
+            shipView.AoeAttacked += OnAoeAttackReleased;
+            shipView.AoeWeaponStateChanged += OnAoeWeaponStateChanged;
+            shipView.Destroyed += OnShipDestroyed;
         }
 
         private void DetachShip()
         {
+            if (!_activeShip)
+            {
+                return;
+            }
+
+            _activeShip.PoseChanged -= OnShipPoseChanged;
+            _activeShip.ProjectileFired -= OnProjectileFired;
+            _activeShip.ProjectileWeaponStateChanged -= OnProjectileWeaponStateChanged;
+            _activeShip.AoeAttacked -= OnAoeAttackReleased;
+            _activeShip.AoeWeaponStateChanged -= OnAoeWeaponStateChanged;
+            _activeShip.Destroyed -= OnShipDestroyed;
             _activeShip = null;
         }
 
@@ -100,7 +116,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _activeShip.Gun.TryAttack();
+            _activeShip.TryShootProjectile();
         }
 
         private void OnAoeWeaponAttackSignal()
@@ -110,43 +126,61 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _activeShip.AoeWeapon.TryAttack();
+            _activeShip.TryReleaseAoeAttack();
         }
 
-        private void OnShipSpawnCommand()
+        private void OnShipSpawnCommand(Vector3 position)
         {
             if (_activeShip)
             {
                 return;
             }
 
-            if (Model.TryGet(out ShipSpawnCommand spawn))
-            {
-                var ship = _pool.Spawn(spawn.Position);
-                TryAttachShip(ship);
-            }
+            var ship = _pool.Spawn(position);
+            AttachShip(ship);
+            _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
+            _shipModel.UpdatePose(new ShipPose(position, Vector2.zero, 0f));
         }
 
         private void OnShipDespawnCommand()
         {
-            if (Model.TryGet(out ShipDespawnCommand despawn))
+            if (!_activeShip)
             {
-                var view = ViewsContainer.GetViewById(despawn.ViewId);
-                if (!view || view is not ShipView ship)
-                {
-                    return;
-                }
-
-                if (_activeShip == ship)
-                {
-                    _pool.Despawn(_activeShip);
-                    DetachShip();
-                }
-                else
-                {
-                    _pool.Despawn(ship);
-                }
+                return;
             }
+
+            _pool.Despawn(_activeShip);
+            DetachShip();
+        }
+
+        private void OnShipPoseChanged(ShipPose shipPose)
+        {
+            _shipModel.UpdatePose(shipPose);
+        }
+
+        private void OnProjectileWeaponStateChanged(ProjectileWeaponState state)
+        {
+            _shipModel.UpdateProjectileWeaponState(state);
+        }
+
+        private void OnAoeWeaponStateChanged(AoeWeaponState state)
+        {
+            _shipModel.UpdateAoeWeaponState(state);
+        }
+
+        private void OnShipDestroyed(ShipDestroyed destroyed)
+        {
+            _shipModel.HandleShipDestroyed(destroyed);
+        }
+
+        private void OnProjectileFired(ProjectileShot shot)
+        {
+            _combatModel.HandleProjectileShot(shot);
+        }
+
+        private void OnAoeAttackReleased(AoeAttackReleased attack)
+        {
+            _combatModel.HandleAoeAttackReleased(attack);
         }
     }
 }

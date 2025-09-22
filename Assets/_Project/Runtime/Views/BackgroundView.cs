@@ -1,42 +1,14 @@
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.Settings;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Runtime.Views
 {
     public class BackgroundView : BaseView
     {
-        [Header("Random drift")]
-        [SerializeField]
-        private float _slowAmplitude = 0.2f;
-
-        [SerializeField]
-        private float _slowFrequency = 0.1f;
-
-        [SerializeField]
-        private float _jitterAmplitude = 0.05f;
-
-        [SerializeField]
-        private float _jitterFrequency = 2.0f;
-
-        [Header("Parallax vs player velocity")]
-        [SerializeField]
-        private float _parallaxStrength = 0.02f;
-
-        [SerializeField]
-        private float _parallaxResponse = 6f;
-
-        [SerializeField]
-        private float _parallaxMax = 0.5f;
-
-        [Header("Smoothing / Limits")]
-        [SerializeField]
-        private float _smoothTime = 0.2f;
-
-        [SerializeField]
-        private float _maxOffset = 40f;
-
-        [SerializeField]
-        private bool _useUnscaledTime = false;
+        [Inject]
+        private BackgroundJitterConfig _conf;
 
         private Vector3 _baseLocalPos;
         private Vector2 _current, _currentVel;
@@ -56,7 +28,7 @@ namespace _Project.Runtime.Views
 
         void Update()
         {
-            float dt = _useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+            float dt = _conf.UseUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
             if (dt <= 0f)
             {
                 return;
@@ -65,26 +37,26 @@ namespace _Project.Runtime.Views
             _t += dt;
 
             Vector2 slow =
-                new Vector2(Mathf.PerlinNoise(_sx + _t * _slowFrequency, _sy) - 0.5f,
-                    Mathf.PerlinNoise(_sy + _t * _slowFrequency, _sx) - 0.5f)
-                * (_slowAmplitude * 2f);
+                new Vector2(Mathf.PerlinNoise(_sx + _t * _conf.SlowFrequency, _sy) - 0.5f,
+                    Mathf.PerlinNoise(_sy + _t * _conf.SlowFrequency, _sx) - 0.5f)
+                * (_conf.SlowAmplitude * 2f);
 
             Vector2 jit =
-                new Vector2(Mathf.PerlinNoise(_jx + _t * _jitterFrequency, _jy) - 0.5f,
-                    Mathf.PerlinNoise(_jy + _t * _jitterFrequency, _jx) - 0.5f)
-                * (_jitterAmplitude * 2f);
+                new Vector2(Mathf.PerlinNoise(_jx + _t * _conf.JitterFrequency, _jy) - 0.5f,
+                    Mathf.PerlinNoise(_jy + _t * _conf.JitterFrequency, _jx) - 0.5f)
+                * (_conf.JitterAmplitude * 2f);
 
             Vector2 v = _playerVelocity;
-            Vector2 parallaxTarget = -v * _parallaxStrength;
-            parallaxTarget = Vector2.ClampMagnitude(parallaxTarget, _parallaxMax);
+            Vector2 parallaxTarget = -v * _conf.ParallaxStrength;
+            parallaxTarget = Vector2.ClampMagnitude(parallaxTarget, _conf.ParallaxMax);
 
-            float a = 1f - Mathf.Exp(-_parallaxResponse * dt);
+            float a = 1f - Mathf.Exp(-_conf.ParallaxResponse * dt);
             _parallax = Vector2.Lerp(_parallax, parallaxTarget, a);
 
             Vector2 target = slow + jit + _parallax;
-            target = Vector2.ClampMagnitude(target, _maxOffset);
+            target = Vector2.ClampMagnitude(target, _conf.MaxOffset);
 
-            _current = Vector2.SmoothDamp(_current, target, ref _currentVel, _smoothTime, Mathf.Infinity, dt);
+            _current = Vector2.SmoothDamp(_current, target, ref _currentVel, _conf.SmoothTime, Mathf.Infinity, dt);
             transform.localPosition = _baseLocalPos + (Vector3)_current;
         }
 

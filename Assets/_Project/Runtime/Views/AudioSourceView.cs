@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.MVP;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace _Project.Runtime.Views
     [RequireComponent(typeof(AudioSource))]
     public class AudioSourceView : BaseView
     {
-        private Pool _pool;
+        public event Action<uint> Expired;
         private AudioSource _audio;
         private void Awake()
         {
@@ -17,27 +18,25 @@ namespace _Project.Runtime.Views
         {
             if (!_audio.isPlaying)
             {
-                _pool.Despawn(this);
+                Expired?.Invoke(ViewId);
             }
         }
 
-        private void Reinitialize(Vector2 pos, AudioClip clip, Pool pool)
+        private void Reinitialize(Vector2 pos, AudioClip clip)
         {
-            _pool = pool;
-            
             transform.position = pos;
             _audio.PlayOneShot(clip);
         }
 
         public class Pool : ViewPool<Vector2, AudioClip, AudioSourceView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
             protected override void Reinitialize(Vector2 par, AudioClip clip, AudioSourceView item)
             {
                 base.Reinitialize(par, clip, item);
-                item.Reinitialize(par, clip, this);
+                item.Reinitialize(par, clip);
             }
         }
     }

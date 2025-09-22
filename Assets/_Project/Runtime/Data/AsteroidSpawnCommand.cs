@@ -8,8 +8,8 @@ namespace _Project.Runtime.Data
         Large,
         Small
     }
-    
-    public readonly struct AsteroidSpawnCommand : IEventData
+
+    public readonly struct AsteroidSpawnCommand
     {
         public readonly Sprite Sprite;
         public readonly AsteroidSize Size;
@@ -19,7 +19,8 @@ namespace _Project.Runtime.Data
         public readonly float AngleRad;
         public readonly float AngRotation;
 
-        public AsteroidSpawnCommand(Sprite sprite, AsteroidSize size, float scale, Vector2 pos, Vector2 vel, float angleRad, float angRotation)
+        public AsteroidSpawnCommand(Sprite sprite, AsteroidSize size, float scale, Vector2 pos, Vector2 vel,
+            float angleRad, float angRotation)
         {
             Sprite = sprite;
             Size = size;
@@ -31,7 +32,7 @@ namespace _Project.Runtime.Data
         }
     }
 
-    public readonly struct AsteroidDespawnCommand : IEventData
+    public readonly struct AsteroidDespawnCommand
     {
         public readonly uint ViewId;
 
@@ -41,33 +42,36 @@ namespace _Project.Runtime.Data
         }
     }
 
-    public readonly struct AsteroidViewOffscreen : IEventData
+    public readonly struct AsteroidOffscreen
     {
         public readonly uint ViewId;
         public readonly AsteroidSize Size;
 
-        public AsteroidViewOffscreen(uint viewId, AsteroidSize size)
+        public AsteroidOffscreen(uint viewId, AsteroidSize size)
         {
             ViewId = viewId;
             Size = size;
         }
     }
 
-    public readonly struct AsteroidDestroyed : IEventData
+    public readonly struct AsteroidDestroyed
     {
         public readonly uint ViewId;
         public readonly AsteroidSize Size;
         public readonly Vector2 Position;
-        public readonly Vector2 Velocity;
+        public readonly Quaternion Rotation;
         public readonly Vector2 Scale;
+        public readonly Vector2 Velocity;
 
-        public AsteroidDestroyed(uint viewId, AsteroidSize size, Vector2 position, Vector2 velocity, Vector2 scale)
+        public AsteroidDestroyed(uint viewId, AsteroidSize size, Vector2 position,
+            Quaternion rotation, Vector2 scale, Vector2 velocity)
         {
             ViewId = viewId;
             Size = size;
             Position = position;
             Velocity = velocity;
             Scale = scale;
+            Rotation = rotation;
         }
     }
 }

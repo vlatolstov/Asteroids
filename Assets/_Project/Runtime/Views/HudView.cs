@@ -34,6 +34,8 @@ namespace _Project.Runtime.Views
 
         private GameState _gameState;
 
+        public event Action PlayerSpawnButtonPressed;
+
         private void Awake()
         {
             _doc = GetComponent<UIDocument>();
@@ -129,7 +131,12 @@ namespace _Project.Runtime.Views
             }
         }
 
-        public void UpdateLaserData(int total, int current, float rechargeRatio)
+        public void UpdateProjectileWeaponData(float cooldown, float reloadRatio)
+        {
+            
+        }
+
+        public void UpdateAoeWeaponData(int total, int current, float rechargeRatio)
         {
             _rechargeProgressBar.visible = total != current;
 
@@ -146,7 +153,7 @@ namespace _Project.Runtime.Views
 
         private void OnSpawnPlayerButtonClicked()
         {
-            Fire(new ShipSpawnRequest());
+            PlayerSpawnButtonPressed?.Invoke();
         }
         
         private void OnRestartGameButtonClicked()

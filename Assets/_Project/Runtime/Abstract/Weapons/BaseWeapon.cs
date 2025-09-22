@@ -11,7 +11,6 @@ namespace _Project.Runtime.Abstract.Weapons
         protected readonly IFireParamsSource Source;
         
         protected float Cooldown;
-        public event Action<IData> AttackGenerated;
         
 
         protected BaseWeapon(TWeaponConfig config, IFireParamsSource source)
@@ -34,10 +33,5 @@ namespace _Project.Runtime.Abstract.Weapons
         { }
 
         public abstract bool TryAttack();
-
-        protected void NotifyAttack(IData data)
-        {
-            AttackGenerated?.Invoke(data);
-        }
     }
 }

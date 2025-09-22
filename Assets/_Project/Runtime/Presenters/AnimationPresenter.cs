@@ -1,74 +1,105 @@
-using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
+using System;
+using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Views;
-using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class AnimationPresenter : BasePresenter<GameModel>
+    public class AnimationPresenter : IDisposable
     {
-        private readonly ShipModel _ship;
-        private readonly AsteroidsModel _asteroids;
-        private readonly UfoModel _ufo;
+        private readonly CombatModel _combatModel;
+        private readonly ShipModel _shipModel;
+        private readonly AsteroidsModel _asteroidsModel;
+        private readonly UfoModel _ufoModel;
 
         private readonly AnimationView.Pool _pool;
-        private readonly GeneralVisualsConfig _general;
+        private readonly GeneralVisualsConfig _config;
 
-        public AnimationPresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipModel ship,
-            AsteroidsModel asteroids, UfoModel ufo, GeneralVisualsConfig general, AnimationView.Pool pool) : base(
-            model, viewsContainer, signalBus)
+        private readonly Dictionary<uint, AnimationView> _activeViews;
+
+        public AnimationPresenter(CombatModel combatModel, ShipModel shipModel,
+            AsteroidsModel asteroidsModel, UfoModel ufoModel,
+            GeneralVisualsConfig config, AnimationView.Pool pool)
         {
-            _ship = ship;
-            _asteroids = asteroids;
-            _ufo = ufo;
-            _general = general;
+            _combatModel = combatModel;
+            _shipModel = shipModel;
+            _asteroidsModel = asteroidsModel;
+            _ufoModel = ufoModel;
+            _config = config;
             _pool = pool;
+            
+            _activeViews = new Dictionary<uint, AnimationView>();
+
+            _combatModel.ProjectileHit += OnProjectileHit;
+            _shipModel.ShipDestroyed += OnShipDestroyed;
+            _ufoModel.UfoDestroyed += OnUfoDestroyed;
+            _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
         }
 
-        public override void Initialize()
+
+        public void Dispose()
         {
-            AddUnsub(Model.Subscribe<ProjectileHit>(OnProjectileHit));
-
-            AddUnsub(_ship.Subscribe<ShipDestroyed>(OnShipDestroyed));
-
-            AddUnsub(_ufo.Subscribe<UfoDestroyed>(OnUfoDestroyed));
-
-            AddUnsub(_asteroids.Subscribe<AsteroidDestroyed>(OnAsteroidDestroyed));
+            _combatModel.ProjectileHit -= OnProjectileHit;
+            _shipModel.ShipDestroyed -= OnShipDestroyed;
+            _ufoModel.UfoDestroyed -= OnUfoDestroyed;
+            _asteroidsModel.AsteroidDestroyed -= OnAsteroidDestroyed;
         }
 
-        private void OnProjectileHit()
+        private void OnProjectileHit(ProjectileHit hit)
         {
-            if (Model.TryGet(out ProjectileHit hit) && hit.Projectile.HitAnimation)
+            if (!hit.Projectile.HitAnimation)
             {
-                _pool.Spawn(hit.Projectile.HitAnimation, hit.Position, hit.Projectile.Size);
+                return;
             }
+            var view = _pool.Spawn(hit.Projectile.HitAnimation, hit.Position, hit.Rotation, hit.Projectile.Size);
+            RegisterView(view);
         }
 
-        private void OnShipDestroyed()
+        private void OnShipDestroyed(ShipDestroyed dest)
         {
-            if (_ship.TryGet(out ShipDestroyed dest))
-            {
-                _pool.Spawn(_general.ShipDestroyed, dest.Position, dest.Scale);
-            }
+            var view = _pool.Spawn(_config.ShipDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            RegisterView(view);
         }
 
-        private void OnUfoDestroyed()
+        private void OnUfoDestroyed(UfoDestroyed dest)
         {
-            if (_ufo.TryGet(out UfoDestroyed dest))
-            {
-                _pool.Spawn(_general.UfoDestroyed, dest.Position, dest.Scale);
-            }
+            var view = _pool.Spawn(_config.UfoDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            RegisterView(view);
         }
 
-        private void OnAsteroidDestroyed()
+        private void OnAsteroidDestroyed(AsteroidDestroyed dest)
         {
-            if (_asteroids.TryGet(out AsteroidDestroyed dest))
+            var view = _pool.Spawn(_config.AsteroidDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            RegisterView(view);
+        }
+
+        private void OnViewExpired(uint viewId)
+        {
+            if (!_activeViews.TryGetValue(viewId, out var view))
             {
-                _pool.Spawn(_general.AsteroidDestroyed, dest.Position, dest.Scale);
+                throw new Exception("View has not been registered");
             }
+
+            UnregisterView(view);
+            _pool.Despawn(view);
+        }
+
+        private void RegisterView(AnimationView v)
+        {
+            if (!_activeViews.TryAdd(v.ViewId, v))
+            {
+                throw new Exception("View has already been registered");
+            }
+
+            v.Expired += OnViewExpired;
+        }
+
+        private void UnregisterView(AnimationView v)
+        {
+            _activeViews.Remove(v.ViewId);
+            v.Expired -= OnViewExpired;
         }
     }
 }

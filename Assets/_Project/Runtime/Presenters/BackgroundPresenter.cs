@@ -1,32 +1,32 @@
-using _Project.Runtime.Abstract.MVP;
+using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Views;
-using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class BackgroundPresenter : BasePresenter<ShipModel>
+    public class BackgroundPresenter : IDisposable
     {
+        private readonly ShipModel _shipModel;
         private readonly BackgroundView _bg;
 
-        public BackgroundPresenter(ShipModel model, IViewsContainer viewsContainer, SignalBus signalBus) : base(model,
-            viewsContainer, signalBus)
+        public BackgroundPresenter(ShipModel shipModel, ViewsContainer viewsContainer)
         {
+            _shipModel = shipModel;
             _bg = viewsContainer.GetView<BackgroundView>();
+
+            _shipModel.ShipPoseChanged += OnShipPoseChanged;
         }
 
-        public override void Initialize()
+        public void Dispose()
         {
-            AddUnsub(Model.Subscribe<ShipPose>(OnShipPoseChange));
+            _shipModel.ShipPoseChanged -= OnShipPoseChanged;
         }
 
-        public void OnShipPoseChange()
+
+        private void OnShipPoseChanged(ShipPose pose)
         {
-            if (Model.TryGet(out ShipPose pose))
-            {
-                _bg.SetPlayerVelocity(pose.Velocity);
-            }
+            _bg.SetPlayerVelocity(pose.Velocity);
         }
     }
 }

@@ -1,9 +1,9 @@
-using _Project.Runtime.Abstract.MVP;
+
 using UnityEngine;
 
 namespace _Project.Runtime.Data
 {
-    public readonly struct UfoSpawnCommand : IEventData
+    public readonly struct UfoSpawnCommand
     {
         public readonly Sprite Sprite;
         public readonly float Scale;
@@ -22,27 +22,18 @@ namespace _Project.Runtime.Data
         }
     }
 
-    public readonly struct UfoDespawnCommand : IEventData
+
+    public readonly struct UfoOffscreen 
     {
         public readonly uint ViewId;
 
-        public UfoDespawnCommand(uint viewId)
+        public UfoOffscreen(uint viewId)
         {
             ViewId = viewId;
         }
     }
 
-    public readonly struct UfoViewOffscreen : IEventData
-    {
-        public readonly uint ViewId;
-
-        public UfoViewOffscreen(uint viewId)
-        {
-            ViewId = viewId;
-        }
-    }
-
-    public readonly struct UfoSpawned : IStateData
+    public readonly struct UfoSpawned 
     {
         public readonly uint ViewId;
         public readonly Vector2 Position;
@@ -54,17 +45,19 @@ namespace _Project.Runtime.Data
         }
     }
     
-    public readonly struct UfoDestroyed : IEventData
+    public readonly struct UfoDestroyed
     {
         public readonly uint ViewId;
         public readonly Vector2 Position;
+        public readonly Quaternion Rotation;
         public readonly Vector2 Scale;
 
-        public UfoDestroyed(uint viewId, Vector2 position, Vector2 scale)
+        public UfoDestroyed(uint viewId, Vector2 position, Quaternion rotation, Vector2 scale )
         {
             ViewId = viewId;
             Position = position;
             Scale = scale;
+            Rotation = rotation;
         }
     }
     

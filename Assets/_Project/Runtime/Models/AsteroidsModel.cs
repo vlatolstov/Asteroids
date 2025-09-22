@@ -1,6 +1,5 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Settings;
 using UnityEngine;
@@ -9,11 +8,17 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Models
 {
-    public class AsteroidsModel : BaseModel, IInitializable, ITickable, IDisposable
+    public class AsteroidsModel : ITickable
     {
         private readonly IWorldConfig _world;
         private readonly AsteroidsSpawnConfig _config;
 
+        public event Action<AsteroidSpawnCommand> AsteroidSpawnRequested;
+        public event Action<AsteroidDespawnCommand> AsteroidDespawnRequested;
+        public event Action<AsteroidDestroyed> AsteroidDestroyed;
+
+        private int _largeAsteroidsCount;
+        private int _smallAsteroidsCount;
         private float _timer;
         private GameState _gameState;
 
@@ -21,62 +26,48 @@ namespace _Project.Runtime.Models
         {
             _world = world;
             _config = config;
-        }
 
-        public void Initialize()
-        {
+            _largeAsteroidsCount = 0;
+            _smallAsteroidsCount = 0;
             _timer = _config.Interval;
-
-            Subscribe<AsteroidViewOffscreen>(OnOffscreen);
-            Subscribe<AsteroidDestroyed>(OnDestroyed);
-        }
-
-        public void Dispose()
-        {
-            Unsubscribe<AsteroidViewOffscreen>(OnOffscreen);
-            Unsubscribe<AsteroidDestroyed>(OnDestroyed);
         }
 
         public void Tick()
         {
             _timer -= Time.deltaTime;
 
-            if (_timer > 0f)
+            if (_timer > 0f || _gameState != GameState.Gameplay)
             {
                 return;
             }
 
-            if (_gameState != GameState.Gameplay)
-            {
-                return;
-            }
-            
             SpawnLargeAsteroid();
             _timer = _config.Interval;
         }
-
-        private void OnOffscreen()
+        
+        public void SetGameState(GameState gameState)
         {
-            if (!TryGet(out AsteroidViewOffscreen eventData))
-            {
-                return;
-            }
-
-            ChangeData(new AsteroidDespawnCommand(eventData.ViewId));
+            _gameState = gameState;
         }
 
-        private void OnDestroyed()
+        public void HandleAsteroidOffscreen(AsteroidOffscreen offscreen)
         {
-            if (!TryGet(out AsteroidDestroyed eventData))
+            AsteroidDespawnRequested?.Invoke(new AsteroidDespawnCommand(offscreen.ViewId));
+        }
+
+        public void HandleAsteroidDestroyed(AsteroidDestroyed destroyed)
+        {
+            AsteroidDespawnRequested?.Invoke(new AsteroidDespawnCommand(destroyed.ViewId));
+            AsteroidDestroyed?.Invoke(destroyed);
+
+            if (destroyed.Size == AsteroidSize.Large)
             {
-                return;
+                _largeAsteroidsCount--;
+                SpawnSmallAsteroids(destroyed);
             }
-
-            ChangeData(new AsteroidDespawnCommand(eventData.ViewId));
-
-            if (eventData.Size == AsteroidSize.Large)
+            else
             {
-                SpawnSmallAsteroids(eventData);
+                _smallAsteroidsCount--;
             }
         }
 
@@ -103,7 +94,12 @@ namespace _Project.Runtime.Models
             var vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
             float nose = Mathf.Atan2(-vel.x, vel.y);
 
-            ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel, nose, _config.AngleRotationDeg));
+            _largeAsteroidsCount++;
+            var command = new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Large, _config.LargeScale, pos, vel,
+                nose,
+                _config.AngleRotationDeg);
+
+            AsteroidSpawnRequested?.Invoke(command);
         }
 
         private void SpawnSmallAsteroids(AsteroidDestroyed ev)
@@ -121,13 +117,12 @@ namespace _Project.Runtime.Models
                 Vector2 vel = new Vector2(Mathf.Cos(a), Mathf.Sin(a)) * spd;
                 float nose = Mathf.Atan2(-vel.x, vel.y);
 
-                ChangeData(new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale, ev.Position, vel, nose, _config.AngleRotationDeg));
+                _smallAsteroidsCount++;
+                var command = new AsteroidSpawnCommand(_config.Sprite, AsteroidSize.Small, _config.SmallScale,
+                    ev.Position,
+                    vel, nose, _config.AngleRotationDeg);
+                AsteroidSpawnRequested?.Invoke(command);
             }
-        }
-
-        public void SetGameState(GameState gameState)
-        {
-            _gameState = gameState;
         }
     }
 }

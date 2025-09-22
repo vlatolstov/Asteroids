@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
 using _Project.Runtime.Utils;
@@ -11,6 +12,8 @@ namespace _Project.Runtime.Weapons
         private int _pendingInBurst;
         private float _burstTimer;
 
+        public event Action<ProjectileShot> ProjectileFired;
+
         public ProjectileWeapon(ProjectileWeaponConfig config, IFireParamsSource source) : base(config, source)
         { }
 
@@ -22,7 +25,8 @@ namespace _Project.Runtime.Weapons
             }
 
             if (Source == null ||
-                !Source.TryGetFireParams(out var origin, out var dir, out var inheritVelocity, out int layer))
+                !Source.TryGetFireParams(out var origin, out var dir, out var inheritVelocity, out int layer,
+                    out var sourceType))
             {
                 return false;
             }
@@ -36,12 +40,12 @@ namespace _Project.Runtime.Weapons
             {
                 for (var i = 0; i < count; i++)
                 {
-                    NotifyAttack(ComposeShot(origin, ApplySpread(dir), inheritVelocity, layer));
+                    NotifyAttack(origin, ApplySpread(dir), inheritVelocity, layer, sourceType);
                 }
             }
             else
             {
-                NotifyAttack(ComposeShot(origin, ApplySpread(dir), inheritVelocity, layer));
+                NotifyAttack(origin, ApplySpread(dir), inheritVelocity, layer, sourceType);
                 _pendingInBurst = count - 1;
                 _burstTimer = Config.BulletsInterval;
             }
@@ -62,13 +66,14 @@ namespace _Project.Runtime.Weapons
             while (_pendingInBurst > 0 && _burstTimer <= 0f)
             {
                 if (Source == null ||
-                    !Source.TryGetFireParams(out var origin, out var dir, out var inheritVelocity, out int layer))
+                    !Source.TryGetFireParams(out var origin, out var dir, out var inheritVelocity, out int layer,
+                        out var sourceType))
                     break;
 
                 dir = dir.sqrMagnitude > 0f ? dir.normalized : Vector2.up;
                 origin += dir * Config.MuzzleOffset;
 
-                NotifyAttack(ComposeShot(origin, ApplySpread(dir), inheritVelocity, layer));
+                NotifyAttack(origin, ApplySpread(dir), inheritVelocity, layer, sourceType);
 
                 _pendingInBurst--;
                 _burstTimer += Config.BulletsInterval;
@@ -82,15 +87,18 @@ namespace _Project.Runtime.Weapons
             return GeometryMethods.RotateVector(dir, a).normalized;
         }
 
-        private ProjectileShoot ComposeShot(Vector2 origin, Vector2 dir, Vector2 inherit, int layer)
+        private void NotifyAttack(Vector2 origin, Vector2 dir, Vector2 inheritVelocity, int layer, Source sourceType)
         {
-            return new ProjectileShoot(
-                origin,
-                dir,
-                inherit,
-                layer,
-                Config
-            );
+            var attack = new ProjectileShot(origin, Quaternion.LookRotation(dir), 
+                scale: Vector2.one, ApplySpread(dir),
+                inheritVelocity, layer, Config, sourceType);
+            
+            ProjectileFired?.Invoke(attack);
+        }
+
+        public ProjectileWeaponState ProvideProjWeaponState()
+        {
+            return new ProjectileWeaponState(Cooldown, 1 - Cooldown / Config.WeaponCooldown);
         }
     }
 }

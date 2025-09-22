@@ -1,4 +1,3 @@
-using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Settings;
 using UnityEngine;
 using Zenject;
@@ -22,6 +21,9 @@ namespace _Project.Runtime.Contexts.Global
         
         [SerializeField]
         private GeneralVisualsConfig _generalVisualsConfig;
+        
+        [SerializeField]
+        private BackgroundJitterConfig _bgJitterConfig;
 
         public override void InstallBindings()
         {
@@ -48,6 +50,11 @@ namespace _Project.Runtime.Contexts.Global
             Container
                 .Bind<GeneralVisualsConfig>()
                 .FromInstance(_generalVisualsConfig)
+                .AsSingle();
+            
+            Container
+                .Bind<BackgroundJitterConfig>()
+                .FromInstance(_bgJitterConfig)
                 .AsSingle();
         }
     }

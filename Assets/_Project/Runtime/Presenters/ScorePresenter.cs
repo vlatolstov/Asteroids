@@ -1,55 +1,73 @@
 using System;
-using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
-using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class ScorePresenter : BasePresenter<GameModel>
+    public class ScorePresenter : IDisposable
     {
         private readonly AsteroidsModel _asteroidsModel;
         private readonly UfoModel _ufoModel;
+        private readonly GameModel _gameModel;
+        private readonly ScoreModel _scoreModel;
+
         private readonly ScoreConfig _scoreConfig;
 
-        public ScorePresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus,
-            AsteroidsModel asteroidsModel, UfoModel ufoModel, ScoreConfig scoreConfig)
-            : base(model, viewsContainer, signalBus)
+        private GameState _previousGameState;
+
+        public ScorePresenter(GameModel gameModel, AsteroidsModel asteroidsModel,
+            UfoModel ufoModel, ScoreModel scoreModel, ScoreConfig scoreConfig)
         {
+            _gameModel = gameModel;
             _asteroidsModel = asteroidsModel;
             _ufoModel = ufoModel;
+            _scoreModel = scoreModel;
             _scoreConfig = scoreConfig;
+
+            _previousGameState = _gameModel.CurrentState;
+            
+            _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
+            _ufoModel.UfoDestroyed += OnUfoDestroyed;
+            _gameModel.GameStateChanged += OnGameStateChanged;
         }
 
-        public override void Initialize()
+        public void Dispose()
         {
-            AddUnsub(_ufoModel.Subscribe<UfoDestroyed>(OnUfoDestroyed));
-            AddUnsub(_asteroidsModel.Subscribe<AsteroidDestroyed>(OnAsteroidDestroyed));
+            _asteroidsModel.AsteroidDestroyed -= OnAsteroidDestroyed;
+            _ufoModel.UfoDestroyed -= OnUfoDestroyed;
+            _gameModel.GameStateChanged -= OnGameStateChanged;
         }
 
-        private void OnAsteroidDestroyed()
+        private void OnGameStateChanged(GameState state)
         {
-            if (_asteroidsModel.TryGet(out AsteroidDestroyed signal))
+            if (state == _previousGameState)
             {
-                var scoreAdded = signal.Size switch
-                {
-                    AsteroidSize.Large => new ScoreAdded(_scoreConfig.LargeAsteroidScore),
-                    AsteroidSize.Small => new ScoreAdded(_scoreConfig.SmallAsteroidScore),
-                    _ => throw new Exception("Unknown asteroid size")
-                };
+                return;
+            }
 
-                Model.Publish(scoreAdded);
+            if (state == GameState.Gameplay &&
+                _previousGameState is GameState.Preparing or GameState.Gameplay)
+            {
+                _scoreModel.ChangeTotalScore(0);
             }
         }
 
-        private void OnUfoDestroyed()
+        private void OnAsteroidDestroyed(AsteroidDestroyed destroyed)
         {
-            if (_ufoModel.TryGet(out UfoDestroyed signal))
+            int amount = destroyed.Size switch
             {
-                Model.Publish(new ScoreAdded(_scoreConfig.UfoScore));
-            }
+                AsteroidSize.Large => _scoreConfig.LargeAsteroidScore,
+                AsteroidSize.Small => _scoreConfig.SmallAsteroidScore,
+                _ => throw new Exception("Unknown asteroid size")
+            };
+
+            _scoreModel.AddScore(amount);
+        }
+
+        private void OnUfoDestroyed(UfoDestroyed _)
+        {
+            _scoreModel.AddScore(_scoreConfig.UfoScore);
         }
     }
 }

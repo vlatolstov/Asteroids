@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace _Project.Runtime.Weapons
     {
         private int _charges;
         private float _rechargeTime;
+
+        public event Action<AoeAttackReleased> AttackReleased;
 
         public AoeWeapon(AoeWeaponConfig config, IFireParamsSource source) : base(config, source)
         {
@@ -28,7 +31,8 @@ namespace _Project.Runtime.Weapons
                 return false;
             }
 
-            if (Source is not MonoBehaviour mb)
+            if (Source is not MonoBehaviour mb ||
+                !Source.TryGetFireParams(out _, out _, out _, out _, out var sourceType))
             {
                 return false;
             }
@@ -36,7 +40,8 @@ namespace _Project.Runtime.Weapons
             var originTransform = mb.transform;
 
             _charges--;
-            NotifyAttack(ComposeAttack(originTransform, Config));
+            var attack = new AoeAttackReleased(originTransform, Config, sourceType);
+            AttackReleased?.Invoke(attack);
 
             Cooldown = Mathf.Max(0f, Config.WeaponCooldown);
             return true;
@@ -58,14 +63,6 @@ namespace _Project.Runtime.Weapons
             {
                 _rechargeTime -= Time.fixedDeltaTime;
             }
-        }
-
-        private AoeAttackReleased ComposeAttack(Transform origin, AoeWeaponConfig weapon)
-        {
-            return new AoeAttackReleased(
-                origin,
-                weapon
-            );
         }
 
         public AoeWeaponState ProvideAoeWeaponState()

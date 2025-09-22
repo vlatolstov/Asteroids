@@ -1,8 +1,7 @@
+using System;
 using System.Collections.Generic;
 using _Project.Runtime.Abstract.MVP;
-using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
-using _Project.Runtime.Utils;
 using _Project.Runtime.Weapons;
 using UnityEngine;
 
@@ -13,24 +12,26 @@ namespace _Project.Runtime.Views
         typeof(Animator))]
     public class AoeAttackView : BaseView
     {
-        private SpriteRenderer _spriteRenderer;
+        private SpriteRenderer _sr;
         private Animator _animator;
         private Collider2D _collider;
 
         private AoeAttackConfig _conf;
 
-        private float _life;
-        private Pool _pool;
-
         private readonly List<ContactPoint2D> _contactPoints = new();
-        
+
+        private Source _source;
+        private float _life;
         private bool _follow;
         private Transform _emitter;
         private float _centerOffset;
 
+        public event Action<AoeHit> AoeHit;
+        public event Action<uint> Expired;
+
         private void Awake()
         {
-            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _sr = GetComponent<SpriteRenderer>();
             _animator = GetComponent<Animator>();
             _collider = GetComponent<Collider2D>();
             _collider.enabled = false;
@@ -38,9 +39,9 @@ namespace _Project.Runtime.Views
 
         private void Update()
         {
-            if (_life <= 0)
+            if (_life <= 0 || !_emitter.gameObject.activeSelf)
             {
-                TurnOff();
+                Expired?.Invoke(ViewId);
             }
 
             _life -= Time.deltaTime;
@@ -61,61 +62,70 @@ namespace _Project.Runtime.Views
             {
                 foreach (var cont in _contactPoints)
                 {
-                    Fire(new AoeHit(_conf, cont.point));
+                    var target = cont.otherCollider.transform;
+                    var hit = new AoeHit(_conf, cont.point, target.rotation, Vector2.one, _source);
+                    AoeHit?.Invoke(hit);
                 }
             }
 
             _contactPoints.Clear();
         }
         
-        public void TurnOff()
+        private void Reinitialize(Transform par, AoeWeaponConfig aoe)
         {
-            _collider.enabled = false;
-            _spriteRenderer.sprite = null;
-            _animator.runtimeAnimatorController = null;
-            transform.SetParent(null, false);
-            _pool.Despawn(this);
-        }
-
-        private void Reinitialize(Transform par, AoeWeaponConfig aoe, Pool pool)
-        {
-            _pool = pool;
             _conf = aoe.Attack;
             _life = _conf.Duration;
+            _follow = aoe.Attack.Mode == AoeAttackConfig.AttachMode.FollowEmitter;
+            _emitter = par;
+            _collider.enabled = true;
+            gameObject.layer = par.gameObject.layer;
 
+            _centerOffset = aoe.MuzzleOffset + _conf.Length / 2;
+            var worldPos = par.TransformPoint(0f, _centerOffset, 0f);
+            transform.SetPositionAndRotation(worldPos, _emitter.rotation);
+            
             if (!_conf.AttackAnimation)
             {
-                _spriteRenderer.sprite = _conf.AttackSprite;
+                _sr.sprite = _conf.AttackSprite;
             }
             else
             {
                 _animator.runtimeAnimatorController = _conf.AttackAnimation;
+                _animator.Rebind();
+                _animator.Update(0f);
             }
 
-            _emitter = par;
-            _centerOffset = aoe.MuzzleOffset + _conf.Length / 2;
-            
-            var worldPos = _emitter.TransformPoint(0f, _centerOffset, 0f);
-            
-            transform.SetPositionAndRotation(worldPos, _emitter.rotation);
-            GeometryMethods.SetWorldSizeOfChildObject(_spriteRenderer, _conf.Width, _conf.Length);
-            gameObject.layer = par.gameObject.layer;
-            
-            _collider.enabled = true;
+            if (_sr.sprite)
+            {
+                transform.localScale = new Vector3(_conf.Width, _conf.Length, 1f);
+                _sr.size = Vector2.one;
+            }
+            else
+            {
+                _sr.transform.localScale = Vector3.one;
+            }
             Physics2D.SyncTransforms();
-
-            _follow = aoe.Attack.Mode == AoeAttackConfig.AttachMode.FollowEmitter;
         }
 
         public class Pool : ViewPool<Transform, AoeWeaponConfig, AoeAttackView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
             protected override void Reinitialize(Transform par, AoeWeaponConfig aoe, AoeAttackView item)
             {
                 base.Reinitialize(par, aoe, item);
-                item.Reinitialize(par, aoe, this);
+                item.Reinitialize(par, aoe);
+            }
+
+            protected override void OnDespawned(AoeAttackView item)
+            {
+                base.OnDespawned(item);
+                item._collider.enabled = false;
+                item._sr.sprite = null;
+                item._animator.runtimeAnimatorController = null;
+                item.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                item.transform.localScale = Vector3.one;
             }
         }
     }

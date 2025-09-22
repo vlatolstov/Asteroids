@@ -1,87 +1,121 @@
-using _Project.Runtime.Abstract.MVP;
+using System;
+using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Views;
-using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class UfoPresenter : BasePresenter<UfoModel>
+    public class UfoPresenter : IDisposable
     {
+        private readonly UfoModel _ufoModel;
         private readonly ShipModel _shipModel;
+        private readonly CombatModel _combatModel;
         private readonly GameModel _gameModel;
         private readonly UfoView.Pool _pool;
+
+        private readonly Dictionary<uint, UfoView> _activeUfo;
 
         private ShipPose _targetShip;
         private GameState _gameState;
 
-        public UfoPresenter(UfoModel model, IViewsContainer viewsContainer, SignalBus signalBus, ShipModel shipModel,
-            GameModel gameModel, UfoView.Pool pool) : base(model,
-            viewsContainer, signalBus)
+        public UfoPresenter(UfoModel ufoModel, ShipModel shipModel, CombatModel combatModel,
+            GameModel gameModel, UfoView.Pool pool)
         {
+            _ufoModel = ufoModel;
             _shipModel = shipModel;
+            _combatModel = combatModel;
             _gameModel = gameModel;
             _pool = pool;
+
+            _activeUfo = new Dictionary<uint, UfoView>();
+            
+            _shipModel.ShipPoseChanged += OnShipPoseChanged;
+            _gameModel.GameStateChanged += OnGameStateChanged;
+            _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
+            _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
+        }
+        
+        public void Dispose()
+        {
+            _shipModel.ShipPoseChanged -= OnShipPoseChanged;
+            _gameModel.GameStateChanged -= OnGameStateChanged;
+            _ufoModel.UfoSpawnRequested -= OnUfoSpawnCommand;
+            _ufoModel.UfoDespawnRequested -= OnUfoDespawnCommand;
         }
 
-        public override void Initialize()
+        private void OnShipPoseChanged(ShipPose shipPose)
         {
-            ForwardOn<UfoSpawned>(publish: true);
-            ForwardOn<UfoDestroyed>(publish: true);
-
-            AddUnsub(_shipModel.Subscribe<ShipPose>(OnShipPoseChanged));
-            AddUnsub(_gameModel.Subscribe<GameStateData>(OnGameStateChanged));
-
-            AddUnsub(Model.Subscribe<UfoSpawnCommand>(OnUfoSpawnCommand));
-            AddUnsub(Model.Subscribe<UfoDespawnCommand>(OnUfoDespawnCommand));
-        }
-
-        private void OnShipPoseChanged()
-        {
-            if (_shipModel.TryGet(out ShipPose shipPose))
+            foreach (var ufo in _activeUfo.Values)
             {
-                foreach (var ufoView in ViewsContainer.GetViews<UfoView>())
-                {
-                    _targetShip = shipPose;
-                    ufoView.UpdateShipPose(shipPose);
-                }
+                _targetShip = shipPose;
+                ufo.UpdateShipPose(shipPose);
             }
         }
 
-        private void OnGameStateChanged()
+        private void OnGameStateChanged(GameState gameState)
         {
-            if (_gameModel.TryGet(out GameStateData data))
+            _gameState = gameState;
+            
+            foreach (var ufo in _activeUfo.Values)
             {
-                Model.SetGameState(data.State);
-                foreach (var ufoView in ViewsContainer.GetViews<UfoView>())
-                {
-                    _gameState = data.State;
-                    ufoView.UpdateGameState(data.State);
-                }
+                ufo.UpdateGameState(gameState);
             }
+
+            _ufoModel.SetGameState(gameState);
         }
 
-        private void OnUfoSpawnCommand()
+        private void OnUfoSpawnCommand(UfoSpawnCommand command)
         {
-            if (Model.TryGet(out UfoSpawnCommand spawn))
-            {
-                var ufo = _pool.Spawn(spawn);
-                ufo.UpdateShipPose(_targetShip);
-                ufo.UpdateGameState(GameState.Gameplay);
-            }
+            var ufo = _pool.Spawn(command);
+            RegisterUfo(ufo);
+            _ufoModel.HandleUfoSpawned(new UfoSpawned(ufo.ViewId, ufo.transform.position));
         }
 
-        private void OnUfoDespawnCommand()
+        private void OnUfoDespawnCommand(uint ufoId)
         {
-            if (Model.TryGet(out UfoDespawnCommand despawn))
+            if (!_activeUfo.TryGetValue(ufoId, out var ufo))
             {
-                var view = ViewsContainer.GetViewById(despawn.ViewId);
-
-                if (view is UfoView ufo)
-                {
-                    _pool.Despawn(ufo);
-                }
+                return;
             }
+
+            UnregisterUfo(ufo);
+            _pool.Despawn(ufo);
+        }
+        
+        private void RegisterUfo(UfoView ufo)
+        {
+            _activeUfo.Add(ufo.ViewId, ufo);
+            
+            ufo.UpdateShipPose(_targetShip);
+            ufo.UpdateGameState(_gameState);
+            
+            ufo.ProjectileFired += OnUfoFiredProjectile;
+            ufo.Destroyed += OnUfoDestroyed;
+            ufo.Offscreen += OnUfoOffscreen;
+        }
+
+        private void UnregisterUfo(UfoView ufo)
+        {
+            ufo.ProjectileFired -= OnUfoFiredProjectile;
+            ufo.Destroyed -= OnUfoDestroyed;
+            ufo.Offscreen -= OnUfoOffscreen;
+            _activeUfo.Remove(ufo.ViewId);
+        }
+        
+        private void OnUfoDestroyed(UfoDestroyed destroyed)
+        {
+            _ufoModel.HandleUfoDestroyed(destroyed);
+        }
+
+        private void OnUfoOffscreen(UfoOffscreen offscreen)
+        {
+            _ufoModel.HandleUfoOffscreen(offscreen.ViewId);
+        }
+
+        private void OnUfoFiredProjectile(ProjectileShot shot)
+        {
+            _combatModel.HandleProjectileShot(shot);
         }
     }
 }

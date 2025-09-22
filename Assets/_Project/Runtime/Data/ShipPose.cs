@@ -1,10 +1,9 @@
 using System;
-using _Project.Runtime.Abstract.MVP;
 using UnityEngine;
 
 namespace _Project.Runtime.Data
 {
-    public readonly struct ShipPose : IStateData, IEquatable<ShipPose>
+    public readonly struct ShipPose : IEquatable<ShipPose>
     {
         public readonly Vector2 Position;
         public readonly Vector2 Velocity;
@@ -19,7 +18,8 @@ namespace _Project.Runtime.Data
 
         public bool Equals(ShipPose other)
         {
-            return Position.Equals(other.Position) && Velocity.Equals(other.Velocity) && AngleRadians.Equals(other.AngleRadians);
+            return Position.Equals(other.Position) && Velocity.Equals(other.Velocity) &&
+                   AngleRadians.Equals(other.AngleRadians);
         }
 
         public override bool Equals(object obj)
@@ -40,6 +40,32 @@ namespace _Project.Runtime.Data
         public static bool operator !=(ShipPose left, ShipPose right)
         {
             return !left.Equals(right);
+        }
+    }
+
+    public struct ShipSpawned
+    {
+        public readonly Vector2 Position;
+        public readonly Vector2 Scale;
+
+        public ShipSpawned(Vector2 position, Vector2 scale)
+        {
+            Position = position;
+            Scale = scale;
+        }
+    }
+
+    public struct ShipDestroyed
+    {
+        public readonly Vector2 Position;
+        public readonly Quaternion Rotation;
+        public readonly Vector2 Scale;
+
+        public ShipDestroyed(Vector2 position, Quaternion rotation, Vector2 scale)
+        {
+            Position = position;
+            Rotation = rotation;
+            Scale = scale;
         }
     }
 }

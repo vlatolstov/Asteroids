@@ -1,31 +1,44 @@
-using _Project.Runtime.Abstract.MVP;
+using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class GameStatePresenter : BasePresenter<GameModel>
+    public class GameStatePresenter : IInitializable, IDisposable
     {
-        public GameStatePresenter(GameModel model, IViewsContainer viewsContainer, SignalBus signalBus) : base(model,
-            viewsContainer, signalBus)
-        {
-        }
+        private readonly GameModel _gameModel;
+        private readonly ShipModel _shipModel;
 
-        public override void Initialize()
+        public GameStatePresenter(GameModel model, ShipModel shipModel)
         {
-            MutateOn<GameStateData, ShipSpawned>(OnShipSpawned);
-            MutateOn<GameStateData, ShipDestroyed>(OnShipDestroyed);
-        }
-
-        private GameStateData OnShipSpawned(GameStateData previousState, ShipSpawned signal)
-        {
-            return new GameStateData(GameState.Gameplay);
+            _gameModel = model;
+            _shipModel = shipModel;
+            
+            _shipModel.ShipSpawned += OnShipSpawned;
+            _shipModel.ShipDestroyed += OnShipDestroyed;
         }
         
-        private GameStateData OnShipDestroyed(GameStateData previousState, ShipDestroyed signal)
+        public void Initialize()
         {
-            return new GameStateData(GameState.GameOver);
+            _gameModel.SetGameState(GameState.Preparing);
+        }
+
+        public void Dispose()
+        {
+            _shipModel.ShipSpawned -= OnShipSpawned;
+            _shipModel.ShipDestroyed -= OnShipDestroyed;
+        }
+
+        private void OnShipSpawned(ShipSpawned _)
+        {
+            _gameModel.SetGameState(GameState.Gameplay);
+        }
+
+        private void OnShipDestroyed(ShipDestroyed _)
+        {
+            _gameModel.SetGameState(GameState.GameOver);
         }
     }
 }

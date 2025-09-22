@@ -1,43 +1,80 @@
+using System;
 using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using UnityEngine;
 
 namespace _Project.Runtime.Models
 {
-    public class ShipModel : BaseModel
+    public class ShipModel
     {
+        public event Action<Vector3> ShipSpawnCommandRequested;
+        public event Action ShipDespawnCommandRequested;
+        public event Action<ShipSpawned> ShipSpawned;
+        public event Action<ShipDestroyed> ShipDestroyed;
+        public event Action<ShipPose> ShipPoseChanged;
+        public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
+        public event Action<AoeWeaponState> AoeWeaponStateChanged;
+
+        public bool ShipInGame { get; private set; }
+
+        public ShipPose CurShipPose { get; private set; }
+        
+        private ProjectileWeaponState _curProjWeaponState;
+        private AoeWeaponState _curAoeWeaponState;
+
+
         private readonly IWorldConfig _worldConfig;
-        private bool _shipInGame;
 
         public ShipModel(IWorldConfig worldConfig)
         {
             _worldConfig = worldConfig;
         }
 
-        protected override void OnEventPublished(IData eventData)
+        public void RequestSpawn()
         {
-            switch (eventData)
+            if (ShipInGame)
             {
-                case ShipSpawnRequest:
-                    if (!_shipInGame)
-                    {
-                        Publish(new ShipSpawnCommand(_worldConfig.WorldRect.center));
-                    }
-
-                    break;
-                case ShipDespawnRequest despawn:
-                    Publish(new ShipDespawnCommand(despawn.ViewId));
-                    _shipInGame = false;
-                    break;
-                case ShipDestroyed destroyed:
-                    Publish(new ShipDespawnCommand(destroyed.ViewId));
-                    ChangeData<ShipSpawned>(spawned => new ShipSpawned(false, spawned.ViewId, spawned.Position));
-                    _shipInGame = false;
-                    break;
-                case ShipSpawned info:
-                        _shipInGame = info.Status;
-                    break;
+                return;
             }
+
+            ShipSpawnCommandRequested?.Invoke(_worldConfig.WorldRect.center);
+        }
+
+        public void RequestDespawn()
+        {
+            ShipInGame = false;
+            ShipDespawnCommandRequested?.Invoke();
+        }
+
+        public void HandleShipSpawned(ShipSpawned shipSpawned)
+        {
+            ShipInGame = true;
+            ShipSpawned?.Invoke(shipSpawned);
+        }
+
+        public void HandleShipDestroyed(ShipDestroyed shipDestroyed)
+        {
+            ShipInGame = false;
+            ShipDestroyed?.Invoke(shipDestroyed);
+            ShipDespawnCommandRequested?.Invoke();
+        }
+
+        public void UpdatePose(ShipPose pose)
+        {
+            CurShipPose = pose;
+            ShipPoseChanged?.Invoke(pose);
+        }
+
+        public void UpdateProjectileWeaponState(ProjectileWeaponState state)
+        {
+            _curProjWeaponState = state;
+            ProjectileWeaponStateChanged?.Invoke(_curProjWeaponState);
+        }
+
+        public void UpdateAoeWeaponState(AoeWeaponState state)
+        {
+            _curAoeWeaponState = state;
+            AoeWeaponStateChanged?.Invoke(_curAoeWeaponState);
         }
     }
 }

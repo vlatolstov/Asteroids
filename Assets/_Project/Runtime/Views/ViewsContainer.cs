@@ -5,7 +5,7 @@ using _Project.Runtime.Abstract.MVP;
 
 namespace _Project.Runtime.Views
 {
-    public class ViewsContainer : IViewsContainer
+    public class ViewsContainer
     {
         private readonly Dictionary<Type, List<BaseView>> _views;
         private readonly Dictionary<uint, BaseView> _viewMap;

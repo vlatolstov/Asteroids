@@ -39,7 +39,6 @@ namespace _Project.Runtime.Contexts.Game
             ViewsBindings();
             PresentersBindings();
             ModelsBindings();
-            DeclareSignals();
 
             Container
                 .Bind<IWorldConfig>()
@@ -53,11 +52,10 @@ namespace _Project.Runtime.Contexts.Game
                 .Bind<BaseView>()
                 .FromComponentsInHierarchy()
                 .AsSingle()
-                .WhenInjectedInto<IViewsContainer>();
+                .WhenInjectedInto<ViewsContainer>();
 
             Container
-                .Bind<IViewsContainer>()
-                .To<ViewsContainer>()
+                .Bind<ViewsContainer>()
                 .AsSingle();
 
             Container.BindMemoryPool<ShipView, ShipView.Pool>()
@@ -126,7 +124,7 @@ namespace _Project.Runtime.Contexts.Game
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<WeaponPresenter>()
+                .BindInterfacesAndSelfTo<CombatPresenter>()
                 .AsSingle();
 
             Container
@@ -171,19 +169,14 @@ namespace _Project.Runtime.Contexts.Game
             Container
                 .BindInterfacesAndSelfTo<AsteroidsModel>()
                 .AsSingle();
-        }
-
-
-        private void DeclareSignals()
-        {
-            SignalBusInstaller.Install(Container);
-
-            var signalTypes = TypeHelpers.GetTypesImplementingInterface<IData>();
-
-            foreach (var type in signalTypes)
-            {
-                Container.DeclareSignal(type);
-            }
+            
+            Container
+                .BindInterfacesAndSelfTo<ScoreModel>()
+                .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<CombatModel>()
+                .AsSingle();
         }
     }
 }

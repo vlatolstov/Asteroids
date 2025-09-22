@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Weapons;
@@ -13,12 +14,15 @@ namespace _Project.Runtime.Views
         [SerializeField]
         private float _defaultLife = 1f;
 
+        private Source _source;
         private ProjectileConfig _conf;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
-        private Pool _pool;
         private float _life;
         private bool _spawned;
+        
+        public event Action<uint, ProjectileHit> ProjectileHit;
+        public event Action<uint> Expired;
 
         void Awake()
         {
@@ -32,7 +36,7 @@ namespace _Project.Runtime.Views
             _life -= Time.fixedDeltaTime;
             if (_life <= 0f && _spawned)
             {
-                Despawn();
+                Expired?.Invoke(ViewId);
             }
         }
 
@@ -40,51 +44,43 @@ namespace _Project.Runtime.Views
         {
             if (_spawned)
             {
-                Fire(new ProjectileHit(_conf, transform.position));
-                Despawn();
+                var hit = new ProjectileHit(_conf, transform.position, transform.rotation, transform.localScale, _source);
+                ProjectileHit?.Invoke(ViewId, hit);
             }
-            
         }
 
-        private void Despawn()
+        public void Reinitialize(ProjectileShot shotData)
         {
-            _spawned = false;
-            _pool.Despawn(this);
-        }
+            _conf = shotData.Weapon.Projectile;
 
-        public void Reinitialize(Pool pool, ProjectileShoot shootData)
-        {
-            _pool = pool;
-
-            _conf = shootData.Weapon.Projectile;
-
-            transform.position = shootData.Position;
+            transform.position = shotData.Position;
             transform.localScale = _conf.Size;
 
-            var dir = shootData.Direction;
+            var dir = shotData.Direction;
             var projectileVelocity = _conf.Speed * dir;
 
             transform.up = dir;
 
-            _rb.linearVelocity = shootData.InheritVelocity + projectileVelocity;
+            _rb.linearVelocity = shotData.InheritVelocity + projectileVelocity;
 
             float lifeTime = _conf.Lifetime;
             _life = lifeTime > 0 ? lifeTime : _defaultLife;
 
             _sr.sprite = _conf.AttackSprite;
 
-            gameObject.layer = shootData.Layer;
+            gameObject.layer = shotData.Layer;
+            _source = shotData.Source;
             _spawned = true;
             gameObject.SetActive(true);
         }
 
-        public class Pool : ViewPool<ProjectileShoot, ProjectileView>
+        public class Pool : ViewPool<ProjectileShot, ProjectileView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
-            protected override void Reinitialize(ProjectileShoot shootData, ProjectileView item)
-                => item.Reinitialize(this, shootData);
+            protected override void Reinitialize(ProjectileShot shotData, ProjectileView item)
+                => item.Reinitialize(shotData);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Abstract.MVP;
@@ -16,49 +17,54 @@ namespace _Project.Runtime.Views
         typeof(SpriteRenderer))]
     public class UfoView : BaseMovableView<ChasingMotor>, IFireParamsSource
     {
-        [Inject]
         private ProjectileWeaponConfig _gunConfig;
-
-        [Inject]
         private IWorldConfig _world;
-
-        [Inject]
         private ChasingEnemyConfig _chase;
-
         private ProjectileWeapon _gun;
 
-        private bool _entered;
-        
+        [Inject]
+        private void Construct(ProjectileWeaponConfig gunConfig, IWorldConfig world, ChasingEnemyConfig chase)
+        {
+            _gunConfig = gunConfig;
+            _world = world;
+            _chase = chase;
+
+            _gun = new ProjectileWeapon(_gunConfig, this);
+            _gun.ProjectileFired += OnProjectileShot;
+        }
+
         private ShipPose _target;
         private GameState _gameState;
+        private bool _entered;
+        private bool _destroyed;
+        private float _selfOffset;
 
         private SpriteRenderer _sr;
-        private bool _destroyed;
+
+        public event Action<ProjectileShot> ProjectileFired;
+        public event Action<UfoDestroyed> Destroyed;
+        public event Action<UfoOffscreen> Offscreen;
 
         protected override void Awake()
         {
             base.Awake();
             _sr = GetComponent<SpriteRenderer>();
-            _gun = new ProjectileWeapon(_gunConfig, this);
-
-            _gun.AttackGenerated += OnWeaponAttack;
         }
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-
-            if (!_entered)
+            
+            bool inside = Motor.IsInsideWorldRect(_selfOffset);
+            switch (_entered)
             {
-                bool inside = Motor.IsInsideWorldRect();
-
-                if (inside)
-                {
+                case false when inside:
                     Motor.SetWrapMode(true);
                     _entered = true;
-                }
-
-                return;
+                    break;
+                case true when !inside:
+                    Offscreen?.Invoke(new UfoOffscreen(ViewId));
+                    break;
             }
 
             if (_gameState != GameState.Gameplay)
@@ -67,7 +73,7 @@ namespace _Project.Runtime.Views
             }
 
             Motor.ChaseTarget(_target);
-            
+
             _gun.FixedTick();
 
             if (CanAttack())
@@ -105,35 +111,24 @@ namespace _Project.Runtime.Views
             if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
                 _destroyed = true;
-                Fire(new UfoDestroyed(ViewId, Motor.Position, transform.localScale));
+                Destroyed?.Invoke(new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
             }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (gameObject.layer != other.gameObject.layer 
+            if (gameObject.layer != other.gameObject.layer
                 && other.CompareTag("Attack")
                 && !_destroyed)
             {
                 _destroyed = true;
-                Fire(new UfoDestroyed(ViewId, Motor.Position, transform.localScale));
+                Destroyed?.Invoke(new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
             }
         }
 
-        private void OnWeaponAttack(IData attackData)
+        private void OnProjectileShot(ProjectileShot shot)
         {
-            switch (attackData)
-            {
-                case ProjectileShoot p:
-                    Fire(p);
-                    break;
-                case AoeAttackReleased l:
-                    Fire(l);
-                    break;
-                default:
-                    Debug.LogWarning($"Unknown attack data: {attackData?.GetType().Name}");
-                    break;
-            }
+            ProjectileFired?.Invoke(shot);
         }
 
         public void UpdateShipPose(in ShipPose shipPose)
@@ -147,12 +142,13 @@ namespace _Project.Runtime.Views
         }
 
         public bool TryGetFireParams(out Vector2 origin, out Vector2 direction, out Vector2 inheritVelocity,
-            out int layer)
+            out int layer, out Source sourceType)
         {
             origin = transform.position;
             direction = GM.AngleToDir(Motor.AngleRadians);
             inheritVelocity = Motor.Velocity;
             layer = gameObject.layer;
+            sourceType = Source.Ufo;
             return true;
         }
 
@@ -162,17 +158,16 @@ namespace _Project.Runtime.Views
             _entered = false;
             _destroyed = false;
             transform.localScale = new Vector3(args.Scale, args.Scale);
+            _selfOffset = Mathf.Max(transform.localScale.x, transform.localScale.y) / 2;
             transform.position = args.Pos;
             Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
 
             _sr.sprite = args.Sprite;
-
-            Fire(new UfoSpawned(ViewId, transform.position));
         }
 
         public class Pool : ViewPool<UfoSpawnCommand, UfoView>
         {
-            public Pool(IViewsContainer viewsContainer) : base(viewsContainer)
+            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
             protected override void Reinitialize(UfoSpawnCommand args, UfoView item)

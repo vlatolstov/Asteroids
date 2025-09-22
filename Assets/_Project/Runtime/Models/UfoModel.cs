@@ -1,49 +1,43 @@
+using System;
 using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Utils;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Models
 {
-    public class UfoModel : BaseModel, IInitializable, ITickable
+    public class UfoModel : ITickable
     {
         private readonly UfoSpawnConfig _spawnConfig;
         private readonly IWorldConfig _world;
 
+        public event Action<UfoSpawnCommand> UfoSpawnRequested;
+        public event Action<uint> UfoDespawnRequested;
+        public event Action<UfoDestroyed> UfoDestroyed;
+
         private float _time;
         private float _nextAt;
         private int _alive;
-        private GameState _gameState = GameState.Gameplay;
+        private GameState _gameState;
 
         public UfoModel(UfoSpawnConfig spawnConfig, IWorldConfig world)
         {
             _spawnConfig = spawnConfig;
             _world = world;
-        }
 
-        public void Initialize()
-        {
             _time = 0f;
             _alive = 0;
             _nextAt = _spawnConfig.InitialDelay;
-
-            Subscribe<UfoSpawned>(OnUfoSpawned);
-            Subscribe<UfoDestroyed>(OnUfoDestroyed);
         }
 
         public void Tick()
         {
             _time += Time.deltaTime;
 
-            if (_time < _nextAt)
-            {
-                return;
-            }
-            
-            if (_gameState != GameState.Gameplay)
+            if (_time < _nextAt || _gameState != GameState.Gameplay)
             {
                 return;
             }
@@ -56,25 +50,27 @@ namespace _Project.Runtime.Models
             _nextAt = _time + _spawnConfig.Interval;
         }
 
-        private void OnUfoSpawned()
+        public void SetGameState(GameState gameState)
         {
-            if (!TryGet(out UfoSpawned spawned))
-            {
-                return;
-            }
+            _gameState = gameState;
+        }
 
+        public void HandleUfoSpawned(UfoSpawned spawned)
+        {
             _alive++;
         }
 
-        private void OnUfoDestroyed()
+        public void HandleUfoOffscreen(uint viewId)
         {
-            if (!TryGet(out UfoDestroyed destroyed))
-            {
-                return;
-            }
+            _alive = Mathf.Max(0, _alive - 1);
+            UfoDespawnRequested?.Invoke(viewId);
+        }
 
-            _alive--;
-            Publish(new UfoDespawnCommand(destroyed.ViewId));
+        public void HandleUfoDestroyed(UfoDestroyed destroyed)
+        {
+            _alive = Mathf.Max(0, _alive - 1);
+            UfoDestroyed?.Invoke(destroyed);
+            UfoDespawnRequested?.Invoke(destroyed.ViewId);
         }
 
         private void SpawnOne()
@@ -117,12 +113,8 @@ namespace _Project.Runtime.Models
             Vector2 vel = dir * _spawnConfig.Speed;
             float angRad = GeometryMethods.DirToAngle(dir);
 
-            Publish(new UfoSpawnCommand(_spawnConfig.Sprite, _spawnConfig.Scale, pos, vel, angRad));
-        }
-        
-        public void SetGameState(GameState gameState)
-        {
-            _gameState = gameState;
+            var command = new UfoSpawnCommand(_spawnConfig.Sprite, _spawnConfig.Scale, pos, vel, angRad);
+            UfoSpawnRequested?.Invoke(command);
         }
     }
 }

@@ -1,5 +1,3 @@
-using _Project.Runtime.Abstract.MVP;
-
 namespace _Project.Runtime.Data
 {
     public enum GameState
@@ -8,15 +6,5 @@ namespace _Project.Runtime.Data
         Gameplay,
         GameOver,
         Pause
-    }
-    
-    public readonly struct GameStateData : IStateData
-    {
-        public readonly GameState State;
-
-        public GameStateData(GameState state)
-        {
-            State = state;
-        }
     }
 }
