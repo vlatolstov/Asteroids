@@ -1,0 +1,60 @@
+.weapon-icon {
+    width: 60px;
+    height: 60px;
+    -unity-background-scale-mode: scale-and-crop;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-left-color: rgba(255, 255, 255, 0.35);
+    border-right-color: rgba(255, 255, 255, 0.35);
+    border-top-color: rgba(255, 255, 255, 0.35);
+    border-bottom-color: rgba(255, 255, 255, 0.35);
+    background-image: url("project://database/Assets/_Project/Art/ship_weapons.png?fileID=5588608046750930362&guid=f4dd745325b4d58448aa8cff03b6f743&type=3#ship_weapons_1");
+}
+
+.reload-mask {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 6px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.12);
+}
+
+.reload-fill {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    background-color: rgba(255, 54, 89, 0.65);
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.count {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: white;
+    font-size: 31px;
+    -unity-text-outline-width: 1;
+    -unity-text-outline-color: rgba(0, 0, 0, 0.7);
+    align-content: flex-end;
+    padding-bottom: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.no-border {
+    border-left-width: 0;
+    border-right-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+}

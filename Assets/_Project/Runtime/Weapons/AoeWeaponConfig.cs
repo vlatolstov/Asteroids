@@ -8,13 +8,13 @@ namespace _Project.Runtime.Weapons
     public class AoeWeaponConfig : WeaponConfig, IWeaponRepresentation
     {
         [Header("Logic")]
-        [field:SerializeField]
+        [field: SerializeField]
         public AoeAttackConfig Attack { get; private set; }
 
-        [field:SerializeField]
+        [field: SerializeField]
         public int Charges { get; private set; }
 
-        [field:SerializeField]
+        [field: SerializeField]
         public float ChargeRate { get; private set; }
 
         [Header("Representation")]

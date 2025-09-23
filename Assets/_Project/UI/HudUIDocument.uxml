@@ -1,18 +1,21 @@
-<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Style src="project://database/Assets/UI/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
-    <ui:VisualElement name="MainContainer" enabled="true" style="flex-grow: 1; position: absolute; top: 25%; left: 25%; right: 25%; bottom: 25%; visibility: visible;">
-        <ui:Label text="controls" name="Controls" enabled="true" enable-rich-text="true" class="dataText" style="-unity-text-align: upper-center; align-self: center;" />
-        <ui:Label text="GAME OVER" name="GameOverLabel" class="dataText" style="font-size: 90px; -unity-text-align: middle-center; align-self: center; justify-content: center;" />
-        <ui:Label text="final score" name="FinalScore" class="dataText" style="-unity-text-align: upper-center; justify-content: center; align-self: center; font-size: 34px;" />
-        <ui:Button text="Spawn" name="SpawnPlayer" style="white-space: nowrap; max-width: none; max-height: none; min-width: auto; min-height: auto; font-size: 31px; -unity-text-align: middle-center; width: auto; height: auto; align-items: flex-start; align-self: center; color: rgb(56, 56, 56); bottom: 0%; margin-top: 64px;" />
-        <ui:Button text="Restart" name="RestartGame" style="white-space: nowrap; max-width: none; max-height: 41px; min-width: auto; min-height: auto; font-size: 31px; -unity-text-align: middle-center; width: auto; height: auto; align-items: flex-start; align-self: center; color: rgb(56, 56, 56); bottom: 0%; margin-top: 30px; margin-right: 0; margin-bottom: 0; margin-left: 0;" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:Template name="weapon-icon-template" src="project://database/Assets/_Project/UI/WeaponIcon.uxml?fileID=9197481963319205126&amp;guid=2c864450adc5bf94cb20e6a97006f13f&amp;type=3#WeaponIcon" />
+    <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
+    <ui:VisualElement name="main-container" style="flex-grow: 1; position: absolute; top: 25%; left: 25%; right: 25%; bottom: 25%;">
+        <ui:Label name="controls-label" text="controls" class="hud-text" style="-unity-text-align: upper-center; align-self: center;" />
+        <ui:Label name="gameover-label" text="GAME OVER" class="hud-title hud-text" />
+        <ui:Label name="final-score-label" text="final score" class="hud-text" style="-unity-text-align: middle-center; align-self: center; font-size: 34px;" />
+        <ui:Button name="spawn-player-btn" text="Start" class="hud-button" style="align-self: center; margin-top: 64px;" />
+        <ui:Button name="restart-game-btn" text="Restart" class="hud-button" style="align-self: center; margin-top: 30px;" />
     </ui:VisualElement>
-    <ui:VisualElement name="ShipDataContainer" style="flex-grow: 1; margin-top: 10px; margin-right: 10px; margin-bottom: 10px; margin-left: 10px;">
-        <ui:Label text="Pos" name="Pos" class="dataText" />
-        <ui:Label text="Speed" name="Speed" class="dataText" />
-        <ui:Label text="Angle" name="Angle" class="dataText" />
-        <ui:Label text="Charges" name="LaserCharges" class="dataText" style="padding-top: 42px;" />
-        <ui:ProgressBar value="0.33" name="Recharge" high-value="1" style="width: 89px; margin-top: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(56, 56, 56);" />
-        <ui:Label text="Score" name="Score" class="dataText" style="right: 0; position: absolute;" />
+    <ui:VisualElement name="ship-data" style="flex-grow: 1; margin: 10px;">
+        <ui:Label name="pos-label" text="Pos" class="hud-text" />
+        <ui:Label name="speed-label" text="Speed" class="hud-text" />
+        <ui:Label name="angle-label" text="Angle" class="hud-text" />
+        <ui:Label name="score-label" text="Score" class="hud-text" style="right: 0; position: absolute;" />
+    </ui:VisualElement>
+    <ui:VisualElement name="weapons-panel" class="weapons-panel" style="right: 16px; left: auto;">
+        <ui:Instance template="weapon-icon-template" name="projectile-weapon-icon" style="background-image: none; margin-right: 4px; -unity-background-scale-mode: scale-and-crop;" />
+        <ui:Instance template="weapon-icon-template" name="aoe-weapon-icon" style="-unity-background-scale-mode: scale-and-crop;" />
     </ui:VisualElement>
 </ui:UXML>

@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using _Project.Runtime.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -10,165 +11,106 @@ namespace _Project.Runtime.Views
     [RequireComponent(typeof(UIDocument))]
     public class HudView : BaseView
     {
-        private const string CONTROLS_TEXT = "W - forward, A - left, D - right.\n" +
-                                             "Space - shoot gun. Ctrl - release laser.";
-
-        private const string FINAL_SCORE_TEXT = "Final score: ";
+        private const string CONTROLS_TEXT =
+            "W - forward, A - left, D - right.\nSpace - shoot gun. Ctrl - release laser.";
 
         private UIDocument _doc;
 
-        private VisualElement _shipDataContainer;
-        private Label _posLabel;
-        private Label _spdLabel;
-        private Label _angLabel;
-        private ProgressBar _rechargeProgressBar;
-        private Label _laserChargesLabel;
-        private Label _scoreLabel;
+        private MainOverlayController _overlay;
+        private ShipDataController _shipData;
+        private WeaponIconController _projectileWeapon;
+        private WeaponIconController _aoeWeapon;
+        private VisualElement _weaponsPanel;
 
-        private VisualElement _mainContainer;
-        private Label _controlsLabel;
-        private Label _gameOverLabel;
-        private Label _finalScoreLabel;
-        private Button _playerSpawnButton;
-        private Button _restartGameButton;
-
-        private GameState _gameState;
+        private int _score;
 
         public event Action PlayerSpawnButtonPressed;
+        public event Action RestartButtonPressed;
 
         private void Awake()
         {
             _doc = GetComponent<UIDocument>();
-
             var root = _doc.rootVisualElement;
 
-            _shipDataContainer = root.Q<VisualElement>("ShipDataContainer");
-            _posLabel = root.Q<Label>("Pos");
-            _spdLabel = root.Q<Label>("Speed");
-            _angLabel = root.Q<Label>("Angle");
-            _rechargeProgressBar = root.Q<ProgressBar>("Recharge");
-            _laserChargesLabel = root.Q<Label>("LaserCharges");
-            _scoreLabel = root.Q<Label>("Score");
+            _overlay = new MainOverlayController(root.Q<VisualElement>("main-container"));
 
-            _mainContainer = root.Q<VisualElement>("MainContainer");
-            _controlsLabel = root.Q<Label>("Controls");
-            _controlsLabel.text = CONTROLS_TEXT;
-            _gameOverLabel = root.Q<Label>("GameOverLabel");
-            _finalScoreLabel = root.Q<Label>("FinalScore");
-            _playerSpawnButton = root.Q<Button>("SpawnPlayer");
-            _playerSpawnButton.clicked += OnSpawnPlayerButtonClicked;
-            _restartGameButton = root.Q<Button>("RestartGame");
-            _restartGameButton.clicked += OnRestartGameButtonClicked;
+            _shipData = new ShipDataController(root.Q<VisualElement>("ship-data"));
+
+            _weaponsPanel = root
+                .Q<VisualElement>("weapons-panel");
+            
+            _projectileWeapon = new WeaponIconController(_weaponsPanel
+                .Q<VisualElement>("projectile-weapon-icon"));
+            _projectileWeapon.SetCountVisible(false);
+            _projectileWeapon.SetReloadVisible(false);
+
+            _aoeWeapon = new WeaponIconController(_weaponsPanel
+                .Q<VisualElement>("aoe-weapon-icon"));
+
+            _overlay.SpawnClicked += () => PlayerSpawnButtonPressed?.Invoke();
+            _overlay.RestartClicked += RestartSceneNow;
         }
 
-        private void Preparing()
+        public void UpdateGameState(GameState state)
         {
-            SetVisibility(_mainContainer, true);
-            SetVisibility(_controlsLabel, true);
-            _playerSpawnButton.text = "Start";
-
-            SetVisibility(_shipDataContainer, false);
-            SetVisibility(_gameOverLabel, false);
-            SetVisibility(_finalScoreLabel, false);
-            SetVisibility(_restartGameButton, false);
-        }
-
-        private void Gameplay()
-        {
-            SetVisibility(_shipDataContainer, true);
-
-            SetVisibility(_mainContainer, false);
-        }
-
-        private void GameOver()
-        {
-            SetVisibility(_mainContainer, true);
-            SetVisibility(_gameOverLabel, true);
-            SetVisibility(_finalScoreLabel, true);
-            _playerSpawnButton.text = "BACK IN GAME";
-            SetVisibility(_playerSpawnButton, true);
-            SetVisibility(_restartGameButton, true);
-
-            SetVisibility(_shipDataContainer, false);
-            SetVisibility(_controlsLabel, false);
-        }
-
-        public void UpdateGameState(GameState gameState)
-        {
-            switch (gameState)
+            switch (state)
             {
                 case GameState.Preparing:
-                    Preparing();
+                    _overlay.Preparing(CONTROLS_TEXT);
+                    _shipData.SetVisible(false);
+                    _weaponsPanel.style.display = DisplayStyle.None;
                     break;
                 case GameState.Gameplay:
-                    Gameplay();
+                    _overlay.Gameplay();
+                    _shipData.SetVisible(true);
+                    _weaponsPanel.style.display = DisplayStyle.Flex;
                     break;
                 case GameState.GameOver:
-                    GameOver();
+                    _overlay.GameOver(_score);
+                    _shipData.SetVisible(false);
+                    _weaponsPanel.style.display = DisplayStyle.None;
                     break;
                 case GameState.Pause:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
         }
 
-        public void UpdatePoseData(Vector2 pos, Vector2 vel, float angleRad)
-        {
-            if (_posLabel != null)
-                _posLabel.text = $"POS X:{pos.x,7:0.00} Y:{pos.y,7:0.00}";
+        public void UpdatePoseData(Vector2 pos, Vector2 vel, float angleRad) =>
+            _shipData.UpdatePose(pos, vel, angleRad);
 
-            if (_spdLabel != null)
-            {
-                float speed = vel.magnitude;
-                _spdLabel.text = $"SPD {speed:0.00}";
-            }
-
-            if (_angLabel != null)
-            {
-                float angleDegrees = Mathf.Repeat(angleRad * Mathf.Rad2Deg, 360f);
-                _angLabel.text = $"ANG {angleDegrees:0.0}°";
-            }
-        }
-
-        public void UpdateProjectileWeaponData(float cooldown, float reloadRatio)
-        { }
-
-        public void UpdateAoeWeaponData(int total, int current, float rechargeRatio)
-        {
-            _rechargeProgressBar.visible = total != current;
-
-            _rechargeProgressBar.value = rechargeRatio;
-
-            _laserChargesLabel.text = $"Laser Charges: {current}";
-        }
 
         public void UpdateScore(int score)
         {
-            _scoreLabel.text = score.ToString();
-            _finalScoreLabel.text = FINAL_SCORE_TEXT + score;
+            _shipData.UpdateScore(score);
+            _score = score;
         }
 
-        private void OnSpawnPlayerButtonClicked()
+        private void RestartSceneNow()
         {
-            PlayerSpawnButtonPressed?.Invoke();
-        }
-
-        private void OnRestartGameButtonClicked()
-        {
-            //TODO replace 
+            //TODO remove
             string sceneName = SceneManager.GetActiveScene().name;
             SceneManager.LoadScene(sceneName);
+            //
+            RestartButtonPressed?.Invoke();
         }
 
-        private void SetVisibility(VisualElement elem, bool visible)
+        public void UpdateProjectileWeaponData(float cooldown, float reloadRatio)
         {
-            if (elem == null)
-            {
-                return;
-            }
-
-            elem.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+            _projectileWeapon.UpdateCooldownState(reloadRatio);
         }
+        
+        public void UpdateAoeWeaponData(int total, int current, float rechargeRatio, float cooldown, float reloadRatio)
+        {
+            _aoeWeapon.SetReloadVisible(total != current);
+            _aoeWeapon.SetReloadProgress01(Mathf.Clamp01(rechargeRatio));
+            _aoeWeapon.SetCount(current);
+            
+            _aoeWeapon.UpdateCooldownState(reloadRatio);
+        }
+        
+        public void SetAoeWeaponIcon(Sprite sprite) => _aoeWeapon.SetIcon(sprite);
+        public void SetProjectileWeaponIcon(Sprite sprite) => _projectileWeapon.SetIcon(sprite);
     }
 }

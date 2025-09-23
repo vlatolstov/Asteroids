@@ -13,5 +13,11 @@ namespace _Project.Runtime.Settings
 
         [field: SerializeField]
         public RuntimeAnimatorController AsteroidDestroyed { get; private set; }
+        
+        [field: SerializeField]
+        public Sprite ShipProjectileWeaponIcon { get; private set; }
+        
+        [field: SerializeField]
+        public Sprite ShipAoeWeaponIcon { get; private set; }
     }
 }

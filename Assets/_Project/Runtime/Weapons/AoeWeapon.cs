@@ -68,7 +68,8 @@ namespace _Project.Runtime.Weapons
         public AoeWeaponState ProvideAoeWeaponState()
         {
             var recharge = 1f - Mathf.Clamp01(_rechargeTime / Mathf.Max(Config.ChargeRate, 1e-6f));
-            return new AoeWeaponState(Config.Charges, _charges, Cooldown,recharge);
+            var reload = 1f - Mathf.Clamp01(Cooldown / Mathf.Max(Config.WeaponCooldown, 1e-6f));
+            return new AoeWeaponState(Config.Charges, _charges, Cooldown,reload, recharge);
         }
     }
 }

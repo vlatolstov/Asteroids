@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/USS/weaponIconSS.uss?fileID=7433441132597879392&amp;guid=0f0fe09b539c35d429e8abd4e73758a7&amp;type=3#weaponIconSS" />
+    <ui:VisualElement name="weapon-icon" class="weapon-icon" style="background-image: none;">
+        <ui:VisualElement name="reload-mask" class="reload-mask">
+            <ui:VisualElement name="reload-fill" class="reload-fill" />
+        </ui:VisualElement>
+        <ui:Label name="count" text="0" class="count" style="margin-bottom: 0; margin-right: 0; margin-left: 0; margin-top: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-left;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -98,7 +98,8 @@ namespace _Project.Runtime.Weapons
 
         public ProjectileWeaponState ProvideProjWeaponState()
         {
-            return new ProjectileWeaponState(Cooldown, 1 - Cooldown / Config.WeaponCooldown);
+            var reload = 1f - Mathf.Clamp01(Cooldown / Mathf.Max(Config.WeaponCooldown, 1e-6f));
+            return new ProjectileWeaponState(Cooldown, reload);
         }
     }
 }

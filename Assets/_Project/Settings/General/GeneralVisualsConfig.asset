@@ -15,3 +15,5 @@ MonoBehaviour:
   <ShipDestroyed>k__BackingField: {fileID: 9100000, guid: 31a3ccf3d4b62d043ab09c5707e3b9cc, type: 2}
   <UfoDestroyed>k__BackingField: {fileID: 9100000, guid: c8f054c0ed678c04f92cc078a59eac14, type: 2}
   <AsteroidDestroyed>k__BackingField: {fileID: 9100000, guid: 4dc9d91ee67bd9042a3112aef54aaf38, type: 2}
+  <ShipProjectileWeaponIcon>k__BackingField: {fileID: 5117170334197161793, guid: f4dd745325b4d58448aa8cff03b6f743, type: 3}
+  <ShipAoeWeaponIcon>k__BackingField: {fileID: 5588608046750930362, guid: f4dd745325b4d58448aa8cff03b6f743, type: 3}

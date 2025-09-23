@@ -1,30 +1,34 @@
 using System;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class HudPresenter : IDisposable
+    public class HudPresenter : IInitializable, IDisposable
     {
         private readonly GameModel _gameModel;
         private readonly ScoreModel _scoreModel;
         private readonly CombatModel _combatModel;
         private readonly ShipModel _shipModel;
+        private readonly GeneralVisualsConfig _visuals;
 
         private readonly HudView _hud;
 
-        public HudPresenter(GameModel gameModel, ShipModel shipModel, ScoreModel scoreModel, CombatModel combatModel,
-            ViewsContainer viewsContainer)
+        public HudPresenter(GameModel gameModel,
+            ShipModel shipModel,
+            ScoreModel scoreModel,
+            CombatModel combatModel,
+            ViewsContainer viewsContainer, GeneralVisualsConfig visuals)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
             _scoreModel = scoreModel;
             _combatModel = combatModel;
+            _visuals = visuals;
 
             _hud = viewsContainer.GetView<HudView>();
 
@@ -39,6 +43,11 @@ namespace _Project.Runtime.Presenters
             _scoreModel.TotalScoreChanged += OnScoreChanged;
         }
 
+        public void Initialize()
+        {
+            _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
+            _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
+        }
 
         public void Dispose()
         {
@@ -75,7 +84,8 @@ namespace _Project.Runtime.Presenters
 
         private void OnAoeWeaponStateChanged(AoeWeaponState state)
         {
-            _hud.UpdateAoeWeaponData(state.MaxCharges, state.Charges, state.RechargeRatio);
+            _hud.UpdateAoeWeaponData(state.MaxCharges, state.Charges, state.RechargeRatio, state.Cooldown,
+                state.ReloadRatio);
         }
 
         private void OnScoreChanged(int totalScore)
@@ -93,7 +103,5 @@ namespace _Project.Runtime.Presenters
             //TODO add combat statistics
             var m = _combatModel;
         }
-        
-        
     }
 }

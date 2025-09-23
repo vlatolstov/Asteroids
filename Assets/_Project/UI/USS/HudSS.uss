@@ -1,0 +1,41 @@
+:root {
+    --hud-fg: rgba(230,230,230,0.92);
+    --hud-fg-muted: rgba(220,220,220,0.75);
+    --hud-border: rgba(255,255,255,0.18);
+    --hud-bg: rgba(255,255,255,0.06);
+    --radius: 12px;
+}
+
+.hud-text {
+    color: var(--hud-fg-muted);
+    font-size: 17px;
+}
+
+.hud-title {
+    color: var(--hud-fg);
+    font-size: 90px;
+    -unity-text-align: middle-center;
+}
+
+.hud-button {
+    color: #222;
+    background-color: var(--hud-bg);
+    border-left-width: 1px; border-right-width: 1px;
+    border-top-width: 1px;  border-bottom-width: 1px;
+    border-left-color: var(--hud-border);
+    border-right-color: var(--hud-border);
+    border-top-color: var(--hud-border);
+    border-bottom-color: var(--hud-border);
+    border-radius: var(--radius);
+    font-size: 31px;
+    padding-left: 18px; padding-right: 18px;
+}
+
+.weapons-panel {
+    position: absolute;
+    left: 16px; bottom: 16px;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.hidden { display: none; }

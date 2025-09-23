@@ -44,13 +44,15 @@ namespace _Project.Runtime.Data
         public readonly int MaxCharges;
         public readonly int Charges;
         public readonly float Cooldown;
+        public readonly float ReloadRatio;
         public readonly float RechargeRatio;
 
-        public AoeWeaponState(int maxCharges, int charges, float cooldown, float rechargeRatio)
+        public AoeWeaponState(int maxCharges, int charges, float cooldown, float reloadRatio, float rechargeRatio)
         {
             MaxCharges = maxCharges;
             Charges = charges;
             Cooldown = cooldown;
+            ReloadRatio = reloadRatio;
             RechargeRatio = rechargeRatio;
         }
 
