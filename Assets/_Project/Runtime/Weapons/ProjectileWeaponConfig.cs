@@ -1,11 +1,10 @@
-using _Project.Runtime.Abstract.Visualization;
 using _Project.Runtime.Abstract.Weapons;
 using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "ProjectileWeapon", menuName = "Settings/Weapons/Projectile Weapon", order = 0)]
-    public class ProjectileWeaponConfig : WeaponConfig, IWeaponRepresentation
+    public class ProjectileWeaponConfig : WeaponConfig
     {
         [Header("Logic")]
         [field: SerializeField]

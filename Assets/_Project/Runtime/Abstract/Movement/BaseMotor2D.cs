@@ -5,16 +5,16 @@ using UnityEngine;
 
 namespace _Project.Runtime.Abstract.Movement
 {
-    public abstract class BaseMotor2D<TConfig> where TConfig : MovementConfig
+    public abstract class BaseMotor2D
     {
         private float _thrust;
         private float _turnAxis;
         private bool _wrapEnabled;
         
-        protected readonly TConfig Config;
+        protected readonly MovementConfig Config;
         protected readonly IWorldConfig World;
         
-        protected BaseMotor2D(TConfig config, IWorldConfig world)
+        protected BaseMotor2D(MovementConfig config, IWorldConfig world)
         {
             Config = config;
             World = world;

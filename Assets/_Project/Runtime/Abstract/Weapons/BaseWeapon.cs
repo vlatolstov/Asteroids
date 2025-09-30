@@ -1,5 +1,3 @@
-using System;
-using _Project.Runtime.Abstract.MVP;
 using UnityEngine;
 using Zenject;
 
@@ -31,7 +29,5 @@ namespace _Project.Runtime.Abstract.Weapons
 
         protected virtual void OnFixedTick()
         { }
-
-        public abstract bool TryAttack();
     }
 }

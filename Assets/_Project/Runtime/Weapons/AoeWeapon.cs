@@ -24,17 +24,17 @@ namespace _Project.Runtime.Weapons
             _rechargeTime = Config.ChargeRate;
         }
 
-        public override bool TryAttack()
+        public virtual void Attack()
         {
             if (Cooldown > 0f || _charges <= 0)
             {
-                return false;
+                return;
             }
 
             if (Source is not MonoBehaviour mb ||
                 !Source.TryGetFireParams(out _, out _, out _, out _, out var sourceType))
             {
-                return false;
+                return;
             }
 
             var originTransform = mb.transform;
@@ -44,7 +44,6 @@ namespace _Project.Runtime.Weapons
             AttackReleased?.Invoke(attack);
 
             Cooldown = Mathf.Max(0f, Config.WeaponCooldown);
-            return true;
         }
 
         protected override void OnFixedTick()

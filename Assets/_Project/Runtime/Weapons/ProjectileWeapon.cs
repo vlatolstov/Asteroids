@@ -17,18 +17,18 @@ namespace _Project.Runtime.Weapons
         public ProjectileWeapon(ProjectileWeaponConfig config, IFireParamsSource source) : base(config, source)
         { }
 
-        public override bool TryAttack()
+        public virtual void Attack()
         {
             if (Cooldown > 0f)
             {
-                return false;
+                return;
             }
 
             if (Source == null ||
                 !Source.TryGetFireParams(out var origin, out var dir, out var inheritVelocity, out int layer,
                     out var sourceType))
             {
-                return false;
+                return;
             }
 
             dir = dir.sqrMagnitude > 0f ? dir.normalized : Vector2.up;
@@ -51,7 +51,6 @@ namespace _Project.Runtime.Weapons
             }
 
             Cooldown = Mathf.Max(0f, Config.WeaponCooldown);
-            return true;
         }
 
         protected override void OnFixedTick()

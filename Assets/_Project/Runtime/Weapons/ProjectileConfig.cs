@@ -1,10 +1,9 @@
-using _Project.Runtime.Abstract.Visualization;
 using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "ProjectileConfig", menuName = "Settings/Weapons/Projectile")]
-    public class ProjectileConfig : ScriptableObject, IAttackRepresentation
+    public class ProjectileConfig : ScriptableObject
     {
         [Header("Logic")]
         [field: SerializeField]

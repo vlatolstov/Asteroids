@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Project.Runtime.Movement
 {
-    public class InertialMotor : BaseMotor2D<MovementConfig>
+    public class InertialMotor : BaseMotor2D
     {
         public InertialMotor(MovementConfig config, IWorldConfig world) : base(config, world)
         {

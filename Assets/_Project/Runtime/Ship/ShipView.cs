@@ -117,12 +117,12 @@ namespace _Project.Runtime.Ship
         
         public void TryShootProjectile()
         {
-            _gun.TryAttack();
+            _gun.Attack();
         }
 
         public void TryReleaseAoeAttack()
         {
-            _aoeWeapon.TryAttack();
+            _aoeWeapon.Attack();
         }
 
         public void SetupMainEngine(bool main)

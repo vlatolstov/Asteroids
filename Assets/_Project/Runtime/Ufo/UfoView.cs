@@ -79,7 +79,7 @@ namespace _Project.Runtime.Ufo
 
             if (CanAttack())
             {
-                _gun.TryAttack();
+                _gun.Attack();
             }
         }
 

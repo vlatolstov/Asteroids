@@ -1,11 +1,10 @@
-using _Project.Runtime.Abstract.Visualization;
 using _Project.Runtime.Abstract.Weapons;
 using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
     [CreateAssetMenu(fileName = "AoeWeaponConfig", menuName = "Settings/Weapons/AOE Weapon", order = 0)]
-    public class AoeWeaponConfig : WeaponConfig, IWeaponRepresentation
+    public class AoeWeaponConfig : WeaponConfig
     {
         [Header("Logic")]
         [field: SerializeField]

@@ -6,7 +6,7 @@ using Zenject;
 namespace _Project.Runtime.Abstract.Movement
 {
     [RequireComponent(typeof(Rigidbody2D))]
-    public abstract class BaseMovableView<TMotor> : BaseView where TMotor : BaseMotor2D<MovementConfig>
+    public abstract class BaseMovableView<TMotor> : BaseView where TMotor : BaseMotor2D
     {
         private Rigidbody2D _rb;
 

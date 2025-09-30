@@ -7,7 +7,7 @@ using GM = _Project.Runtime.Utils.GeometryMethods;
 
 namespace _Project.Runtime.Movement
 {
-    public class ChasingMotor : BaseMotor2D<MovementConfig>
+    public class ChasingMotor : BaseMotor2D
     {
         private readonly ChasingEnemyConfig _chaseConfig;
         
