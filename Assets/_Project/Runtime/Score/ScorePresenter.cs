@@ -5,7 +5,7 @@ using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ufo;
 
-namespace _Project.Runtime.Presenters
+namespace _Project.Runtime.Score
 {
     public class ScorePresenter : IDisposable
     {
@@ -15,6 +15,7 @@ namespace _Project.Runtime.Presenters
         private readonly ScoreModel _scoreModel;
 
         private readonly ScoreConfig _scoreConfig;
+        
 
         private GameState _previousGameState;
 

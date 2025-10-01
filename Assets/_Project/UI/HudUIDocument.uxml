@@ -5,7 +5,8 @@
         <ui:Label name="controls-label" text="controls" class="hud-text" style="-unity-text-align: upper-center; align-self: center;" />
         <ui:Label name="gameover-label" text="GAME OVER" class="hud-title hud-text" />
         <ui:Label name="final-score-label" text="final score" class="hud-text" style="-unity-text-align: middle-center; align-self: center; font-size: 34px;" />
-        <ui:Button name="spawn-player-btn" text="Start" class="hud-button" style="align-self: center; margin-top: 64px;" />
+        <ui:Label name="best-score-label" text="best score" class="hud-text" style="-unity-text-align: middle-center; align-self: center; font-size: 34px;" />
+        <ui:Button name="spawn-player-btn" text="Start" class="hud-button" style="align-self: center; margin-top: 2px;" />
         <ui:Button name="restart-game-btn" text="Restart" class="hud-button" style="align-self: center; margin-top: 30px;" />
     </ui:VisualElement>
     <ui:VisualElement name="ship-data" style="flex-grow: 1; margin: 10px;">

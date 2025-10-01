@@ -3,6 +3,7 @@ using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
+using _Project.Runtime.Score;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
@@ -34,13 +35,14 @@ namespace _Project.Runtime.Installers
 
         [SerializeField]
         private GameObject _animationPrefab;
-        
+
 
         public override void InstallBindings()
         {
             ViewsBindings();
             PresentersBindings();
             ModelsBindings();
+            ServicesBindings();
 
             Container
                 .Bind<IWorldConfig>()
@@ -140,7 +142,7 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<ScorePresenter>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<AudioPresenter>()
                 .AsSingle();
@@ -171,13 +173,20 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<AsteroidsModel>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<ScoreModel>()
                 .AsSingle();
-            
+
             Container
                 .BindInterfacesAndSelfTo<CombatModel>()
+                .AsSingle();
+        }
+
+        private void ServicesBindings()
+        {
+            Container
+                .BindInterfacesAndSelfTo<BestScoreService>()
                 .AsSingle();
         }
     }

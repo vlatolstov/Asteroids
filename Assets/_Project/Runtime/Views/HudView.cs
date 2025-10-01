@@ -23,6 +23,7 @@ namespace _Project.Runtime.Views
         private VisualElement _weaponsPanel;
 
         private int _score;
+        private int _bestScore;
 
         public event Action PlayerSpawnButtonPressed;
         public event Action RestartButtonPressed;
@@ -66,7 +67,7 @@ namespace _Project.Runtime.Views
                     _weaponsPanel.style.display = DisplayStyle.Flex;
                     break;
                 case GameState.GameOver:
-                    _overlay.GameOver(_score);
+                    _overlay.GameOver(_score, _bestScore);
                     _shipData.SetVisible(false);
                     _weaponsPanel.style.display = DisplayStyle.None;
                     break;
@@ -85,6 +86,12 @@ namespace _Project.Runtime.Views
         {
             _shipData.UpdateScore(score);
             _score = score;
+        }
+
+        public void UpdateBestScore(int bestScore)
+        {
+            _bestScore = bestScore;
+            _overlay.SetBestScore(bestScore);
         }
 
         private void RestartSceneNow()

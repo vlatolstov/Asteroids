@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Score;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
@@ -41,12 +42,14 @@ namespace _Project.Runtime.Presenters
             _gameModel.GameStateChanged += OnGameStateChanged;
 
             _scoreModel.TotalScoreChanged += OnScoreChanged;
+            _scoreModel.BestScoreChanged += OnBestScoreChanged;
         }
 
         public void Initialize()
         {
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
+            _hud.UpdateBestScore(_scoreModel.BestScore);
         }
 
         public void Dispose()
@@ -60,6 +63,7 @@ namespace _Project.Runtime.Presenters
             _gameModel.GameStateChanged -= OnGameStateChanged;
 
             _scoreModel.TotalScoreChanged -= OnScoreChanged;
+            _scoreModel.BestScoreChanged -= OnBestScoreChanged;
         }
 
         private void OnGameStateChanged(GameState state)
@@ -91,6 +95,11 @@ namespace _Project.Runtime.Presenters
         private void OnScoreChanged(int totalScore)
         {
             _hud.UpdateScore(totalScore);
+        }
+
+        private void OnBestScoreChanged(int bestScore)
+        {
+            _hud.UpdateBestScore(bestScore);
         }
 
         private void OnSpawnPlayerPressed()

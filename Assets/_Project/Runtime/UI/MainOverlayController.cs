@@ -9,6 +9,7 @@ namespace _Project.Runtime.UI
         private readonly Label _controls;
         private readonly Label _gameOver;
         private readonly Label _finalScore;
+        private readonly Label _bestScore;
         private readonly Button _spawnBtn;
         private readonly Button _restartBtn;
 
@@ -21,6 +22,7 @@ namespace _Project.Runtime.UI
             _controls = root.Q<Label>("controls-label");
             _gameOver = root.Q<Label>("gameover-label");
             _finalScore = root.Q<Label>("final-score-label");
+            _bestScore = root.Q<Label>("best-score-label");
             _spawnBtn = root.Q<Button>("spawn-player-btn");
             _restartBtn = root.Q<Button>("restart-game-btn");
 
@@ -41,6 +43,7 @@ namespace _Project.Runtime.UI
             Set(_controls, true, controlsText);
             Set(_gameOver, false);
             Set(_finalScore, false);
+            Set(_bestScore, false);
             Set(_spawnBtn, true, "Start");
             Set(_restartBtn, false);
         }
@@ -50,14 +53,25 @@ namespace _Project.Runtime.UI
             SetVisible(false);
         }
 
-        public void GameOver(int finalScore)
+        public void GameOver(int finalScore, int bestScore)
         {
             SetVisible(true);
             Set(_controls, false);
             Set(_gameOver, true);
             Set(_finalScore, true, $"Final score: {finalScore}");
+            Set(_bestScore, true, $"Best score: {bestScore}");
             Set(_spawnBtn, true, "BACK IN GAME");
             Set(_restartBtn, true);
+        }
+
+        public void SetBestScore(int bestScore)
+        {
+            if (_bestScore == null)
+            {
+                return;
+            }
+
+            _bestScore.text = $"Best score: {bestScore}";
         }
 
         private void SetVisible(bool v) => _root.style.display = v ? DisplayStyle.Flex : DisplayStyle.None;
