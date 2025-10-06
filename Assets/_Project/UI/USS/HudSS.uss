@@ -4,38 +4,331 @@
     --hud-border: rgba(255,255,255,0.18);
     --hud-bg: rgba(255,255,255,0.06);
     --radius: 12px;
+
+    --hud-padding: 32px;
+    --hud-gap: 20px;
+    --hud-overlay-padding: 28px;
+    --hud-body-size: 18px;
+    --hud-title-size: 86px;
+    --hud-button-size: 30px;
+    --hud-debug-size: 14px;
+    --overlay-radius: 18px;
+    --overlay-spacing: 20px;
+    --panel-radius: 12px;
+    --hud-button-min-width: 220px;
+    --hud-button-max-width: 380px;
+    --hud-button-min-height: 56px;
+    --weapon-slot-size: 76px;
+    --weapon-counter-size: 24px;
+}
+
+.hud-root {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--hud-padding);
+}
+
+.hud-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--hud-gap);
+}
+
+.hud-middle {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: var(--hud-gap);
+    padding-left: var(--hud-padding);
+    padding-right: var(--hud-padding);
+}
+
+.hud-bottom {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.ship-data-panel {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+    max-width: 320px;
+}
+
+.ship-data-panel > * {
+    margin-bottom: 6px;
+}
+
+.ship-data-line {
+    color: var(--hud-fg-muted);
+    font-size: var(--hud-debug-size);
+}
+
+.ship-score {
+    color: var(--hud-fg);
+    font-size: var(--hud-debug-size);
+    unity-font-style-and-weight: bold;
+}
+
+.stats-panel {
+    display: none;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 280px;
+    padding: 8px 12px;
+    border-width: 1px;
+    border-color: var(--hud-border);
+    border-radius: var(--panel-radius);
+    background-color: rgba(0, 0, 0, 0.28);
+}
+
+.stats-content {
+    color: var(--hud-fg-muted);
+    font-size: var(--hud-debug-size);
+    white-space: normal;
+    -unity-text-align: upper-right;
+}
+
+.overlay-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 240px;
+    max-width: 720px;
+    max-height: 85%;
+    padding: var(--hud-overlay-padding);
+    border-radius: var(--overlay-radius);
+    background-color: rgba(0, 0, 0, 0.35);
+    border-width: 1px;
+    border-color: rgba(255,255,255,0.08);
+}
+
+.overlay-item {
+    margin-bottom: var(--overlay-spacing);
+}
+
+.overlay-item-last {
+    margin-bottom: 0;
 }
 
 .hud-text {
     color: var(--hud-fg-muted);
-    font-size: 17px;
+    font-size: var(--hud-body-size);
+    white-space: normal;
 }
 
 .hud-title {
     color: var(--hud-fg);
-    font-size: 90px;
+    font-size: var(--hud-title-size);
     -unity-text-align: middle-center;
+    letter-spacing: 4px;
+}
+
+.overlay-caption {
+    -unity-text-align: upper-center;
+}
+
+.overlay-score {
+    -unity-text-align: middle-center;
+    color: var(--hud-fg);
+    font-size: var(--hud-button-size);
 }
 
 .hud-button {
-    color: #222;
+    color: #222222;
     background-color: var(--hud-bg);
     border-left-width: 1px; border-right-width: 1px;
-    border-top-width: 1px;  border-bottom-width: 1px;
+    border-top-width: 1px; border-bottom-width: 1px;
     border-left-color: var(--hud-border);
     border-right-color: var(--hud-border);
     border-top-color: var(--hud-border);
     border-bottom-color: var(--hud-border);
     border-radius: var(--radius);
-    font-size: 31px;
-    padding-left: 18px; padding-right: 18px;
+    font-size: var(--hud-button-size);
+    min-width: var(--hud-button-min-width);
+    max-width: var(--hud-button-max-width);
+    min-height: var(--hud-button-min-height);
+    padding: 10px 28px;
+}
+
+.overlay-button {
+    align-self: center;
 }
 
 .weapons-panel {
-    position: absolute;
-    left: 16px; bottom: 16px;
+    display: flex;
     flex-direction: row;
-    gap: 10px;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 10px 18px;
+    border-radius: var(--panel-radius);
+    background-color: rgba(0, 0, 0, 0.28);
 }
 
-.hidden { display: none; }
+.weapon-slot {
+    margin-right: 12px;
+}
+
+.weapon-slot-last {
+    margin-right: 0;
+}
+
+.weapons-panel .weapon-icon {
+    width: var(--weapon-slot-size);
+    height: var(--weapon-slot-size);
+}
+
+.weapons-panel .count {
+    font-size: var(--weapon-counter-size);
+}
+
+.hud--landscape {
+    --hud-padding: 36px;
+    --hud-gap: 24px;
+    --hud-overlay-padding: 36px;
+    --hud-body-size: 18px;
+    --hud-title-size: 88px;
+    --hud-button-size: 30px;
+    --hud-debug-size: 15px;
+    --overlay-radius: 20px;
+    --overlay-spacing: 22px;
+    --panel-radius: 14px;
+    --hud-button-min-width: 240px;
+    --hud-button-max-width: 400px;
+    --hud-button-min-height: 60px;
+    --weapon-slot-size: 84px;
+    --weapon-counter-size: 26px;
+}
+
+.hud--portrait {
+    --hud-padding: 24px;
+    --hud-gap: 16px;
+    --hud-overlay-padding: 26px;
+    --hud-body-size: 16px;
+    --hud-title-size: 68px;
+    --hud-button-size: 26px;
+    --hud-debug-size: 13px;
+    --overlay-radius: 18px;
+    --overlay-spacing: 18px;
+    --panel-radius: 11px;
+    --hud-button-min-width: 190px;
+    --hud-button-max-width: 320px;
+    --hud-button-min-height: 48px;
+    --weapon-slot-size: 68px;
+    --weapon-counter-size: 22px;
+}
+
+.hud--portrait .hud-middle {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.hud--compact {
+    --hud-padding: 20px;
+    --hud-gap: 14px;
+    --hud-overlay-padding: 22px;
+    --hud-body-size: 15px;
+    --hud-title-size: 54px;
+    --hud-button-size: 22px;
+    --hud-debug-size: 12px;
+    --overlay-radius: 16px;
+    --overlay-spacing: 16px;
+    --panel-radius: 10px;
+    --hud-button-min-width: 160px;
+    --hud-button-max-width: 270px;
+    --hud-button-min-height: 44px;
+    --weapon-slot-size: 60px;
+    --weapon-counter-size: 20px;
+}
+
+.hud--compact .ship-data-panel > * {
+    margin-bottom: 4px;
+}
+
+.hud--extra-compact {
+    --hud-padding: 14px;
+    --hud-gap: 10px;
+    --hud-overlay-padding: 16px;
+    --hud-body-size: 14px;
+    --hud-title-size: 46px;
+    --hud-button-size: 20px;
+    --hud-debug-size: 11px;
+    --overlay-radius: 14px;
+    --overlay-spacing: 14px;
+    --panel-radius: 9px;
+    --hud-button-min-width: 140px;
+    --hud-button-max-width: 240px;
+    --hud-button-min-height: 38px;
+    --weapon-slot-size: 54px;
+    --weapon-counter-size: 18px;
+}
+
+.hud--large {
+    --hud-padding: 40px;
+    --hud-gap: 28px;
+    --hud-overlay-padding: 40px;
+    --hud-body-size: 20px;
+    --hud-title-size: 96px;
+    --hud-button-size: 32px;
+    --hud-debug-size: 16px;
+    --overlay-radius: 22px;
+    --overlay-spacing: 24px;
+    --panel-radius: 16px;
+    --hud-button-min-width: 280px;
+    --hud-button-max-width: 460px;
+    --hud-button-min-height: 68px;
+    --weapon-slot-size: 92px;
+    --weapon-counter-size: 28px;
+}
+
+.hud--extra-large {
+    --hud-padding: 46px;
+    --hud-gap: 32px;
+    --hud-overlay-padding: 46px;
+    --hud-body-size: 22px;
+    --hud-title-size: 108px;
+    --hud-button-size: 34px;
+    --hud-debug-size: 18px;
+    --overlay-radius: 24px;
+    --overlay-spacing: 26px;
+    --panel-radius: 18px;
+    --hud-button-min-width: 320px;
+    --hud-button-max-width: 520px;
+    --hud-button-min-height: 74px;
+    --weapon-slot-size: 100px;
+    --weapon-counter-size: 30px;
+}
+
+.hud--short {
+    --hud-gap: 14px;
+    --hud-overlay-padding: 20px;
+    --overlay-spacing: 14px;
+    --hud-button-min-height: 44px;
+    --hud-button-size: 24px;
+    --weapon-slot-size: 58px;
+    --weapon-counter-size: 19px;
+}
+
+.hud--ultra-short {
+    --hud-gap: 12px;
+    --hud-overlay-padding: 16px;
+    --overlay-spacing: 12px;
+    --hud-button-min-height: 40px;
+    --hud-button-size: 22px;
+    --hud-body-size: 14px;
+    --weapon-slot-size: 52px;
+    --weapon-counter-size: 18px;
+}
+
+.hidden {
+    display: none;
+}

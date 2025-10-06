@@ -19,7 +19,7 @@ namespace _Project.Runtime.Ufo
 
         private float _time;
         private float _nextAt;
-        private int _alive;
+        private int _inGame;
         private GameState _gameState;
 
         public UfoModel(UfoSpawnConfig spawnConfig, IWorldConfig world)
@@ -28,7 +28,7 @@ namespace _Project.Runtime.Ufo
             _world = world;
 
             _time = 0f;
-            _alive = 0;
+            _inGame = 0;
             _nextAt = _spawnConfig.InitialDelay;
         }
 
@@ -41,7 +41,7 @@ namespace _Project.Runtime.Ufo
                 return;
             }
 
-            if (_alive < _spawnConfig.MaxAlive)
+            if (_inGame < _spawnConfig.MaxAlive)
             {
                 SpawnOne();
             }
@@ -56,18 +56,18 @@ namespace _Project.Runtime.Ufo
 
         public void HandleUfoSpawned(UfoSpawned spawned)
         {
-            _alive++;
+            _inGame++;
         }
 
         public void HandleUfoOffscreen(uint viewId)
         {
-            _alive = Mathf.Max(0, _alive - 1);
+            _inGame = Mathf.Max(0, _inGame - 1);
             UfoDespawnRequested?.Invoke(viewId);
         }
 
         public void HandleUfoDestroyed(UfoDestroyed destroyed)
         {
-            _alive = Mathf.Max(0, _alive - 1);
+            _inGame = Mathf.Max(0, _inGame - 1);
             UfoDestroyed?.Invoke(destroyed);
             UfoDespawnRequested?.Invoke(destroyed.ViewId);
         }

@@ -89,18 +89,4 @@ namespace _Project.Runtime.Data
         Ship,
         Ufo,
     }
-
-    public enum CombatEvent
-    {
-        Undefined = 0,
-        Shot,
-        Hit
-    }
-
-    public enum WeaponType
-    {
-        Undefined = 0,
-        Projectile,
-        Aoe
-    }
 }

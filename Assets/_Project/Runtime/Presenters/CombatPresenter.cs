@@ -9,7 +9,6 @@ namespace _Project.Runtime.Presenters
     public class CombatPresenter : IDisposable
     {
         private readonly CombatModel _combatModel;
-        private readonly GameModel _gameModel;
 
         private readonly ProjectileView.Pool _projectilePool;
         private readonly AoeAttackView.Pool _aoePool;
@@ -17,10 +16,9 @@ namespace _Project.Runtime.Presenters
         private readonly Dictionary<uint, ProjectileView> _activeProjectiles;
         private readonly Dictionary<uint, AoeAttackView> _activeAoe;
 
-        public CombatPresenter(CombatModel combatModel, GameModel gameModel, ProjectileView.Pool projectilePool, AoeAttackView.Pool aoePool)
+        public CombatPresenter(CombatModel combatModel, ProjectileView.Pool projectilePool, AoeAttackView.Pool aoePool)
         {
             _combatModel = combatModel;
-            _gameModel = gameModel;
 
             _projectilePool = projectilePool;
             _aoePool = aoePool;
@@ -30,24 +28,12 @@ namespace _Project.Runtime.Presenters
 
             _combatModel.ProjectileShot += OnProjectileShot;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
-
-            _gameModel.GameStateChanged += OnGameStateChanged;
         }
 
         public void Dispose()
         {
             _combatModel.ProjectileShot -= OnProjectileShot;
             _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
-            
-            _gameModel.GameStateChanged -= OnGameStateChanged;
-        }
-
-        private void OnGameStateChanged(GameState state)
-        {
-            if (state is GameState.Preparing or GameState.Gameplay)
-            {
-                _combatModel.RefreshStatistics();
-            }
         }
         
         private void OnProjectileShot(ProjectileShot shot)
@@ -112,7 +98,7 @@ namespace _Project.Runtime.Presenters
 
         private void SpawnAoe(AoeAttackReleased aoe)
         {
-            var attack = _aoePool.Spawn(aoe.Emitter, aoe.Weapon);
+            var attack = _aoePool.Spawn(aoe.Emitter, aoe.Weapon, aoe.Source);
 
             if (!_activeAoe.TryAdd(attack.ViewId, attack))
             {

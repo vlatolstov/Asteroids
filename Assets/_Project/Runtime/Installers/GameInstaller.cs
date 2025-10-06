@@ -1,5 +1,7 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.Analytics;
+using _Project.Runtime.Analytics.Firebase;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
@@ -150,6 +152,11 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<AnimationPresenter>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<StatisticsPresenter>()
+                .AsSingle()
+                .NonLazy();
         }
 
         private void ModelsBindings()
@@ -181,6 +188,10 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<CombatModel>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<StatisticsModel>()
+                .AsSingle();
         }
 
         private void ServicesBindings()
@@ -188,6 +199,16 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<BestScoreService>()
                 .AsSingle();
+            
+            Container
+                .Bind<IAnalyticsLogger>()
+                .To<FirebaseAnalyticsLogger>()
+                .AsSingle();
+
+            Container
+                .BindInterfacesAndSelfTo<AnalyticsEventHandler>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

@@ -15,9 +15,10 @@ namespace _Project.Runtime.Asteroid
         public event Action<AsteroidSpawnCommand> AsteroidSpawnRequested;
         public event Action<AsteroidDespawnCommand> AsteroidDespawnRequested;
         public event Action<AsteroidDestroyed> AsteroidDestroyed;
+        
+        private int _largeInGameCount;
+        private int _smallInGameCount;
 
-        private int _largeAsteroidsCount;
-        private int _smallAsteroidsCount;
         private float _timer;
         private GameState _gameState;
 
@@ -26,8 +27,6 @@ namespace _Project.Runtime.Asteroid
             _world = world;
             _config = config;
 
-            _largeAsteroidsCount = 0;
-            _smallAsteroidsCount = 0;
             _timer = _config.Interval;
         }
 
@@ -61,12 +60,12 @@ namespace _Project.Runtime.Asteroid
 
             if (destroyed.Size == AsteroidSize.Large)
             {
-                _largeAsteroidsCount--;
                 SpawnSmallAsteroids(destroyed);
+                _largeInGameCount--;
             }
             else
             {
-                _smallAsteroidsCount--;
+                _smallInGameCount--;
             }
         }
 
@@ -96,8 +95,6 @@ namespace _Project.Runtime.Asteroid
 
             float noseAngleRad = Mathf.Atan2(-velocity.x, velocity.y);
 
-            _largeAsteroidsCount++;
-
             var spawnCommand = new AsteroidSpawnCommand(
                 _config.Sprite,
                 AsteroidSize.Large,
@@ -107,6 +104,7 @@ namespace _Project.Runtime.Asteroid
                 noseAngleRad,
                 _config.AngleRotationDeg);
 
+            _largeInGameCount++;
             AsteroidSpawnRequested?.Invoke(spawnCommand);
         }
 
@@ -135,8 +133,6 @@ namespace _Project.Runtime.Asteroid
 
                 float noseAngleRad = Mathf.Atan2(-fragmentVelocity.x, fragmentVelocity.y);
 
-                _smallAsteroidsCount++;
-
                 var spawnCommand = new AsteroidSpawnCommand(
                     _config.Sprite,
                     AsteroidSize.Small,
@@ -145,7 +141,8 @@ namespace _Project.Runtime.Asteroid
                     fragmentVelocity,
                     noseAngleRad,
                     _config.AngleRotationDeg);
-
+                
+                _smallInGameCount++;
                 AsteroidSpawnRequested?.Invoke(spawnCommand);
             }
         }

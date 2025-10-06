@@ -18,8 +18,6 @@ namespace _Project.Runtime.Views
 
         private AoeAttackConfig _conf;
 
-        private readonly List<ContactPoint2D> _contactPoints = new();
-
         private Source _source;
         private float _life;
         private bool _follow;
@@ -58,32 +56,25 @@ namespace _Project.Runtime.Views
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.GetContacts(_contactPoints) > 0)
-            {
-                foreach (var cont in _contactPoints)
-                {
-                    var target = cont.otherCollider.transform;
-                    var hit = new AoeHit(_conf, cont.point, target.rotation, Vector2.one, _source);
-                    AoeHit?.Invoke(hit);
-                }
-            }
-
-            _contactPoints.Clear();
+            var target = other.transform;
+            var hit = new AoeHit(_conf, target.position, target.rotation, Vector2.one, _source);
+            AoeHit?.Invoke(hit);
         }
-        
-        private void Reinitialize(Transform par, AoeWeaponConfig aoe)
+
+        private void Reinitialize(Transform par, AoeWeaponConfig aoe, Source source)
         {
             _conf = aoe.Attack;
             _life = _conf.Duration;
             _follow = aoe.Attack.Mode == AoeAttackConfig.AttachMode.FollowEmitter;
             _emitter = par;
             _collider.enabled = true;
+            _source = source;
             gameObject.layer = par.gameObject.layer;
 
             _centerOffset = aoe.MuzzleOffset + _conf.Length / 2;
             var worldPos = par.TransformPoint(0f, _centerOffset, 0f);
             transform.SetPositionAndRotation(worldPos, _emitter.rotation);
-            
+
             if (!_conf.AttackAnimation)
             {
                 _sr.sprite = _conf.AttackSprite;
@@ -104,23 +95,26 @@ namespace _Project.Runtime.Views
             {
                 _sr.transform.localScale = Vector3.one;
             }
+
             Physics2D.SyncTransforms();
         }
 
-        public class Pool : ViewPool<Transform, AoeWeaponConfig, AoeAttackView>
+        public class Pool : ViewPool<Transform, AoeWeaponConfig, Source, AoeAttackView>
         {
             public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
             { }
 
-            protected override void Reinitialize(Transform par, AoeWeaponConfig aoe, AoeAttackView item)
+            protected override void Reinitialize(Transform par, AoeWeaponConfig aoe, 
+                Source source, AoeAttackView item)
             {
-                base.Reinitialize(par, aoe, item);
-                item.Reinitialize(par, aoe);
+                base.Reinitialize(par, aoe,source, item);
+                item.Reinitialize(par, aoe, source);
             }
 
             protected override void OnDespawned(AoeAttackView item)
             {
                 base.OnDespawned(item);
+                item._source = Source.Undefined;
                 item._collider.enabled = false;
                 item._sr.sprite = null;
                 item._animator.runtimeAnimatorController = null;

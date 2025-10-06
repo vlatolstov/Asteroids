@@ -1,22 +1,33 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <ui:Template name="weapon-icon-template" src="project://database/Assets/_Project/UI/WeaponIcon.uxml?fileID=9197481963319205126&amp;guid=2c864450adc5bf94cb20e6a97006f13f&amp;type=3#WeaponIcon" />
     <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
-    <ui:VisualElement name="main-container" style="flex-grow: 1; position: absolute; top: 25%; left: 25%; right: 25%; bottom: 25%;">
-        <ui:Label name="controls-label" text="controls" class="hud-text" style="-unity-text-align: upper-center; align-self: center;" />
-        <ui:Label name="gameover-label" text="GAME OVER" class="hud-title hud-text" />
-        <ui:Label name="final-score-label" text="final score" class="hud-text" style="-unity-text-align: middle-center; align-self: center; font-size: 34px;" />
-        <ui:Label name="best-score-label" text="best score" class="hud-text" style="-unity-text-align: middle-center; align-self: center; font-size: 34px;" />
-        <ui:Button name="spawn-player-btn" text="Start" class="hud-button" style="align-self: center; margin-top: 2px;" />
-        <ui:Button name="restart-game-btn" text="Restart" class="hud-button" style="align-self: center; margin-top: 30px;" />
-    </ui:VisualElement>
-    <ui:VisualElement name="ship-data" style="flex-grow: 1; margin: 10px;">
-        <ui:Label name="pos-label" text="Pos" class="hud-text" />
-        <ui:Label name="speed-label" text="Speed" class="hud-text" />
-        <ui:Label name="angle-label" text="Angle" class="hud-text" />
-        <ui:Label name="score-label" text="Score" class="hud-text" style="right: 0; position: absolute;" />
-    </ui:VisualElement>
-    <ui:VisualElement name="weapons-panel" class="weapons-panel" style="right: 16px; left: auto;">
-        <ui:Instance template="weapon-icon-template" name="projectile-weapon-icon" style="background-image: none; margin-right: 4px; -unity-background-scale-mode: scale-and-crop;" />
-        <ui:Instance template="weapon-icon-template" name="aoe-weapon-icon" style="-unity-background-scale-mode: scale-and-crop;" />
+    <ui:VisualElement name="hud-root" class="hud-root">
+        <ui:VisualElement name="hud-top" class="hud-top">
+            <ui:VisualElement name="ship-data" class="ship-data-panel">
+                <ui:Label name="pos-label" text="Pos" class="hud-text ship-data-line" />
+                <ui:Label name="speed-label" text="Speed" class="hud-text ship-data-line" />
+                <ui:Label name="angle-label" text="Angle" class="hud-text ship-data-line" />
+                <ui:Label name="score-label" text="Score" class="hud-text ship-score" />
+            </ui:VisualElement>
+            <ui:VisualElement name="stats-panel" class="stats-panel">
+                <ui:Label name="stats-content" class="hud-text stats-content" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="hud-middle" class="hud-middle">
+            <ui:VisualElement name="main-container" class="overlay-panel">
+                <ui:Label name="controls-label" text="controls" class="hud-text overlay-item overlay-caption" />
+                <ui:Label name="gameover-label" text="GAME OVER" class="hud-title overlay-item" />
+                <ui:Label name="final-score-label" text="final score" class="hud-text overlay-item overlay-score" />
+                <ui:Label name="best-score-label" text="best score" class="hud-text overlay-item overlay-score" />
+                <ui:Button name="spawn-player-btn" text="Start" class="hud-button overlay-item overlay-button" />
+                <ui:Button name="restart-game-btn" text="Restart" class="hud-button overlay-item overlay-button overlay-item-last" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="hud-bottom" class="hud-bottom">
+            <ui:VisualElement name="weapons-panel" class="weapons-panel">
+                <ui:Instance template="weapon-icon-template" name="projectile-weapon-icon" class="weapon-slot" />
+                <ui:Instance template="weapon-icon-template" name="aoe-weapon-icon" class="weapon-slot weapon-slot-last" />
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

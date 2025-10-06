@@ -5,6 +5,7 @@ using _Project.Runtime.Score;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -14,6 +15,7 @@ namespace _Project.Runtime.Presenters
         private readonly GameModel _gameModel;
         private readonly ScoreModel _scoreModel;
         private readonly CombatModel _combatModel;
+        private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
         private readonly GeneralVisualsConfig _visuals;
 
@@ -23,12 +25,15 @@ namespace _Project.Runtime.Presenters
             ShipModel shipModel,
             ScoreModel scoreModel,
             CombatModel combatModel,
-            ViewsContainer viewsContainer, GeneralVisualsConfig visuals)
+            StatisticsModel statisticsModel,
+            ViewsContainer viewsContainer,
+            GeneralVisualsConfig visuals)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
             _scoreModel = scoreModel;
             _combatModel = combatModel;
+            _statisticsModel = statisticsModel;
             _visuals = visuals;
 
             _hud = viewsContainer.GetView<HudView>();
@@ -109,8 +114,30 @@ namespace _Project.Runtime.Presenters
 
         private void UpdateGameStatistics()
         {
-            //TODO add combat statistics
-            var m = _combatModel;
+            var stats = _statisticsModel;
+
+            int asteroidTotal = stats.LargeAsteroidsDestroyed + stats.SmallAsteroidsDestroyed;
+            float projectileAccuracy = stats.ShipProjectileShots > 0
+                ? (float)stats.ShipProjectileHits / stats.ShipProjectileShots
+                : 0f;
+
+            int projectilePercent = Mathf.RoundToInt(projectileAccuracy * 100f);
+
+            string projectileLine = stats.ShipProjectileShots > 0
+                ? $"Guns: {stats.ShipProjectileHits}/{stats.ShipProjectileShots} hits ({projectilePercent}%)"
+                : "Guns: no shots";
+
+            string aoeLine = stats.ShipAoeAttacks > 0
+                ? $"Laser: {stats.ShipAoeHits} hits from {stats.ShipAoeAttacks}"
+                : "Laser: no bursts";
+
+            string summary =
+                $"Asteroids: {asteroidTotal} ({stats.LargeAsteroidsDestroyed} large /{stats.SmallAsteroidsDestroyed} small)\n" +
+                $"UFOs: {stats.UfoDestroyed}\n" +
+                projectileLine + "\n" +
+                aoeLine;
+
+            _hud.SetStatisticsSummary(summary);
         }
     }
 }
