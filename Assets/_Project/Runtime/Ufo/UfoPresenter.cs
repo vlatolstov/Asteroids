@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Ship;
+using Zenject;
 
 namespace _Project.Runtime.Ufo
 {
-    public class UfoPresenter : IDisposable
+    public class UfoPresenter : IInitializable, IDisposable
     {
         private readonly UfoModel _ufoModel;
         private readonly ShipModel _shipModel;
@@ -29,13 +30,16 @@ namespace _Project.Runtime.Ufo
             _pool = pool;
 
             _activeUfo = new Dictionary<uint, UfoView>();
-            
+        }
+
+        public void Initialize()
+        {
             _shipModel.ShipPoseChanged += OnShipPoseChanged;
             _gameModel.GameStateChanged += OnGameStateChanged;
             _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
             _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
         }
-        
+
         public void Dispose()
         {
             _shipModel.ShipPoseChanged -= OnShipPoseChanged;
@@ -56,7 +60,7 @@ namespace _Project.Runtime.Ufo
         private void OnGameStateChanged(GameState gameState)
         {
             _gameState = gameState;
-            
+
             foreach (var ufo in _activeUfo.Values)
             {
                 ufo.UpdateGameState(gameState);
@@ -82,14 +86,14 @@ namespace _Project.Runtime.Ufo
             UnregisterUfo(ufo);
             _pool.Despawn(ufo);
         }
-        
+
         private void RegisterUfo(UfoView ufo)
         {
             _activeUfo.Add(ufo.ViewId, ufo);
-            
+
             ufo.UpdateShipPose(_targetShip);
             ufo.UpdateGameState(_gameState);
-            
+
             ufo.ProjectileFired += OnUfoFiredProjectile;
             ufo.Destroyed += OnUfoDestroyed;
             ufo.Offscreen += OnUfoOffscreen;
@@ -102,7 +106,7 @@ namespace _Project.Runtime.Ufo
             ufo.Offscreen -= OnUfoOffscreen;
             _activeUfo.Remove(ufo.ViewId);
         }
-        
+
         private void OnUfoDestroyed(UfoDestroyed destroyed)
         {
             _ufoModel.HandleUfoDestroyed(destroyed);

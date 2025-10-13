@@ -1,10 +1,11 @@
+using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using Firebase;
+using Zenject;
 
 namespace _Project.Runtime.Analytics
 {
-    public class AnalyticsEventHandler
+    public class AnalyticsEventHandler : IInitializable, IDisposable
     {
         private readonly IAnalyticsLogger _analyticsLogger;
 
@@ -19,9 +20,18 @@ namespace _Project.Runtime.Analytics
             _statisticsModel = statisticsModel;
             _gameModel = gameModel;
             _combatModel = combatModel;
-
+        }
+        
+        public void Initialize()
+        {
             _gameModel.GameStateChanged += OnGameStateChanged;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
+        }
+
+        public void Dispose()
+        {
+            _gameModel.GameStateChanged -= OnGameStateChanged;
+            _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
         }
 
         private void OnAoeAttackReleased(AoeAttackReleased _)

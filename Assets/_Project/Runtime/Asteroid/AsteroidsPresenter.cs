@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using Zenject;
 
 namespace _Project.Runtime.Asteroid
 {
-    public class AsteroidsPresenter : IDisposable
+    public class AsteroidsPresenter : IInitializable, IDisposable
     {
         private readonly AsteroidsModel _asteroidsModel;
         private readonly GameModel _gameModel;
@@ -20,10 +21,13 @@ namespace _Project.Runtime.Asteroid
             _pool = pool;
 
             _activeAsteroids = new Dictionary<uint, AsteroidView>();
+        }
 
+        public void Initialize()
+        {
             _asteroidsModel.AsteroidSpawnRequested += OnSpawnCommand;
             _asteroidsModel.AsteroidDespawnRequested += OnDespawnCommand;
-            
+
             _gameModel.GameStateChanged += OnGameStateChanged;
         }
 
@@ -31,14 +35,14 @@ namespace _Project.Runtime.Asteroid
         {
             _asteroidsModel.AsteroidSpawnRequested -= OnSpawnCommand;
             _asteroidsModel.AsteroidDespawnRequested -= OnDespawnCommand;
-            
+
             _gameModel.GameStateChanged -= OnGameStateChanged;
         }
 
         private void OnSpawnCommand(AsteroidSpawnCommand command)
         {
             var asteroid = _pool.Spawn(command);
-            
+
             if (!RegisterAsteroid(asteroid))
             {
                 _pool.Despawn(asteroid);
@@ -80,7 +84,7 @@ namespace _Project.Runtime.Asteroid
             {
                 return false;
             }
-            
+
             asteroid.Destroyed -= OnAsteroidDestroyed;
             asteroid.Offscreen -= OnAsteroidOffscreen;
             return true;

@@ -15,13 +15,13 @@ namespace _Project.Runtime.Presenters
         {
             _gameModel = model;
             _shipModel = shipModel;
-            
-            _shipModel.ShipSpawned += OnShipSpawned;
-            _shipModel.ShipDestroyed += OnShipDestroyed;
         }
         
         public void Initialize()
         {
+            _shipModel.ShipSpawned += OnShipSpawned;
+            _shipModel.ShipDestroyed += OnShipDestroyed;
+            
             _gameModel.SetGameState(GameState.Preparing);
         }
 

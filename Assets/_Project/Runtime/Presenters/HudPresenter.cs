@@ -35,9 +35,12 @@ namespace _Project.Runtime.Presenters
             _combatModel = combatModel;
             _statisticsModel = statisticsModel;
             _visuals = visuals;
-
+            
             _hud = viewsContainer.GetView<HudView>();
+        }
 
+        public void Initialize()
+        {
             _hud.PlayerSpawnButtonPressed += OnSpawnPlayerPressed;
 
             _shipModel.ShipPoseChanged += OnPoseChanged;
@@ -48,10 +51,7 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged += OnScoreChanged;
             _scoreModel.BestScoreChanged += OnBestScoreChanged;
-        }
-
-        public void Initialize()
-        {
+            
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
             _hud.UpdateBestScore(_scoreModel.BestScore);

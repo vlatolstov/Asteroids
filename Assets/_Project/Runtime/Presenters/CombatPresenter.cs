@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Views;
+using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class CombatPresenter : IDisposable
+    public class CombatPresenter : IInitializable, IDisposable
     {
         private readonly CombatModel _combatModel;
 
@@ -25,7 +26,10 @@ namespace _Project.Runtime.Presenters
 
             _activeProjectiles = new Dictionary<uint, ProjectileView>();
             _activeAoe = new Dictionary<uint, AoeAttackView>();
+        }
 
+        public void Initialize()
+        {
             _combatModel.ProjectileShot += OnProjectileShot;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
         }
@@ -35,12 +39,12 @@ namespace _Project.Runtime.Presenters
             _combatModel.ProjectileShot -= OnProjectileShot;
             _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
         }
-        
+
         private void OnProjectileShot(ProjectileShot shot)
         {
             SpawnProjectile(shot);
         }
-        
+
         private void OnAoeAttackReleased(AoeAttackReleased aoe)
         {
             SpawnAoe(aoe);
@@ -90,7 +94,7 @@ namespace _Project.Runtime.Presenters
 
             projView.ProjectileHit -= OnProjectileHit;
             projView.Expired -= OnProjectileExpired;
-            
+
             _projectilePool.Despawn(projView);
             _activeProjectiles.Remove(viewId);
         }
@@ -119,7 +123,7 @@ namespace _Project.Runtime.Presenters
 
             aoeView.AoeHit -= OnAoeAttackHit;
             aoeView.Expired -= OnAoeAttackExpired;
-            
+
             _aoePool.Despawn(aoeView);
             _activeAoe.Remove(viewId);
         }

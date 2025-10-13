@@ -4,10 +4,11 @@ using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ufo;
+using Zenject;
 
 namespace _Project.Runtime.Score
 {
-    public class ScorePresenter : IDisposable
+    public class ScorePresenter : IInitializable, IDisposable
     {
         private readonly AsteroidsModel _asteroidsModel;
         private readonly UfoModel _ufoModel;
@@ -29,7 +30,10 @@ namespace _Project.Runtime.Score
             _scoreConfig = scoreConfig;
 
             _previousGameState = _gameModel.CurrentState;
-            
+        }
+        
+        public void Initialize()
+        {
             _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
             _ufoModel.UfoDestroyed += OnUfoDestroyed;
             _gameModel.GameStateChanged += OnGameStateChanged;

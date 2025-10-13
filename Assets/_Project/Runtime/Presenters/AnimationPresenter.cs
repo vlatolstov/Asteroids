@@ -7,10 +7,11 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
+using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class AnimationPresenter : IDisposable
+    public class AnimationPresenter : IInitializable, IDisposable
     {
         private readonly CombatModel _combatModel;
         private readonly ShipModel _shipModel;
@@ -32,15 +33,17 @@ namespace _Project.Runtime.Presenters
             _ufoModel = ufoModel;
             _config = config;
             _pool = pool;
-            
-            _activeViews = new Dictionary<uint, AnimationView>();
 
+            _activeViews = new Dictionary<uint, AnimationView>();
+        }
+
+        public void Initialize()
+        {
             _combatModel.ProjectileHit += OnProjectileHit;
             _shipModel.ShipDestroyed += OnShipDestroyed;
             _ufoModel.UfoDestroyed += OnUfoDestroyed;
             _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
         }
-
 
         public void Dispose()
         {
@@ -56,6 +59,7 @@ namespace _Project.Runtime.Presenters
             {
                 return;
             }
+
             var view = _pool.Spawn(hit.Projectile.HitAnimation, hit.Position, hit.Rotation, hit.Projectile.Size);
             RegisterView(view);
         }

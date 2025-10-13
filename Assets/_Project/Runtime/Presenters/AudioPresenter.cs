@@ -6,10 +6,11 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class AudioPresenter : IDisposable
+    public class AudioPresenter : IInitializable, IDisposable
     {
         private readonly CombatModel _combatModel;
         private readonly ShipModel _shipModel;
@@ -28,7 +29,10 @@ namespace _Project.Runtime.Presenters
             _audioPool = audioPool;
 
             _activeViews = new Dictionary<uint, AudioSourceView>();
+        }
 
+        public void Initialize()
+        {
             _combatModel.ProjectileShot += OnProjectileShot;
             _combatModel.ProjectileHit += OnProjectileHit;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
@@ -78,11 +82,11 @@ namespace _Project.Runtime.Presenters
             {
                 throw new Exception("View has not been registered");
             }
-            
+
             UnregisterView(view);
             _audioPool.Despawn(view);
         }
-        
+
         private void SpawnAndRegister(Vector2 position, AudioClip clip)
         {
             var view = _audioPool.Spawn(position, clip);

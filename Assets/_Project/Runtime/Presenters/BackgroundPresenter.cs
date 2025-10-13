@@ -1,12 +1,12 @@
 using System;
 using _Project.Runtime.Data;
-using _Project.Runtime.Models;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
+using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class BackgroundPresenter : IDisposable
+    public class BackgroundPresenter : IInitializable, IDisposable
     {
         private readonly ShipModel _shipModel;
         private readonly BackgroundView _bg;
@@ -15,7 +15,10 @@ namespace _Project.Runtime.Presenters
         {
             _shipModel = shipModel;
             _bg = viewsContainer.GetView<BackgroundView>();
+        }
 
+        public void Initialize()
+        {
             _shipModel.ShipPoseChanged += OnShipPoseChanged;
         }
 

@@ -2,10 +2,11 @@ using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Runtime.Ship
 {
-    public class ShipPresenter : IDisposable
+    public class ShipPresenter : IInitializable, IDisposable
     {
         private readonly ShipModel _shipModel;
         private readonly CombatModel _combatModel;
@@ -20,7 +21,10 @@ namespace _Project.Runtime.Ship
             _combatModel = combatModel;
             _inputModel = inputModel;
             _pool = pool;
+        }
 
+        public void Initialize()
+        {
             _inputModel.FireGunPressed += OnGunAttackSignal;
             _inputModel.AoeAttackPressed += OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged += OnThrustChanged;

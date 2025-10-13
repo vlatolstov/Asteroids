@@ -1,11 +1,13 @@
+using System;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Ufo;
+using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class StatisticsPresenter
+    public class StatisticsPresenter : IInitializable, IDisposable
     {
         private StatisticsModel _statisticsModel;
         private GameModel _gameModel;
@@ -22,16 +24,32 @@ namespace _Project.Runtime.Presenters
             _combatModel = combatModel;
             _ufoModel = ufoModel;
             _asteroidsModel = asteroidsModel;
+        }
 
+        public void Initialize()
+        {
             _gameModel.GameStateChanged += OnGameStateChanged;
-            
+
             _combatModel.ProjectileShot += OnProjectileShot;
             _combatModel.ProjectileHit += OnProjectileHit;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
             _combatModel.AoeHit += OnAoeHit;
-            
+
             _ufoModel.UfoDestroyed += OnUfoDestroyed;
             _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
+        }
+
+        public void Dispose()
+        {
+            _gameModel.GameStateChanged -= OnGameStateChanged;
+
+            _combatModel.ProjectileShot -= OnProjectileShot;
+            _combatModel.ProjectileHit -= OnProjectileHit;
+            _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
+            _combatModel.AoeHit -= OnAoeHit;
+
+            _ufoModel.UfoDestroyed -= OnUfoDestroyed;
+            _asteroidsModel.AsteroidDestroyed -= OnAsteroidDestroyed;
         }
 
         private void OnAsteroidDestroyed(AsteroidDestroyed obj)
