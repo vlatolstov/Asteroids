@@ -6,8 +6,8 @@ using Zenject;
 
 namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "SettingsInstaller", menuName = "Installers/Settings Installer")]
-    public class SettingsInstaller : ScriptableObjectInstaller
+    [CreateAssetMenu(fileName = "GameConfigsInstaller", menuName = "Installers/Game Configs Installer")]
+    public class GameConfigsInstaller : ScriptableObjectInstaller
     {
         [SerializeField]
         private AsteroidsSpawnConfig _asteroidsSpawnConfig;

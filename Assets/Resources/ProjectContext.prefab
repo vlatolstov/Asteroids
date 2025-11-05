@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.ProjectContext
   _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 5dce3246cfb1ad148b871aec6ec142d8, type: 2}
+  - {fileID: 11400000, guid: 3e5f56dc9e5185745b8b3ec3a81e92cc, type: 2}
   _monoInstallers: []
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
