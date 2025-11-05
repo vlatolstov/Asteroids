@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
+    <Style src="project://database/Assets/_Project/UI/USS/MenuSS.uss?fileID=7433441132597879392&amp;guid=ad96e0fd719344a4b4fbff82b0950028&amp;type=3#MenuSS" />
+    <ui:VisualElement name="menu-root" class="menu-root">
+        <ui:VisualElement name="menu-header" class="menu-header">
+            <ui:Label name="best-score-label" text="Best: 0" class="menu-best-score" />
+        </ui:VisualElement>
+        <ui:VisualElement name="menu-body" class="menu-body">
+            <ui:Label name="menu-title-label" text="ASTEROIDS" class="menu-title hud-title" />
+            <ui:Label name="menu-subtitle-label" text="Classic arcade survival" class="menu-subtitle hud-text" />
+            <ui:VisualElement name="menu-actions" class="menu-actions">
+                <ui:Button name="start-game-btn" text="Start Game" class="menu-button hud-button" />
+                <ui:Button name="exit-game-btn" text="Exit Game" class="menu-button hud-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

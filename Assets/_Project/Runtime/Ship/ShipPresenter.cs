@@ -9,18 +9,20 @@ namespace _Project.Runtime.Ship
     public class ShipPresenter : IInitializable, IDisposable
     {
         private readonly ShipModel _shipModel;
+        private readonly GameModel _gameModel;
         private readonly CombatModel _combatModel;
         private readonly InputModel _inputModel;
         private readonly ShipView.Pool _pool;
 
         private ShipView _activeShip;
 
-        public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel, ShipView.Pool pool)
+        public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel, ShipView.Pool pool, GameModel gameModel)
         {
             _shipModel = shipModel;
             _combatModel = combatModel;
             _inputModel = inputModel;
             _pool = pool;
+            _gameModel = gameModel;
         }
 
         public void Initialize()
@@ -29,10 +31,14 @@ namespace _Project.Runtime.Ship
             _inputModel.AoeAttackPressed += OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged += OnThrustChanged;
             _inputModel.TurnChanged += OnTurnAxisChanged;
+            
+            _gameModel.GameStateChanged += OnGameStateChanged;
 
             _shipModel.ShipSpawnCommandRequested += OnShipSpawnCommand;
             _shipModel.ShipDespawnCommandRequested += OnShipDespawnCommand;
         }
+
+        
 
         public void Dispose()
         {
@@ -40,12 +46,22 @@ namespace _Project.Runtime.Ship
             _inputModel.AoeAttackPressed -= OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged -= OnThrustChanged;
             _inputModel.TurnChanged -= OnTurnAxisChanged;
+            
+            _gameModel.GameStateChanged -= OnGameStateChanged;
 
             _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
             _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
             DetachShip();
         }
 
+        private void OnGameStateChanged(GameState state)
+        {
+            if (state == GameState.Gameplay)
+            {
+                _shipModel.RequestSpawn();
+            }
+        }
+        
         private void AttachShip(ShipView shipView)
         {
             if (!shipView)

@@ -3,7 +3,6 @@ using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace _Project.Runtime.Views
@@ -36,9 +35,10 @@ namespace _Project.Runtime.Views
         private bool _statsPanelShouldBeVisible;
         private int _score;
         private int _bestScore;
+        private bool _isNewRecordAchieved;
 
-        public event Action PlayerSpawnButtonPressed;
-        public event Action RestartButtonPressed;
+        public event Action RespawnButtonPressed;
+        public event Action BackToMenuButtonPressed;
 
         private void Awake()
         {
@@ -66,8 +66,11 @@ namespace _Project.Runtime.Views
 
             _aoeWeapon = new WeaponIconController(_weaponsPanel.Q<VisualElement>("aoe-weapon-icon"));
 
-            _overlay.SpawnClicked += () => PlayerSpawnButtonPressed?.Invoke();
-            _overlay.RestartClicked += RestartSceneNow;
+            if (_overlay != null)
+            {
+                _overlay.RespawnClicked += OnOverlayRespawnClicked;
+                _overlay.BackToMenuClicked += OnOverlayBackToMenuClicked;
+            }
 
             UpdateStatsPanelVisibility(false);
         }
@@ -77,6 +80,12 @@ namespace _Project.Runtime.Views
             if (_root != null)
             {
                 _root.UnregisterCallback<GeometryChangedEvent>(HandleGeometryChanged);
+            }
+
+            if (_overlay != null)
+            {
+                _overlay.RespawnClicked -= OnOverlayRespawnClicked;
+                _overlay.BackToMenuClicked -= OnOverlayBackToMenuClicked;
             }
         }
 
@@ -139,18 +148,21 @@ namespace _Project.Runtime.Views
                     _statisticsSummary = string.Empty;
                     UpdateStatsPanelVisibility(false);
                     _overlay.Preparing(CONTROLS_TEXT);
+                    _overlay.SetBestScore(_bestScore);
+                    _isNewRecordAchieved = false;
                     _shipData.SetVisible(false);
                     _weaponsPanel.style.display = DisplayStyle.None;
                     break;
                 case GameState.Gameplay:
                     UpdateStatsPanelVisibility(false);
                     _overlay.Gameplay();
+                    _isNewRecordAchieved = false;
                     _shipData.SetVisible(true);
                     _weaponsPanel.style.display = DisplayStyle.Flex;
                     break;
                 case GameState.GameOver:
                     UpdateStatsPanelVisibility(true);
-                    _overlay.GameOver(_score, _bestScore);
+                    _overlay.GameOver(_score, _bestScore, _isNewRecordAchieved);
                     _shipData.SetVisible(false);
                     _weaponsPanel.style.display = DisplayStyle.None;
                     break;
@@ -188,6 +200,11 @@ namespace _Project.Runtime.Views
             UpdateStatsPanelVisibility(_statsPanelShouldBeVisible);
         }
 
+        public void SetNewRecordAchieved(bool achieved)
+        {
+            _isNewRecordAchieved = achieved;
+        }
+
         private void UpdateStatsPanelVisibility(bool visible)
         {
             _statsPanelShouldBeVisible = visible;
@@ -212,13 +229,14 @@ namespace _Project.Runtime.Views
             _statsPanel.style.display = DisplayStyle.Flex;
         }
 
-        private void RestartSceneNow()
+        private void OnOverlayRespawnClicked()
         {
-            //TODO remove
-            string sceneName = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(sceneName);
-            //
-            RestartButtonPressed?.Invoke();
+            RespawnButtonPressed?.Invoke();
+        }
+
+        private void OnOverlayBackToMenuClicked()
+        {
+            BackToMenuButtonPressed?.Invoke();
         }
 
         public void UpdateProjectileWeaponData(float cooldown, float reloadRatio)

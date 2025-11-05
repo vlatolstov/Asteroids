@@ -10,11 +10,11 @@ namespace _Project.Runtime.UI
         private readonly Label _gameOver;
         private readonly Label _finalScore;
         private readonly Label _bestScore;
-        private readonly Button _spawnBtn;
-        private readonly Button _restartBtn;
+        private readonly Button _respawnBtn;
+        private readonly Button _backToMenuBtn;
 
-        public event Action SpawnClicked;
-        public event Action RestartClicked;
+        public event Action RespawnClicked;
+        public event Action BackToMenuClicked;
 
         public MainOverlayController(VisualElement root)
         {
@@ -23,17 +23,17 @@ namespace _Project.Runtime.UI
             _gameOver = root.Q<Label>("gameover-label");
             _finalScore = root.Q<Label>("final-score-label");
             _bestScore = root.Q<Label>("best-score-label");
-            _spawnBtn = root.Q<Button>("spawn-player-btn");
-            _restartBtn = root.Q<Button>("restart-game-btn");
+            _respawnBtn = root.Q<Button>("respawn-btn");
+            _backToMenuBtn = root.Q<Button>("back-to-menu-btn");
 
-            if (_spawnBtn != null)
+            if (_respawnBtn != null)
             {
-                _spawnBtn.clicked += () => SpawnClicked?.Invoke();
+                _respawnBtn.clicked += () => RespawnClicked?.Invoke();
             }
 
-            if (_restartBtn != null)
+            if (_backToMenuBtn != null)
             {
-                _restartBtn.clicked += () => RestartClicked?.Invoke();
+                _backToMenuBtn.clicked += () => BackToMenuClicked?.Invoke();
             }
         }
 
@@ -43,25 +43,35 @@ namespace _Project.Runtime.UI
             Set(_controls, true, controlsText);
             Set(_gameOver, false);
             Set(_finalScore, false);
-            Set(_bestScore, false);
-            Set(_spawnBtn, true, "Start");
-            Set(_restartBtn, false);
+            Set(_bestScore, true);
+            Set(_respawnBtn, false);
+            Set(_backToMenuBtn, false);
         }
 
         public void Gameplay()
         {
             SetVisible(false);
+            Set(_respawnBtn, false);
+            Set(_backToMenuBtn, false);
         }
 
-        public void GameOver(int finalScore, int bestScore)
+        public void GameOver(int finalScore, int bestScore, bool isNewRecord)
         {
             SetVisible(true);
             Set(_controls, false);
             Set(_gameOver, true);
             Set(_finalScore, true, $"Final score: {finalScore}");
-            Set(_bestScore, true, $"Best score: {bestScore}");
-            Set(_spawnBtn, true, "BACK IN GAME");
-            Set(_restartBtn, true);
+            if (isNewRecord)
+            {
+                Set(_bestScore, true, $"New best score: {bestScore}!");
+            }
+            else
+            {
+                Set(_bestScore, false);
+            }
+
+            Set(_respawnBtn, true);
+            Set(_backToMenuBtn, true);
         }
 
         public void SetBestScore(int bestScore)

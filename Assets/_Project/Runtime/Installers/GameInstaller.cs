@@ -6,6 +6,7 @@ using _Project.Runtime.Asteroid;
 using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
+using _Project.Runtime.Services;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
@@ -199,6 +200,11 @@ namespace _Project.Runtime.Installers
             Container
                 .BindInterfacesAndSelfTo<BestScoreService>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<GameLoadingTaskService>()
+                .AsSingle()
+                .NonLazy();
             
             Container
                 .Bind<IAnalyticsLogger>()

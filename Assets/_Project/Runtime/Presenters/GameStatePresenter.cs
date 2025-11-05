@@ -22,7 +22,7 @@ namespace _Project.Runtime.Presenters
             _shipModel.ShipSpawned += OnShipSpawned;
             _shipModel.ShipDestroyed += OnShipDestroyed;
             
-            _gameModel.SetGameState(GameState.Preparing);
+            _gameModel.SetGameState(GameState.Gameplay);
         }
 
         public void Dispose()

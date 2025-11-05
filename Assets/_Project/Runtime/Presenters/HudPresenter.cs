@@ -1,10 +1,13 @@
 using System;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Score;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
+using _Project.Runtime.SceneManagement;
 using _Project.Runtime.Views;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -18,8 +21,10 @@ namespace _Project.Runtime.Presenters
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
         private readonly GeneralVisualsConfig _visuals;
+        private readonly SceneLoader _sceneLoader;
 
         private readonly HudView _hud;
+        private int _lastBestScore;
 
         public HudPresenter(GameModel gameModel,
             ShipModel shipModel,
@@ -27,7 +32,8 @@ namespace _Project.Runtime.Presenters
             CombatModel combatModel,
             StatisticsModel statisticsModel,
             ViewsContainer viewsContainer,
-            GeneralVisualsConfig visuals)
+            GeneralVisualsConfig visuals,
+            SceneLoader sceneLoader)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
@@ -35,13 +41,21 @@ namespace _Project.Runtime.Presenters
             _combatModel = combatModel;
             _statisticsModel = statisticsModel;
             _visuals = visuals;
+            _sceneLoader = sceneLoader;
             
             _hud = viewsContainer.GetView<HudView>();
         }
 
         public void Initialize()
         {
-            _hud.PlayerSpawnButtonPressed += OnSpawnPlayerPressed;
+            _lastBestScore = _scoreModel.BestScore;
+
+            if (_hud != null)
+            {
+                _hud.RespawnButtonPressed += OnRespawnButtonPressed;
+                _hud.BackToMenuButtonPressed += OnBackToMenuButtonPressed;
+                _hud.SetNewRecordAchieved(false);
+            }
 
             _shipModel.ShipPoseChanged += OnPoseChanged;
             _shipModel.ProjectileWeaponStateChanged += OnProjectileWeaponStateChanged;
@@ -55,11 +69,17 @@ namespace _Project.Runtime.Presenters
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
             _hud.UpdateBestScore(_scoreModel.BestScore);
+
+            _shipModel.RequestSpawn();
         }
 
         public void Dispose()
         {
-            _hud.PlayerSpawnButtonPressed -= OnSpawnPlayerPressed;
+            if (_hud != null)
+            {
+                _hud.RespawnButtonPressed -= OnRespawnButtonPressed;
+                _hud.BackToMenuButtonPressed -= OnBackToMenuButtonPressed;
+            }
 
             _shipModel.ShipPoseChanged -= OnPoseChanged;
             _shipModel.ProjectileWeaponStateChanged -= OnProjectileWeaponStateChanged;
@@ -73,9 +93,15 @@ namespace _Project.Runtime.Presenters
 
         private void OnGameStateChanged(GameState state)
         {
-            if (state == GameState.GameOver)
+            switch (state)
             {
-                UpdateGameStatistics();
+                case GameState.GameOver:
+                    UpdateGameStatistics();
+                    break;
+                case GameState.Preparing:
+                case GameState.Gameplay:
+                    _hud?.SetNewRecordAchieved(false);
+                    break;
             }
 
             _hud.UpdateGameState(state);
@@ -104,12 +130,29 @@ namespace _Project.Runtime.Presenters
 
         private void OnBestScoreChanged(int bestScore)
         {
+            bool isNewRecord = bestScore > _lastBestScore;
+            _lastBestScore = bestScore;
+
             _hud.UpdateBestScore(bestScore);
+            if (isNewRecord)
+            {
+                _hud.SetNewRecordAchieved(true);
+            }
         }
 
-        private void OnSpawnPlayerPressed()
+        private void OnRespawnButtonPressed()
         {
+            _gameModel.SetGameState(GameState.Preparing);
             _shipModel.RequestSpawn();
+            _hud?.SetNewRecordAchieved(false);
+        }
+
+        private void OnBackToMenuButtonPressed()
+        {
+            UniTask.Void(async () =>
+            {
+                await _sceneLoader.LoadSceneAsync(Constants.Scenes.Menu);
+            });
         }
 
         private void UpdateGameStatistics()

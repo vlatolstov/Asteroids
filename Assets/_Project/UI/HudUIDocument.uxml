@@ -19,8 +19,8 @@
                 <ui:Label name="gameover-label" text="GAME OVER" class="hud-title overlay-item" />
                 <ui:Label name="final-score-label" text="final score" class="hud-text overlay-item overlay-score" />
                 <ui:Label name="best-score-label" text="best score" class="hud-text overlay-item overlay-score" />
-                <ui:Button name="spawn-player-btn" text="Start" class="hud-button overlay-item overlay-button" />
-                <ui:Button name="restart-game-btn" text="Restart" class="hud-button overlay-item overlay-button overlay-item-last" />
+                <ui:Button name="respawn-btn" text="Respawn" class="hud-button overlay-item overlay-button" />
+                <ui:Button name="back-to-menu-btn" text="Back to menu" class="hud-button overlay-item overlay-button overlay-item-last" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="hud-bottom" class="hud-bottom">

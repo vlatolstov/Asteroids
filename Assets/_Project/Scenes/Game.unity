@@ -226,12 +226,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: _scriptableObjectInstallers.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: '_scriptableObjectInstallers.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 5dce3246cfb1ad148b871aec6ec142d8, type: 2}
+      objectReference: {fileID: 11400000, guid: 77c7d7a12e4d30b47b7f13b76060bf6b, type: 2}
     - target: {fileID: 8309457139586916777, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: m_Name
       value: GameContext
@@ -292,6 +292,14 @@ PrefabInstance:
     - target: {fileID: 3645710375531822287, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
       propertyPath: m_Name
       value: BackgroundView
+      objectReference: {fileID: 0}
+    - target: {fileID: 4097645908287447342, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
+      propertyPath: m_Size.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4097645908287447342, guid: 6b59baf2cb78bb6459efc39ceccaa7f5, type: 3}
+      propertyPath: m_Size.y
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
