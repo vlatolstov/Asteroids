@@ -1,4 +1,5 @@
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
 using _Project.Runtime.Services;
@@ -13,10 +14,10 @@ namespace _Project.Runtime.Installers
     {
         public override void InstallBindings()
         {
-            BindViews();
-            BindServices();
-            BindPresenters();
             BindLoadingTasks();
+            BindServices();
+            BindViews();
+            BindPresenters();
         }
 
         private void BindViews()
@@ -52,6 +53,10 @@ namespace _Project.Runtime.Installers
                 .BindInterfacesAndSelfTo<MenuLoadingTaskService>()
                 .AsSingle()
                 .NonLazy();
+
+            Container
+                .BindInterfacesAndSelfTo<MenuViewLoader>()
+                .AsTransient();
         }
     }
 }

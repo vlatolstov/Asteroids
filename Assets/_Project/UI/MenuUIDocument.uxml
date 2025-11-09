@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
     <Style src="project://database/Assets/_Project/UI/USS/MenuSS.uss?fileID=7433441132597879392&amp;guid=ad96e0fd719344a4b4fbff82b0950028&amp;type=3#MenuSS" />
+    <ui:VisualElement name="background" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/_Project/Art/MainMenuBg.png?fileID=2800000&amp;guid=a6b51ec10c32ce245aaf4907e9cac036&amp;type=3#MainMenuBg&quot;); position: absolute; width: 100%; height: 100%; -unity-background-scale-mode: scale-and-crop;" />
     <ui:VisualElement name="menu-root" class="menu-root">
         <ui:VisualElement name="menu-header" class="menu-header">
             <ui:Label name="best-score-label" text="Best: 0" class="menu-best-score" />
