@@ -168,12 +168,13 @@ namespace _Project.Runtime.Ufo
 
         public class Pool : ViewPool<UfoSpawnCommand, UfoView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<UfoView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(UfoSpawnCommand args, UfoView item)
             {
-                base.Reinitialize(args, item);
                 item.Reinitialize(in args);
             }
         }

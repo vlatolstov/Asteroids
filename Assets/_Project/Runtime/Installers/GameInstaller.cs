@@ -5,6 +5,7 @@ using _Project.Runtime.Analytics.Firebase;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
+using _Project.Runtime.Pooling;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
 using _Project.Runtime.Ship;
@@ -39,6 +40,34 @@ namespace _Project.Runtime.Installers
         [SerializeField]
         private GameObject _animationPrefab;
 
+        [SerializeField, Min(0)]
+        private int _shipPoolSize = 2;
+
+        [SerializeField, Min(0)]
+        private int _ufoPoolSize = 20;
+
+        [SerializeField, Min(0)]
+        private int _asteroidPoolSize = 80;
+
+        [SerializeField, Min(0)]
+        private int _projectilePoolSize = 100;
+
+        [SerializeField, Min(0)]
+        private int _aoePoolSize = 10;
+
+        [SerializeField, Min(0)]
+        private int _audioPoolSize = 100;
+
+        [SerializeField, Min(0)]
+        private int _animationPoolSize = 20;
+
+        private const string ShipPoolGroup = "Ship";
+        private const string UfoPoolGroup = "Ufo's";
+        private const string AsteroidPoolGroup = "Asteroids";
+        private const string ProjectilePoolGroup = "Projectiles";
+        private const string AoePoolGroup = "AoeViewsPool";
+        private const string AudioPoolGroup = "Sound";
+        private const string AnimationPoolGroup = "Animations";
 
         public override void InstallBindings()
         {
@@ -65,47 +94,35 @@ namespace _Project.Runtime.Installers
                 .Bind<ViewsContainer>()
                 .AsSingle();
 
-            Container.BindMemoryPool<ShipView, ShipView.Pool>()
-                .WithInitialSize(2)
-                .FromComponentInNewPrefab(_shipPrefab)
-                .UnderTransformGroup("Ship")
+            Container
+                .BindInterfacesAndSelfTo<ViewPoolsService>()
+                .AsSingle()
+                .WithArguments(CreatePoolSettings())
                 .NonLazy();
+        }
 
-            Container.BindMemoryPool<UfoView, UfoView.Pool>()
-                .WithInitialSize(20)
-                .FromComponentInNewPrefab(_ufoPrefab)
-                .UnderTransformGroup("Ufo's")
-                .NonLazy();
+        private ViewPoolsService.Settings CreatePoolSettings()
+        {
+            return new ViewPoolsService.Settings
+            {
+                Ship = CreateConfig(_shipPrefab, _shipPoolSize, ShipPoolGroup),
+                Ufo = CreateConfig(_ufoPrefab, _ufoPoolSize, UfoPoolGroup),
+                Asteroid = CreateConfig(_asteroidPrefab, _asteroidPoolSize, AsteroidPoolGroup),
+                Projectile = CreateConfig(_projectilePrefab, _projectilePoolSize, ProjectilePoolGroup),
+                Aoe = CreateConfig(_aoeAttackPrefab, _aoePoolSize, AoePoolGroup),
+                Audio = CreateConfig(_audioSourcePrefab, _audioPoolSize, AudioPoolGroup),
+                Animation = CreateConfig(_animationPrefab, _animationPoolSize, AnimationPoolGroup)
+            };
+        }
 
-            Container.BindMemoryPool<AsteroidView, AsteroidView.Pool>()
-                .WithInitialSize(80)
-                .FromComponentInNewPrefab(_asteroidPrefab)
-                .UnderTransformGroup("Asteroids")
-                .NonLazy();
-
-            Container.BindMemoryPool<ProjectileView, ProjectileView.Pool>()
-                .WithInitialSize(100)
-                .FromComponentInNewPrefab(_projectilePrefab)
-                .UnderTransformGroup("Projectiles")
-                .NonLazy();
-
-            Container.BindMemoryPool<AoeAttackView, AoeAttackView.Pool>()
-                .WithInitialSize(10)
-                .FromComponentInNewPrefab(_aoeAttackPrefab)
-                .UnderTransformGroup("AoeViewsPool")
-                .NonLazy();
-
-            Container.BindMemoryPool<AudioSourceView, AudioSourceView.Pool>()
-                .WithInitialSize(100)
-                .FromComponentInNewPrefab(_audioSourcePrefab)
-                .UnderTransformGroup("Sound")
-                .NonLazy();
-
-            Container.BindMemoryPool<AnimationView, AnimationView.Pool>()
-                .WithInitialSize(20)
-                .FromComponentInNewPrefab(_animationPrefab)
-                .UnderTransformGroup("Animations")
-                .NonLazy();
+        private static ViewPoolsService.PoolConfig CreateConfig(GameObject prefab, int size, string groupName)
+        {
+            return new ViewPoolsService.PoolConfig
+            {
+                Prefab = prefab,
+                InitialSize = Mathf.Max(0, size),
+                ParentGroup = groupName
+            };
         }
 
         private void PresentersBindings()

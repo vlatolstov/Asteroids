@@ -101,19 +101,19 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<Transform, AoeWeaponConfig, Source, AoeAttackView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<AoeAttackView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(Transform par, AoeWeaponConfig aoe, 
                 Source source, AoeAttackView item)
             {
-                base.Reinitialize(par, aoe,source, item);
                 item.Reinitialize(par, aoe, source);
             }
 
             protected override void OnDespawned(AoeAttackView item)
             {
-                base.OnDespawned(item);
                 item._source = Source.Undefined;
                 item._collider.enabled = false;
                 item._sr.sprite = null;

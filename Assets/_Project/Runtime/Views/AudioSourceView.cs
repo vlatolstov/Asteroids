@@ -30,12 +30,13 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<Vector2, AudioClip, AudioSourceView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<AudioSourceView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(Vector2 par, AudioClip clip, AudioSourceView item)
             {
-                base.Reinitialize(par, clip, item);
                 item.Reinitialize(par, clip);
             }
         }

@@ -79,13 +79,14 @@ namespace _Project.Runtime.Asteroid
 
         public class Pool : ViewPool<AsteroidSpawnCommand, AsteroidView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<AsteroidView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(AsteroidSpawnCommand args, AsteroidView item)
             {
                 item.Reinitialize(args);
-                base.Reinitialize(args, item);
             }
         }
     }

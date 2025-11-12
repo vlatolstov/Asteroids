@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Pooling;
 using _Project.Runtime.Ship;
 using Zenject;
 
@@ -13,39 +14,68 @@ namespace _Project.Runtime.Ufo
         private readonly ShipModel _shipModel;
         private readonly CombatModel _combatModel;
         private readonly GameModel _gameModel;
-        private readonly UfoView.Pool _pool;
+        private readonly IViewPoolsService _poolsService;
 
         private readonly Dictionary<uint, UfoView> _activeUfo;
+        private UfoView.Pool _pool;
+        private bool _subscriptionsActive;
 
         private ShipPose _targetShip;
         private GameState _gameState;
 
         public UfoPresenter(UfoModel ufoModel, ShipModel shipModel, CombatModel combatModel,
-            GameModel gameModel, UfoView.Pool pool)
+            GameModel gameModel, IViewPoolsService poolsService)
         {
             _ufoModel = ufoModel;
             _shipModel = shipModel;
             _combatModel = combatModel;
             _gameModel = gameModel;
-            _pool = pool;
+            _poolsService = poolsService;
 
             _activeUfo = new Dictionary<uint, UfoView>();
         }
 
         public void Initialize()
         {
-            _shipModel.ShipPoseChanged += OnShipPoseChanged;
-            _gameModel.GameStateChanged += OnGameStateChanged;
-            _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
-            _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
+            if (_poolsService.IsInitialized)
+            {
+                OnPoolsInitialized();
+            }
+            else
+            {
+                _poolsService.Initialized += OnPoolsInitialized;
+            }
         }
 
         public void Dispose()
         {
-            _shipModel.ShipPoseChanged -= OnShipPoseChanged;
-            _gameModel.GameStateChanged -= OnGameStateChanged;
-            _ufoModel.UfoSpawnRequested -= OnUfoSpawnCommand;
-            _ufoModel.UfoDespawnRequested -= OnUfoDespawnCommand;
+            _poolsService.Initialized -= OnPoolsInitialized;
+
+            if (_subscriptionsActive)
+            {
+                _shipModel.ShipPoseChanged -= OnShipPoseChanged;
+                _gameModel.GameStateChanged -= OnGameStateChanged;
+                _ufoModel.UfoSpawnRequested -= OnUfoSpawnCommand;
+                _ufoModel.UfoDespawnRequested -= OnUfoDespawnCommand;
+                _subscriptionsActive = false;
+            }
+        }
+
+        private void OnPoolsInitialized()
+        {
+            _poolsService.Initialized -= OnPoolsInitialized;
+            _pool = _poolsService.GetPool<UfoView.Pool>();
+
+            if (_subscriptionsActive)
+            {
+                return;
+            }
+
+            _shipModel.ShipPoseChanged += OnShipPoseChanged;
+            _gameModel.GameStateChanged += OnGameStateChanged;
+            _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
+            _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
+            _subscriptionsActive = true;
         }
 
         private void OnShipPoseChanged(ShipPose shipPose)
@@ -71,6 +101,11 @@ namespace _Project.Runtime.Ufo
 
         private void OnUfoSpawnCommand(UfoSpawnCommand command)
         {
+            if (_pool == null)
+            {
+                return;
+            }
+
             var ufo = _pool.Spawn(command);
             RegisterUfo(ufo);
             _ufoModel.HandleUfoSpawned(new UfoSpawned(ufo.ViewId, ufo.transform.position));
@@ -84,7 +119,7 @@ namespace _Project.Runtime.Ufo
             }
 
             UnregisterUfo(ufo);
-            _pool.Despawn(ufo);
+            _pool?.Despawn(ufo);
         }
 
         private void RegisterUfo(UfoView ufo)

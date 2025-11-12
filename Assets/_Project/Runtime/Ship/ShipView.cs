@@ -168,19 +168,18 @@ namespace _Project.Runtime.Ship
 
         public class Pool : ViewPool<Vector2, ShipView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<ShipView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(Vector2 p1, ShipView item)
             {
-                base.Reinitialize(p1, item);
                 item.Reinitialize(p1);
             }
 
             protected override void OnDespawned(ShipView item)
             {
-                base.OnDespawned(item);
-                
                 item.SetupMainEngine(false);
                 item.SetupSideEngines(false, false);
             

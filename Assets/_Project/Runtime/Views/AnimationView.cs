@@ -42,14 +42,15 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<RuntimeAnimatorController, Vector2, Quaternion, Vector2, AnimationView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<AnimationView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(RuntimeAnimatorController anim, Vector2 pos, Quaternion rotation,
                 Vector2 scale,
                 AnimationView item)
             {
-                base.Reinitialize(anim, pos, rotation, scale, item);
                 item.Reinitialize(anim, pos, rotation, scale);
             }
         }

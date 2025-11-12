@@ -76,8 +76,10 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<ProjectileShot, ProjectileView>
         {
-            public Pool(ViewsContainer viewsContainer) : base(viewsContainer)
-            { }
+            public Pool(ViewsContainer viewsContainer, Func<ProjectileView> factory, Transform parent, int warmup)
+                : base(viewsContainer, factory, parent, warmup)
+            {
+            }
 
             protected override void Reinitialize(ProjectileShot shotData, ProjectileView item)
                 => item.Reinitialize(shotData);

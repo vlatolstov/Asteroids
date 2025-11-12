@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using _Project.Runtime.Pooling;
 using UnityEngine;
 using Zenject;
 
@@ -12,21 +13,48 @@ namespace _Project.Runtime.Ship
         private readonly GameModel _gameModel;
         private readonly CombatModel _combatModel;
         private readonly InputModel _inputModel;
-        private readonly ShipView.Pool _pool;
+        private readonly IViewPoolsService _poolsService;
 
         private ShipView _activeShip;
+        private ShipView.Pool _pool;
+        private bool _subscriptionsActive;
 
-        public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel, ShipView.Pool pool, GameModel gameModel)
+        public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel,
+            IViewPoolsService poolsService, GameModel gameModel)
         {
             _shipModel = shipModel;
             _combatModel = combatModel;
             _inputModel = inputModel;
-            _pool = pool;
+            _poolsService = poolsService;
             _gameModel = gameModel;
         }
 
         public void Initialize()
         {
+            if (_poolsService.IsInitialized)
+            {
+                OnPoolsInitialized();
+            }
+            else
+            {
+                _poolsService.Initialized += OnPoolsInitialized;
+            }
+        }
+
+        private void OnPoolsInitialized()
+        {
+            _poolsService.Initialized -= OnPoolsInitialized;
+            _pool = _poolsService.GetPool<ShipView.Pool>();
+            Subscribe();
+        }
+
+        private void Subscribe()
+        {
+            if (_subscriptionsActive)
+            {
+                return;
+            }
+
             _inputModel.FireGunPressed += OnGunAttackSignal;
             _inputModel.AoeAttackPressed += OnAoeWeaponAttackSignal;
             _inputModel.ThrustChanged += OnThrustChanged;
@@ -36,21 +64,27 @@ namespace _Project.Runtime.Ship
 
             _shipModel.ShipSpawnCommandRequested += OnShipSpawnCommand;
             _shipModel.ShipDespawnCommandRequested += OnShipDespawnCommand;
+            _subscriptionsActive = true;
         }
-
-        
 
         public void Dispose()
         {
-            _inputModel.FireGunPressed -= OnGunAttackSignal;
-            _inputModel.AoeAttackPressed -= OnAoeWeaponAttackSignal;
-            _inputModel.ThrustChanged -= OnThrustChanged;
-            _inputModel.TurnChanged -= OnTurnAxisChanged;
-            
-            _gameModel.GameStateChanged -= OnGameStateChanged;
+            _poolsService.Initialized -= OnPoolsInitialized;
 
-            _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
-            _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
+            if (_subscriptionsActive)
+            {
+                _inputModel.FireGunPressed -= OnGunAttackSignal;
+                _inputModel.AoeAttackPressed -= OnAoeWeaponAttackSignal;
+                _inputModel.ThrustChanged -= OnThrustChanged;
+                _inputModel.TurnChanged -= OnTurnAxisChanged;
+            
+                _gameModel.GameStateChanged -= OnGameStateChanged;
+
+                _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
+                _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
+                _subscriptionsActive = false;
+            }
+
             DetachShip();
         }
 
@@ -155,6 +189,11 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
+            if (_pool == null)
+            {
+                return;
+            }
+
             var ship = _pool.Spawn(position);
             AttachShip(ship);
             _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
@@ -163,7 +202,7 @@ namespace _Project.Runtime.Ship
 
         private void OnShipDespawnCommand()
         {
-            if (!_activeShip)
+            if (!_activeShip || _pool == null)
             {
                 return;
             }
