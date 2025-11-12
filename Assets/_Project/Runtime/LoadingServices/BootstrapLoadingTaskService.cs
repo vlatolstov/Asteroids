@@ -1,9 +1,8 @@
 using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
-using Zenject;
 
-namespace _Project.Runtime.Services
+namespace _Project.Runtime.LoadingServices
 {
     public class BootstrapLoadingTaskService : BaseLoadingTaskService
     {

@@ -1,8 +1,8 @@
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
-using _Project.Runtime.Services;
 using _Project.Runtime.Views;
 using UnityEngine;
 using Zenject;
@@ -55,7 +55,7 @@ namespace _Project.Runtime.Installers
                 .NonLazy();
 
             Container
-                .BindInterfacesAndSelfTo<MenuViewLoader>()
+                .BindInterfacesAndSelfTo<MenuViewProvider>()
                 .AsTransient();
         }
     }

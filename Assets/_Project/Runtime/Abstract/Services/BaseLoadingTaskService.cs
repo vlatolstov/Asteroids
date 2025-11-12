@@ -1,3 +1,4 @@
+using System;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
 using Zenject;
@@ -6,10 +7,14 @@ namespace _Project.Runtime.Abstract.Services
 {
     public abstract class BaseLoadingTaskService : IInitializable, ITickable
     {
-        private SceneLoader _sceneLoader;
+        private readonly SceneLoader _sceneLoader;
 
         private UniTask _pendingTask;
         private bool _inProgress;
+        
+        public bool IsFinished => !_inProgress;
+        
+        public event Action OnTasksFinished;
 
         protected abstract int SceneIndex { get; }
 
@@ -39,6 +44,7 @@ namespace _Project.Runtime.Abstract.Services
             if (_pendingTask.Status == UniTaskStatus.Succeeded)
             {
                 _sceneLoader.Finish(SceneIndex);
+                OnTasksFinished?.Invoke();
             }
         }
 

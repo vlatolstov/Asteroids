@@ -1,7 +1,9 @@
 namespace _Project.Runtime.Constants
 {
-    public static class AddressablesPaths
+    public static class AddressablesPrefabsPaths
     {
-        public static string UI = "UI/";
+        public static readonly string MenuView = "UI/MenuView";
+        
+        public static readonly string Camera = "Camera";
     }
 }

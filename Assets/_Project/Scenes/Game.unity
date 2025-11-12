@@ -169,7 +169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6780868429105795317, guid: 252da09616dbdf74b87a5e9003b5e077, type: 3}
       propertyPath: m_Name
-      value: Main Camera
+      value: Camera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -222,6 +222,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1174506149419930515, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
+      propertyPath: _contractNames.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
+      propertyPath: '_contractNames.Array.data[0]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
+      propertyPath: _parentContractNames.Array.size
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
@@ -424,8 +436,8 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1685950095814619881}
   - {fileID: 4351248957785283367}
+  - {fileID: 1685950095814619881}
   - {fileID: 8294478484589673879}
   - {fileID: 7463986905243377810}
   - {fileID: 8259050725399423562}

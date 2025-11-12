@@ -2,7 +2,7 @@ using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
 
-namespace _Project.Runtime.Services
+namespace _Project.Runtime.LoadingServices
 {
     public class GameLoadingTaskService : BaseLoadingTaskService
     {
