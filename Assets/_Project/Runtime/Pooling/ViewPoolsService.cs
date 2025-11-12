@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -18,27 +20,16 @@ namespace _Project.Runtime.Pooling
 
     public sealed class ViewPoolsService : IInitializable, IDisposable, IViewPoolsService
     {
-        public class PoolConfig
-        {
-            public GameObject Prefab;
-            public int InitialSize;
-            public string ParentGroup;
-        }
-
-        public class Settings
-        {
-            public PoolConfig Ship;
-            public PoolConfig Ufo;
-            public PoolConfig Asteroid;
-            public PoolConfig Projectile;
-            public PoolConfig Aoe;
-            public PoolConfig Audio;
-            public PoolConfig Animation;
-        }
-
         private readonly DiContainer _container;
         private readonly ViewsContainer _viewsContainer;
-        private readonly Settings _settings;
+
+        private readonly ShipViewProvider _shipViewProvider;
+        private readonly UfoViewProvider _ufoViewProvider;
+        private readonly AsteroidViewProvider _asteroidViewProvider;
+        private readonly ProjectileViewProvider _projectileViewProvider;
+        private readonly AoeAttackViewProvider _aoeAttackViewProvider;
+        private readonly AudioSourceViewProvider _audioSourceViewProvider;
+        private readonly AnimationViewProvider _animationViewProvider;
 
         private readonly Dictionary<Type, object> _pools;
         private Transform _root;
@@ -46,11 +37,42 @@ namespace _Project.Runtime.Pooling
         public bool IsInitialized { get; private set; }
         public event Action Initialized;
 
-        public ViewPoolsService(DiContainer container, ViewsContainer viewsContainer, Settings settings)
+        private const int ShipPoolSize = 2;
+        private const int UfoPoolSize = 20;
+        private const int AsteroidPoolSize = 80;
+        private const int ProjectilePoolSize = 100;
+        private const int AoePoolSize = 10;
+        private const int AudioPoolSize = 100;
+        private const int AnimationPoolSize = 20;
+
+        private static readonly string ShipGroup = "Ship";
+        private static readonly string UfoGroup = "Ufo's";
+        private static readonly string AsteroidGroup = "Asteroids";
+        private static readonly string ProjectileGroup = "Projectiles";
+        private static readonly string AoeGroup = "AoeViewsPool";
+        private static readonly string AudioGroup = "Sound";
+        private static readonly string AnimationGroup = "Animations";
+
+        public ViewPoolsService(
+            DiContainer container,
+            ViewsContainer viewsContainer,
+            ShipViewProvider shipViewProvider,
+            UfoViewProvider ufoViewProvider,
+            AsteroidViewProvider asteroidViewProvider,
+            ProjectileViewProvider projectileViewProvider,
+            AoeAttackViewProvider aoeAttackViewProvider,
+            AudioSourceViewProvider audioSourceViewProvider,
+            AnimationViewProvider animationViewProvider)
         {
             _container = container;
             _viewsContainer = viewsContainer;
-            _settings = settings;
+            _shipViewProvider = shipViewProvider;
+            _ufoViewProvider = ufoViewProvider;
+            _asteroidViewProvider = asteroidViewProvider;
+            _projectileViewProvider = projectileViewProvider;
+            _aoeAttackViewProvider = aoeAttackViewProvider;
+            _audioSourceViewProvider = audioSourceViewProvider;
+            _animationViewProvider = animationViewProvider;
 
             _pools = new Dictionary<Type, object>();
         }
@@ -63,17 +85,36 @@ namespace _Project.Runtime.Pooling
             }
 
             _root = new GameObject("[ViewPools]").transform;
+            CreatePoolsAsync().Forget();
+        }
 
-            RegisterPool(CreateShipPool());
-            RegisterPool(CreateUfoPool());
-            RegisterPool(CreateAsteroidPool());
-            RegisterPool(CreateProjectilePool());
-            RegisterPool(CreateAoePool());
-            RegisterPool(CreateAudioPool());
-            RegisterPool(CreateAnimationPool());
+        private async UniTaskVoid CreatePoolsAsync()
+        {
+            try
+            {
+                var shipPrefab = await _shipViewProvider.LoadPrefabAsync();
+                var ufoPrefab = await _ufoViewProvider.LoadPrefabAsync();
+                var asteroidPrefab = await _asteroidViewProvider.LoadPrefabAsync();
+                var projectilePrefab = await _projectileViewProvider.LoadPrefabAsync();
+                var aoePrefab = await _aoeAttackViewProvider.LoadPrefabAsync();
+                var audioPrefab = await _audioSourceViewProvider.LoadPrefabAsync();
+                var animationPrefab = await _animationViewProvider.LoadPrefabAsync();
 
-            IsInitialized = true;
-            Initialized?.Invoke();
+                RegisterPool(CreateShipPool(shipPrefab));
+                RegisterPool(CreateUfoPool(ufoPrefab));
+                RegisterPool(CreateAsteroidPool(asteroidPrefab));
+                RegisterPool(CreateProjectilePool(projectilePrefab));
+                RegisterPool(CreateAoePool(aoePrefab));
+                RegisterPool(CreateAudioPool(audioPrefab));
+                RegisterPool(CreateAnimationPool(animationPrefab));
+
+                IsInitialized = true;
+                Initialized?.Invoke();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Failed to initialize view pools: {ex}");
+            }
         }
 
         public void Dispose()
@@ -108,82 +149,65 @@ namespace _Project.Runtime.Pooling
             _pools[typeof(TPool)] = pool;
         }
 
-        private ShipView.Pool CreateShipPool()
+        private ShipView.Pool CreateShipPool(GameObject prefab)
         {
-            var config = _settings.Ship;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(ShipGroup);
             return new ShipView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<ShipView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<ShipView>(prefab, parent),
+                parent, ShipPoolSize);
         }
 
-        private UfoView.Pool CreateUfoPool()
+        private UfoView.Pool CreateUfoPool(GameObject prefab)
         {
-            var config = _settings.Ufo;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(UfoGroup);
             return new UfoView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<UfoView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<UfoView>(prefab, parent),
+                parent, UfoPoolSize);
         }
 
-        private AsteroidView.Pool CreateAsteroidPool()
+        private AsteroidView.Pool CreateAsteroidPool(GameObject prefab)
         {
-            var config = _settings.Asteroid;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(AsteroidGroup);
             return new AsteroidView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<AsteroidView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<AsteroidView>(prefab, parent),
+                parent, AsteroidPoolSize);
         }
 
-        private ProjectileView.Pool CreateProjectilePool()
+        private ProjectileView.Pool CreateProjectilePool(GameObject prefab)
         {
-            var config = _settings.Projectile;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(ProjectileGroup);
             return new ProjectileView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<ProjectileView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<ProjectileView>(prefab, parent),
+                parent, ProjectilePoolSize);
         }
 
-        private AoeAttackView.Pool CreateAoePool()
+        private AoeAttackView.Pool CreateAoePool(GameObject prefab)
         {
-            var config = _settings.Aoe;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(AoeGroup);
             return new AoeAttackView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<AoeAttackView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<AoeAttackView>(prefab, parent),
+                parent, AoePoolSize);
         }
 
-        private AudioSourceView.Pool CreateAudioPool()
+        private AudioSourceView.Pool CreateAudioPool(GameObject prefab)
         {
-            var config = _settings.Audio;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(AudioGroup);
             return new AudioSourceView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<AudioSourceView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<AudioSourceView>(prefab, parent),
+                parent, AudioPoolSize);
         }
 
-        private AnimationView.Pool CreateAnimationPool()
+        private AnimationView.Pool CreateAnimationPool(GameObject prefab)
         {
-            var config = _settings.Animation;
-            var parent = CreateGroup(config);
+            var parent = CreateGroup(AnimationGroup);
             return new AnimationView.Pool(_viewsContainer, () =>
-                _container.InstantiatePrefabForComponent<AnimationView>(config.Prefab, parent),
-                parent, config.InitialSize);
+                _container.InstantiatePrefabForComponent<AnimationView>(prefab, parent),
+                parent, AnimationPoolSize);
         }
 
-        private Transform CreateGroup(PoolConfig config)
+        private Transform CreateGroup(string groupName)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config));
-            }
-
-            if (!config.Prefab)
-            {
-                throw new ArgumentException($"Prefab for group '{config.ParentGroup}' is not set.", nameof(config));
-            }
-
-            var group = new GameObject(string.IsNullOrEmpty(config.ParentGroup) ? "Pool" : config.ParentGroup);
+            var group = new GameObject(string.IsNullOrEmpty(groupName) ? "Pool" : groupName);
             group.transform.SetParent(_root, false);
             return group.transform;
         }

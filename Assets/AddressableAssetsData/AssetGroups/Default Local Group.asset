@@ -15,13 +15,58 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: ca1950fe4e18f784c98300ca59ec4d54
   m_SerializeEntries:
-  - m_GUID: 2f6ac716c88e60e45871c645cb18ede7
-    m_Address: Assets/_Project/Art/asteroids_sheet.png
+  - m_GUID: 1ea96ea7bd2318741a9817c77dc4a11a
+    m_Address: Views/UfoView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a95a417f3550284eafde565848c4029
+    m_Address: Views/AoeAttackView
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3ad2186bf8283b443bf527a9f726eaeb
     m_Address: UI/MenuView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b59baf2cb78bb6459efc39ceccaa7f5
+    m_Address: Views/BackgroundView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6bc5979aea5da33489e383d4d08de30f
+    m_Address: Views/AsteroidView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97e7da8bdb2aae440b4eae32c36c5798
+    m_Address: UI/HudView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ba627481552a3741bf4b2d14471e1aa
+    m_Address: Views/ProjectileView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c98d7168a96d7e04db80f76cad42536c
+    m_Address: Views/BGMView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d40a1825267e6194a9a71be152fa5b51
+    m_Address: Views/ShipView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e76034862717b6042ac9d4bdd3be94df
+    m_Address: Views/AnimationView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc241df9852e94c43bd5cddad6075056
+    m_Address: Views/AudioSourceView
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
