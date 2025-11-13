@@ -238,12 +238,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: _scriptableObjectInstallers.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5007021573369681592, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
-      propertyPath: '_scriptableObjectInstallers.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 77c7d7a12e4d30b47b7f13b76060bf6b, type: 2}
     - target: {fileID: 8309457139586916777, guid: 35d5a3188d84c1c4ea5f8a706ab6190a, type: 3}
       propertyPath: m_Name
       value: GameContext

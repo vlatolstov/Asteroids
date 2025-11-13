@@ -1,16 +1,20 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
+using _Project.Runtime.Services;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Asteroid
 {
-    public class AsteroidsModel : ITickable
+    public class AsteroidsModel : ITickable, IInitializable
     {
         private readonly IWorldConfig _world;
-        private readonly AsteroidsSpawnConfig _config;
+        private readonly IConfigsService _configsService;
+        private AsteroidsSpawnConfig _config;
 
         public event Action<AsteroidSpawnCommand> AsteroidSpawnRequested;
         public event Action<AsteroidDespawnCommand> AsteroidDespawnRequested;
@@ -21,17 +25,32 @@ namespace _Project.Runtime.Asteroid
 
         private float _timer;
         private GameState _gameState;
+        private bool _ready;
 
-        public AsteroidsModel(IWorldConfig world, AsteroidsSpawnConfig config)
+        public AsteroidsModel(IWorldConfig world, IConfigsService configsService)
         {
             _world = world;
-            _config = config;
-
-            _timer = _config.Interval;
+            _configsService = configsService;
+        }
+        
+        public void Initialize()
+        {
+            UniTask.Void(async () =>
+            {
+                await _configsService.LoadAllAsync();
+                _config = _configsService.Get<AsteroidsSpawnConfig>(AddressablesConfigPaths.General.AsteroidsSpawn);
+                _timer = _config.Interval;
+                _ready = true;
+            });
         }
 
         public void Tick()
         {
+            if (!_ready)
+            {
+                return;
+            }
+
             _timer -= Time.deltaTime;
 
             if (_timer > 0 || _gameState != GameState.Gameplay)

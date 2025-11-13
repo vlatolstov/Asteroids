@@ -1,4 +1,6 @@
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.Constants;
+using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using UnityEngine;
 using Zenject;
@@ -7,8 +9,13 @@ namespace _Project.Runtime.Views
 {
     public class BackgroundView : BaseView
     {
-        [Inject]
         private BackgroundJitterConfig _config;
+
+        [Inject]
+        private void Construct(IConfigsService configsService)
+        {
+            _config = configsService.Get<BackgroundJitterConfig>(AddressablesConfigPaths.General.BackgroundJitter);
+        }
 
         private Vector3 _baseLocalPosition;
         private Vector2 _currentOffset;

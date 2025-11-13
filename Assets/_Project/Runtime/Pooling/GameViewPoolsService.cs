@@ -47,13 +47,13 @@ namespace _Project.Runtime.Pooling
         private const int AudioPoolSize = 100;
         private const int AnimationPoolSize = 20;
 
-        private static readonly string ShipGroup = "Ship";
-        private static readonly string UfoGroup = "Ufo's";
-        private static readonly string AsteroidGroup = "Asteroids";
-        private static readonly string ProjectileGroup = "Projectiles";
-        private static readonly string AoeGroup = "AoeViewsPool";
-        private static readonly string AudioGroup = "Sound";
-        private static readonly string AnimationGroup = "Animations";
+        private const string ShipGroup = "Ship";
+        private const string UfoGroup = "Ufo's";
+        private const string AsteroidGroup = "Asteroids";
+        private const string ProjectileGroup = "Projectiles";
+        private const string AudioGroup = "Sound";
+        private const string AoeGroup = "AoeViewsPool";
+        private const string AnimationGroup = "Animations";
 
         public GameViewPoolsService(
             DiContainer container,

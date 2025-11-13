@@ -1,4 +1,6 @@
+using _Project.Runtime.Constants;
 using _Project.Runtime.Movement;
+using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Weapons;
 using UnityEngine;
@@ -9,15 +11,13 @@ namespace _Project.Runtime.Installers
     [CreateAssetMenu(fileName = "UfoInstaller", menuName = "Installers/UFO Installer")]
     public class UfoInstaller : ScriptableObjectInstaller
     {
-        public MovementConfig MovementConfig;
-        public ChasingEnemyConfig ChaseConfig;
-        public ProjectileWeaponConfig UfoGun;
-
         public override void InstallBindings()
         {
+            var configs = Container.Resolve<IConfigsService>();
+
             Container
                 .Bind<MovementConfig>()
-                .FromInstance(MovementConfig)
+                .FromInstance(configs.Get<MovementConfig>(AddressablesConfigPaths.Movement.Ufo))
                 .AsSingle();
 
             Container
@@ -25,13 +25,13 @@ namespace _Project.Runtime.Installers
                 .AsTransient();
 
             Container
-                .BindInterfacesAndSelfTo<ProjectileWeaponConfig>()
-                .FromInstance(UfoGun)
+                .Bind<ProjectileWeaponConfig>()
+                .FromInstance(configs.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.UfoBlaster))
                 .AsSingle();
             
             Container
-                .BindInterfacesAndSelfTo<ChasingEnemyConfig>()
-                .FromInstance(ChaseConfig)
+                .Bind<ChasingEnemyConfig>()
+                .FromInstance(configs.Get<ChasingEnemyConfig>(AddressablesConfigPaths.Movement.UfoChasing))
                 .AsSingle();
         }
     }

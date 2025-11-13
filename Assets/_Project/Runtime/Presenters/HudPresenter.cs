@@ -4,6 +4,7 @@ using _Project.Runtime.Data;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.Score;
+using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.SceneManagement;
@@ -21,12 +22,13 @@ namespace _Project.Runtime.Presenters
         private readonly CombatModel _combatModel;
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
-        private readonly GeneralVisualsConfig _visuals;
         private readonly SceneLoader _sceneLoader;
         private readonly ViewsContainer _viewsContainer;
         private readonly GameLoadingTaskService _gameLoadingTaskService;
+        private readonly IConfigsService _configsService;
 
         private HudView _hud;
+        private GeneralVisualsConfig _visuals;
         private int _lastBestScore;
         private bool _hudReady;
 
@@ -36,19 +38,19 @@ namespace _Project.Runtime.Presenters
             CombatModel combatModel,
             StatisticsModel statisticsModel,
             ViewsContainer viewsContainer,
-            GeneralVisualsConfig visuals,
             SceneLoader sceneLoader,
-            GameLoadingTaskService gameLoadingTaskService)
+            GameLoadingTaskService gameLoadingTaskService,
+            IConfigsService configsService)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
             _scoreModel = scoreModel;
             _combatModel = combatModel;
             _statisticsModel = statisticsModel;
-            _visuals = visuals;
             _sceneLoader = sceneLoader;
             _viewsContainer = viewsContainer;
             _gameLoadingTaskService = gameLoadingTaskService;
+            _configsService = configsService;
         }
 
         public void Initialize()
@@ -95,6 +97,8 @@ namespace _Project.Runtime.Presenters
                 Debug.LogError("HudView not provided");
                 return;
             }
+
+            _visuals ??= _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
 
             _lastBestScore = _scoreModel.BestScore;
 

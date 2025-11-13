@@ -1,16 +1,20 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
+using _Project.Runtime.Services;
 using _Project.Runtime.Utils;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Ufo
 {
-    public class UfoModel : ITickable
+    public class UfoModel : ITickable, IInitializable
     {
-        private readonly UfoSpawnConfig _spawnConfig;
+        private readonly IConfigsService _configsService;
+        private UfoSpawnConfig _spawnConfig;
         private readonly IWorldConfig _world;
 
         public event Action<UfoSpawnCommand> UfoSpawnRequested;
@@ -21,19 +25,35 @@ namespace _Project.Runtime.Ufo
         private float _nextAt;
         private int _inGame;
         private GameState _gameState;
+        private bool _ready;
 
-        public UfoModel(UfoSpawnConfig spawnConfig, IWorldConfig world)
+        public UfoModel(IConfigsService configsService, IWorldConfig world)
         {
-            _spawnConfig = spawnConfig;
+            _configsService = configsService;
             _world = world;
 
             _time = 0f;
             _inGame = 0;
-            _nextAt = _spawnConfig.InitialDelay;
+        }
+        
+        public void Initialize()
+        {
+            UniTask.Void(async () =>
+            {
+                await _configsService.LoadAllAsync();
+                _spawnConfig = _configsService.Get<UfoSpawnConfig>(AddressablesConfigPaths.General.UfoSpawn);
+                _nextAt = _spawnConfig.InitialDelay;
+                _ready = true;
+            });
         }
 
         public void Tick()
         {
+            if (!_ready)
+            {
+                return;
+            }
+
             _time += Time.deltaTime;
 
             if (_time < _nextAt || _gameState != GameState.Gameplay)

@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using _Project.Runtime.Asteroid;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Pooling;
+using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
+using Cysharp.Threading.Tasks;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -20,22 +23,25 @@ namespace _Project.Runtime.Presenters
         private readonly UfoModel _ufoModel;
 
         private readonly IViewPoolsService _poolsService;
-        private readonly GeneralVisualsConfig _config;
+        private readonly IConfigsService _configsService;
 
         private readonly Dictionary<uint, AnimationView> _activeViews;
         private AnimationView.Pool _pool;
+        private GeneralVisualsConfig _visuals;
         private bool _subscriptionsActive;
+        private bool _poolsReady;
+        private bool _configReady;
 
         public AnimationPresenter(CombatModel combatModel, ShipModel shipModel,
             AsteroidsModel asteroidsModel, UfoModel ufoModel,
-            GeneralVisualsConfig config, IViewPoolsService poolsService)
+            IViewPoolsService poolsService, IConfigsService configsService)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
             _asteroidsModel = asteroidsModel;
             _ufoModel = ufoModel;
-            _config = config;
             _poolsService = poolsService;
+            _configsService = configsService;
 
             _activeViews = new Dictionary<uint, AnimationView>();
         }
@@ -50,6 +56,16 @@ namespace _Project.Runtime.Presenters
             {
                 _poolsService.Initialized += OnPoolsInitialized;
             }
+
+            UniTask.Void(LoadConfigAsync);
+        }
+
+        private async UniTaskVoid LoadConfigAsync()
+        {
+            await _configsService.LoadAllAsync();
+            _visuals = _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
+            _configReady = true;
+            TrySubscribe();
         }
 
         public void Dispose()
@@ -70,8 +86,13 @@ namespace _Project.Runtime.Presenters
         {
             _poolsService.Initialized -= OnPoolsInitialized;
             _pool = _poolsService.GetPool<AnimationView.Pool>();
+            _poolsReady = true;
+            TrySubscribe();
+        }
 
-            if (_subscriptionsActive)
+        private void TrySubscribe()
+        {
+            if (_subscriptionsActive || !_poolsReady || !_configReady)
             {
                 return;
             }
@@ -106,7 +127,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var view = _pool.Spawn(_config.ShipDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            var view = _pool.Spawn(_visuals.ShipDestroyed, dest.Position, dest.Rotation, dest.Scale);
             RegisterView(view);
         }
 
@@ -117,7 +138,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var view = _pool.Spawn(_config.UfoDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            var view = _pool.Spawn(_visuals.UfoDestroyed, dest.Position, dest.Rotation, dest.Scale);
             RegisterView(view);
         }
 
@@ -128,7 +149,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var view = _pool.Spawn(_config.AsteroidDestroyed, dest.Position, dest.Rotation, dest.Scale);
+            var view = _pool.Spawn(_visuals.AsteroidDestroyed, dest.Position, dest.Rotation, dest.Scale);
             RegisterView(view);
         }
 

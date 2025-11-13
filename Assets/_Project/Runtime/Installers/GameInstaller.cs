@@ -1,14 +1,17 @@
+using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Analytics;
 using _Project.Runtime.Analytics.Firebase;
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.AssetManagement.Configs;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.Pooling;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
+using _Project.Runtime.Services;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
@@ -36,38 +39,36 @@ namespace _Project.Runtime.Installers
 
         private void AssetProvidersBindings()
         {
-            Container
-                .BindInterfacesAndSelfTo<ShipViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<UfoViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<AsteroidViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<ProjectileViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<AoeAttackViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<AnimationViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<AudioSourceViewProvider>()
-                .AsSingle();
-            
-            
-            Container
-                .BindInterfacesAndSelfTo<BackgroundViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<BGMViewProvider>()
-                .AsSingle();
-            Container
-                .BindInterfacesAndSelfTo<HudViewProvider>()
-                .AsSingle();
+            Container.Bind<UfoViewProvider>().AsSingle();
+            Container.Bind<ShipViewProvider>().AsSingle();
+            Container.Bind<AsteroidViewProvider>().AsSingle();
+            Container.Bind<ProjectileViewProvider>().AsSingle();
+            Container.Bind<AoeAttackViewProvider>().AsSingle();
+            Container.Bind<AnimationViewProvider>().AsSingle();
+            Container.Bind<AudioSourceViewProvider>().AsSingle();
+            Container.Bind<BackgroundViewProvider>().AsSingle();
+            Container.Bind<BGMViewProvider>().AsSingle();
+            Container.Bind<HudViewProvider>().AsSingle();
+
+            Container.Bind<IConfigLoader>().To<AsteroidsSpawnConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<UfoSpawnConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<ScoreConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<GeneralSoundsConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<GeneralVisualsConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<BackgroundJitterConfigLoader>().AsSingle();
+
+            Container.Bind<IConfigLoader>().To<ShipMovementConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<AsteroidMovementConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<UfoMovementConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<UfoChasingConfigLoader>().AsSingle();
+
+            Container.Bind<IConfigLoader>().To<ShipGunConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<ShipLaserConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<UfoBlasterConfigLoader>().AsSingle();
+
+            Container.Bind<IConfigLoader>().To<BlasterPulseConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<RocketConfigLoader>().AsSingle();
+            Container.Bind<IConfigLoader>().To<LaserAttackConfigLoader>().AsSingle();
         }
 
         private void ViewsBindings()
@@ -174,9 +175,12 @@ namespace _Project.Runtime.Installers
         {
             Container
                 .BindInterfacesAndSelfTo<GameViewPoolsService>()
-                .AsSingle()
-                .NonLazy();
-            
+                .AsSingle();
+
+            Container
+                .BindInterfacesAndSelfTo<GameConfigsService>()
+                .AsSingle();
+
             Container
                 .BindInterfacesAndSelfTo<BestScoreService>()
                 .AsSingle();

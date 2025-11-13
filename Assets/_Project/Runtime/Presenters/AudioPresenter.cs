@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Pooling;
+using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Views;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -17,19 +20,22 @@ namespace _Project.Runtime.Presenters
         private readonly ShipModel _shipModel;
 
         private readonly IViewPoolsService _poolsService;
-        private readonly GeneralSoundsConfig _generalSounds;
+        private readonly IConfigsService _configsService;
 
         private readonly Dictionary<uint, AudioSourceView> _activeViews;
         private AudioSourceView.Pool _audioPool;
+        private GeneralSoundsConfig _generalSounds;
         private bool _subscriptionsActive;
+        private bool _poolsReady;
+        private bool _configsReady;
 
         public AudioPresenter(CombatModel combatModel, ShipModel shipModel,
-            GeneralSoundsConfig generalSounds, IViewPoolsService poolsService)
+            IViewPoolsService poolsService, IConfigsService configsService)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
-            _generalSounds = generalSounds;
             _poolsService = poolsService;
+            _configsService = configsService;
 
             _activeViews = new Dictionary<uint, AudioSourceView>();
         }
@@ -44,6 +50,16 @@ namespace _Project.Runtime.Presenters
             {
                 _poolsService.Initialized += OnPoolsInitialized;
             }
+
+            UniTask.Void(LoadConfigAsync);
+        }
+
+        private async UniTaskVoid LoadConfigAsync()
+        {
+            await _configsService.LoadAllAsync();
+            _generalSounds = _configsService.Get<GeneralSoundsConfig>(AddressablesConfigPaths.General.GeneralSounds);
+            _configsReady = true;
+            TrySubscribe();
         }
 
         public void Dispose()
@@ -65,8 +81,13 @@ namespace _Project.Runtime.Presenters
         {
             _poolsService.Initialized -= OnPoolsInitialized;
             _audioPool = _poolsService.GetPool<AudioSourceView.Pool>();
+            _poolsReady = true;
+            TrySubscribe();
+        }
 
-            if (_subscriptionsActive)
+        private void TrySubscribe()
+        {
+            if (_subscriptionsActive || !_poolsReady || !_configsReady)
             {
                 return;
             }
@@ -75,7 +96,6 @@ namespace _Project.Runtime.Presenters
             _combatModel.ProjectileHit += OnProjectileHit;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
             _combatModel.AoeHit += OnAoeHit;
-
             _shipModel.ShipSpawned += OnShipSpawned;
             _subscriptionsActive = true;
         }
