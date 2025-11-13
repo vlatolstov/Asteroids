@@ -173,7 +173,7 @@ namespace _Project.Runtime.Installers
         private void ServicesBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<ViewPoolsService>()
+                .BindInterfacesAndSelfTo<GameViewPoolsService>()
                 .AsSingle()
                 .NonLazy();
             

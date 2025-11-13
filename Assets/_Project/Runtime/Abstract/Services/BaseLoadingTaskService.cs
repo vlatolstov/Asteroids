@@ -12,8 +12,6 @@ namespace _Project.Runtime.Abstract.Services
         private UniTask _pendingTask;
         private bool _inProgress;
         
-        public bool IsFinished => !_inProgress;
-        
         public event Action OnTasksFinished;
 
         protected abstract int SceneIndex { get; }

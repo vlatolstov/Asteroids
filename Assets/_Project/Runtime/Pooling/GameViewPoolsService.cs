@@ -16,9 +16,10 @@ namespace _Project.Runtime.Pooling
         bool IsInitialized { get; }
         event Action Initialized;
         TPool GetPool<TPool>() where TPool : class;
+        UniTask LoadPoolsAsync();
     }
 
-    public sealed class ViewPoolsService : IInitializable, IDisposable, IViewPoolsService
+    public sealed class GameViewPoolsService : IDisposable, IViewPoolsService
     {
         private readonly DiContainer _container;
         private readonly ViewsContainer _viewsContainer;
@@ -33,6 +34,7 @@ namespace _Project.Runtime.Pooling
 
         private readonly Dictionary<Type, object> _pools;
         private Transform _root;
+        private UniTaskCompletionSource _loadingTcs;
 
         public bool IsInitialized { get; private set; }
         public event Action Initialized;
@@ -53,7 +55,7 @@ namespace _Project.Runtime.Pooling
         private static readonly string AudioGroup = "Sound";
         private static readonly string AnimationGroup = "Animations";
 
-        public ViewPoolsService(
+        public GameViewPoolsService(
             DiContainer container,
             ViewsContainer viewsContainer,
             ShipViewProvider shipViewProvider,
@@ -77,21 +79,32 @@ namespace _Project.Runtime.Pooling
             _pools = new Dictionary<Type, object>();
         }
 
-        public void Initialize()
+        public UniTask LoadPoolsAsync()
         {
             if (IsInitialized)
             {
-                return;
+                return UniTask.CompletedTask;
             }
 
-            _root = new GameObject("[ViewPools]").transform;
-            CreatePoolsAsync().Forget();
+            if (_loadingTcs != null)
+            {
+                return _loadingTcs.Task;
+            }
+
+            _loadingTcs = new UniTaskCompletionSource();
+            LoadInternalAsync().Forget();
+            return _loadingTcs.Task;
         }
 
-        private async UniTaskVoid CreatePoolsAsync()
+        private async UniTaskVoid LoadInternalAsync()
         {
             try
             {
+                if (!_root)
+                {
+                    _root = new GameObject("[ViewPools]").transform;
+                }
+
                 var shipPrefab = await _shipViewProvider.LoadPrefabAsync();
                 var ufoPrefab = await _ufoViewProvider.LoadPrefabAsync();
                 var asteroidPrefab = await _asteroidViewProvider.LoadPrefabAsync();
@@ -110,10 +123,14 @@ namespace _Project.Runtime.Pooling
 
                 IsInitialized = true;
                 Initialized?.Invoke();
+                _loadingTcs?.TrySetResult();
+                _loadingTcs = null;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to initialize view pools: {ex}");
+                _loadingTcs?.TrySetException(ex);
+                _loadingTcs = null;
             }
         }
 
@@ -127,6 +144,7 @@ namespace _Project.Runtime.Pooling
 
             _pools.Clear();
             IsInitialized = false;
+            _loadingTcs = null;
         }
 
         public TPool GetPool<TPool>() where TPool : class

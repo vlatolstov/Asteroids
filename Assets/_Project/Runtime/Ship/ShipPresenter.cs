@@ -65,6 +65,11 @@ namespace _Project.Runtime.Ship
             _shipModel.ShipSpawnCommandRequested += OnShipSpawnCommand;
             _shipModel.ShipDespawnCommandRequested += OnShipDespawnCommand;
             _subscriptionsActive = true;
+
+            if (_gameModel.CurrentState == GameState.Gameplay)
+            {
+                _shipModel.RequestSpawn();
+            }
         }
 
         public void Dispose()

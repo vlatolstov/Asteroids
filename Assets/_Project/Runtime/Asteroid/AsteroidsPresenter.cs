@@ -67,6 +67,7 @@ namespace _Project.Runtime.Asteroid
             _asteroidsModel.AsteroidDespawnRequested += OnDespawnCommand;
             _gameModel.GameStateChanged += OnGameStateChanged;
             _subscriptionsActive = true;
+            _asteroidsModel.SetGameState(_gameModel.CurrentState);
         }
 
         private void OnSpawnCommand(AsteroidSpawnCommand command)

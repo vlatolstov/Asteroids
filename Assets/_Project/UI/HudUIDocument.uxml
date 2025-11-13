@@ -3,18 +3,18 @@
     <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
     <ui:VisualElement name="hud-root" class="hud-root">
         <ui:VisualElement name="hud-top" class="hud-top">
-            <ui:VisualElement name="ship-data" class="ship-data-panel">
+            <ui:VisualElement name="ship-data" enabled="true" class="ship-data-panel" style="display: none;">
                 <ui:Label name="pos-label" text="Pos" class="hud-text ship-data-line" />
                 <ui:Label name="speed-label" text="Speed" class="hud-text ship-data-line" />
                 <ui:Label name="angle-label" text="Angle" class="hud-text ship-data-line" />
                 <ui:Label name="score-label" text="Score" class="hud-text ship-score" />
             </ui:VisualElement>
-            <ui:VisualElement name="stats-panel" class="stats-panel">
+            <ui:VisualElement name="stats-panel" enabled="true" class="stats-panel" style="display: none;">
                 <ui:Label name="stats-content" class="hud-text stats-content" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="hud-middle" class="hud-middle">
-            <ui:VisualElement name="main-container" class="overlay-panel">
+            <ui:VisualElement name="main-container" enabled="true" class="overlay-panel" style="display: none;">
                 <ui:Label name="controls-label" text="controls" class="hud-text overlay-item overlay-caption" />
                 <ui:Label name="gameover-label" text="GAME OVER" class="hud-title overlay-item" />
                 <ui:Label name="final-score-label" text="final score" class="hud-text overlay-item overlay-score" />
@@ -24,7 +24,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="hud-bottom" class="hud-bottom">
-            <ui:VisualElement name="weapons-panel" class="weapons-panel">
+            <ui:VisualElement name="weapons-panel" class="weapons-panel" style="display: none;">
                 <ui:Instance template="weapon-icon-template" name="projectile-weapon-icon" class="weapon-slot" />
                 <ui:Instance template="weapon-icon-template" name="aoe-weapon-icon" class="weapon-slot weapon-slot-last" />
             </ui:VisualElement>

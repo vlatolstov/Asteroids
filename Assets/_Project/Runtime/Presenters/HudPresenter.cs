@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
+using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.Score;
 using _Project.Runtime.Settings;
@@ -22,9 +23,12 @@ namespace _Project.Runtime.Presenters
         private readonly ShipModel _shipModel;
         private readonly GeneralVisualsConfig _visuals;
         private readonly SceneLoader _sceneLoader;
+        private readonly ViewsContainer _viewsContainer;
+        private readonly GameLoadingTaskService _gameLoadingTaskService;
 
-        private readonly HudView _hud;
+        private HudView _hud;
         private int _lastBestScore;
+        private bool _hudReady;
 
         public HudPresenter(GameModel gameModel,
             ShipModel shipModel,
@@ -33,7 +37,8 @@ namespace _Project.Runtime.Presenters
             StatisticsModel statisticsModel,
             ViewsContainer viewsContainer,
             GeneralVisualsConfig visuals,
-            SceneLoader sceneLoader)
+            SceneLoader sceneLoader,
+            GameLoadingTaskService gameLoadingTaskService)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
@@ -42,39 +47,19 @@ namespace _Project.Runtime.Presenters
             _statisticsModel = statisticsModel;
             _visuals = visuals;
             _sceneLoader = sceneLoader;
-            
-            _hud = viewsContainer.GetView<HudView>();
+            _viewsContainer = viewsContainer;
+            _gameLoadingTaskService = gameLoadingTaskService;
         }
 
         public void Initialize()
         {
-            _lastBestScore = _scoreModel.BestScore;
-
-            if (_hud != null)
-            {
-                _hud.RespawnButtonPressed += OnRespawnButtonPressed;
-                _hud.BackToMenuButtonPressed += OnBackToMenuButtonPressed;
-                _hud.SetNewRecordAchieved(false);
-            }
-
-            _shipModel.ShipPoseChanged += OnPoseChanged;
-            _shipModel.ProjectileWeaponStateChanged += OnProjectileWeaponStateChanged;
-            _shipModel.AoeWeaponStateChanged += OnAoeWeaponStateChanged;
-
-            _gameModel.GameStateChanged += OnGameStateChanged;
-
-            _scoreModel.TotalScoreChanged += OnScoreChanged;
-            _scoreModel.BestScoreChanged += OnBestScoreChanged;
-            
-            _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
-            _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
-            _hud.UpdateBestScore(_scoreModel.BestScore);
-
-            _shipModel.RequestSpawn();
+            _gameLoadingTaskService.OnTasksFinished += OnLoadingTaskFinished;
         }
 
         public void Dispose()
         {
+            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+
             if (_hud != null)
             {
                 _hud.RespawnButtonPressed -= OnRespawnButtonPressed;
@@ -89,6 +74,49 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged -= OnScoreChanged;
             _scoreModel.BestScoreChanged -= OnBestScoreChanged;
+        }
+
+        private void OnLoadingTaskFinished()
+        {
+            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            InitHud();
+        }
+
+        private void InitHud()
+        {
+            if (_hudReady)
+            {
+                return;
+            }
+
+            _hud = _viewsContainer.GetView<HudView>();
+            if (_hud == null)
+            {
+                Debug.LogError("HudView not provided");
+                return;
+            }
+
+            _lastBestScore = _scoreModel.BestScore;
+
+            _hud.RespawnButtonPressed += OnRespawnButtonPressed;
+            _hud.BackToMenuButtonPressed += OnBackToMenuButtonPressed;
+            _hud.SetNewRecordAchieved(false);
+
+            _shipModel.ShipPoseChanged += OnPoseChanged;
+            _shipModel.ProjectileWeaponStateChanged += OnProjectileWeaponStateChanged;
+            _shipModel.AoeWeaponStateChanged += OnAoeWeaponStateChanged;
+
+            _gameModel.GameStateChanged += OnGameStateChanged;
+
+            _scoreModel.TotalScoreChanged += OnScoreChanged;
+            _scoreModel.BestScoreChanged += OnBestScoreChanged;
+
+            _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
+            _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
+            _hud.UpdateBestScore(_scoreModel.BestScore);
+
+            _shipModel.RequestSpawn();
+            _hudReady = true;
         }
 
         private void OnGameStateChanged(GameState state)

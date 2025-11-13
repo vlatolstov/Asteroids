@@ -76,6 +76,8 @@ namespace _Project.Runtime.Ufo
             _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
             _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
             _subscriptionsActive = true;
+            _gameState = _gameModel.CurrentState;
+            _ufoModel.SetGameState(_gameState);
         }
 
         private void OnShipPoseChanged(ShipPose shipPose)
