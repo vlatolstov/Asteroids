@@ -30,6 +30,11 @@ namespace _Project.Runtime.Asteroid
         {
             base.FixedUpdate();
 
+            if (Motor == null)
+            {
+                return;
+            }
+
             bool inside = Motor.IsInsideWorldRect(_selfOffset);
             switch (_entered)
             {
@@ -47,8 +52,9 @@ namespace _Project.Runtime.Asteroid
         {
             if (other.gameObject.layer != gameObject.layer)
             {
+                var velocity = Motor?.Velocity ?? Vector2.zero;
                 Destroyed?.Invoke(new AsteroidDestroyed(ViewId, _size, transform.position, transform.rotation,
-                    transform.localScale, Motor.Velocity));
+                    transform.localScale, velocity));
             }
         }
 
@@ -57,8 +63,9 @@ namespace _Project.Runtime.Asteroid
             if (gameObject.layer != other.gameObject.layer
                 && other.CompareTag("Attack"))
             {
+                var velocity = Motor?.Velocity ?? Vector2.zero;
                 Destroyed?.Invoke(new AsteroidDestroyed(ViewId, _size, transform.position, transform.rotation,
-                    transform.localScale, Motor.Velocity));
+                    transform.localScale, velocity));
             }
         }
 
@@ -77,16 +84,34 @@ namespace _Project.Runtime.Asteroid
             _selfOffset = Mathf.Max(transform.localScale.x, transform.localScale.y) / 2;
         }
 
-        public class Pool : ViewPool<AsteroidSpawnCommand, AsteroidView>
+        public void ConfigureMotor(InertialMotor motor)
+        {
+            SetMotor(motor);
+        }
+
+        public readonly struct SpawnArgs
+        {
+            public readonly AsteroidSpawnCommand Command;
+            public readonly InertialMotor Motor;
+
+            public SpawnArgs(AsteroidSpawnCommand command, InertialMotor motor)
+            {
+                Command = command;
+                Motor = motor;
+            }
+        }
+
+        public class Pool : ViewPool<SpawnArgs, AsteroidView>
         {
             public Pool(ViewsContainer viewsContainer, Func<AsteroidView> factory, Transform parent, int warmup)
                 : base(viewsContainer, factory, parent, warmup)
             {
             }
 
-            protected override void Reinitialize(AsteroidSpawnCommand args, AsteroidView item)
+            protected override void Reinitialize(SpawnArgs args, AsteroidView item)
             {
-                item.Reinitialize(args);
+                item.ConfigureMotor(args.Motor);
+                item.Reinitialize(args.Command);
             }
         }
     }

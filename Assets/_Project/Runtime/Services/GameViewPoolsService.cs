@@ -9,7 +9,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Runtime.Pooling
+namespace _Project.Runtime.Services
 {
     public interface IViewPoolsService
     {
@@ -34,7 +34,6 @@ namespace _Project.Runtime.Pooling
 
         private readonly Dictionary<Type, object> _pools;
         private Transform _root;
-        private UniTaskCompletionSource _loadingTcs;
 
         public bool IsInitialized { get; private set; }
         public event Action Initialized;
@@ -79,24 +78,17 @@ namespace _Project.Runtime.Pooling
             _pools = new Dictionary<Type, object>();
         }
 
-        public UniTask LoadPoolsAsync()
+        public async UniTask LoadPoolsAsync()
         {
             if (IsInitialized)
             {
-                return UniTask.CompletedTask;
+                await UniTask.CompletedTask;
             }
 
-            if (_loadingTcs != null)
-            {
-                return _loadingTcs.Task;
-            }
-
-            _loadingTcs = new UniTaskCompletionSource();
-            LoadInternalAsync().Forget();
-            return _loadingTcs.Task;
+            await LoadInternalAsync();
         }
 
-        private async UniTaskVoid LoadInternalAsync()
+        private async UniTask LoadInternalAsync()
         {
             try
             {
@@ -123,14 +115,10 @@ namespace _Project.Runtime.Pooling
 
                 IsInitialized = true;
                 Initialized?.Invoke();
-                _loadingTcs?.TrySetResult();
-                _loadingTcs = null;
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to initialize view pools: {ex}");
-                _loadingTcs?.TrySetException(ex);
-                _loadingTcs = null;
             }
         }
 
@@ -144,7 +132,6 @@ namespace _Project.Runtime.Pooling
 
             _pools.Clear();
             IsInitialized = false;
-            _loadingTcs = null;
         }
 
         public TPool GetPool<TPool>() where TPool : class

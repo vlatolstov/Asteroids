@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Weapons;

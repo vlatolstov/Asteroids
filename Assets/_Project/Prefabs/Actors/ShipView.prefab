@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 1074268564404137070}
   - component: {fileID: 5626302874393680537}
   - component: {fileID: 3837115616988274673}
-  - component: {fileID: -9081217606741827109}
   m_Layer: 6
   m_Name: ShipView
   m_TagString: Ship
@@ -189,24 +188,6 @@ MonoBehaviour:
   _mainEngine: {fileID: 2109283140358357254}
   _leftEngine: {fileID: 5787399376138479892}
   _rightEngine: {fileID: 2324302986307858760}
---- !u!114 &-9081217606741827109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2529211537695395251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08eca9f7688a0a24685b89133b020c8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
-  _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 6027052f928faa24eaf647e78c0efca5, type: 2}
-  _monoInstallers: []
-  _installerPrefabs: []
-  _autoRun: 1
-  _kernel: {fileID: 0}
 --- !u!1001 &2966157475900117178
 PrefabInstance:
   m_ObjectHideFlags: 0

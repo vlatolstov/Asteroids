@@ -1,7 +1,11 @@
 using System;
+using _Project.Runtime.Abstract.Configs;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Pooling;
+using _Project.Runtime.Movement;
+using _Project.Runtime.Services;
+using _Project.Runtime.Weapons;
 using UnityEngine;
 using Zenject;
 
@@ -14,19 +18,29 @@ namespace _Project.Runtime.Ship
         private readonly CombatModel _combatModel;
         private readonly InputModel _inputModel;
         private readonly IViewPoolsService _poolsService;
+        private readonly IConfigsService _configsService;
+        private readonly IWorldConfig _worldConfig;
 
         private ShipView _activeShip;
         private ShipView.Pool _pool;
         private bool _subscriptionsActive;
 
+        private MovementConfig _movementConfig;
+        private ProjectileWeaponConfig _shipGunConfig;
+        private AoeWeaponConfig _shipAoeConfig;
+        private bool _configsReady;
+
         public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel,
-            IViewPoolsService poolsService, GameModel gameModel)
+            IViewPoolsService poolsService, GameModel gameModel, IConfigsService configsService,
+            IWorldConfig worldConfig)
         {
             _shipModel = shipModel;
             _combatModel = combatModel;
             _inputModel = inputModel;
             _poolsService = poolsService;
             _gameModel = gameModel;
+            _configsService = configsService;
+            _worldConfig = worldConfig;
         }
 
         public void Initialize()
@@ -199,7 +213,14 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
-            var ship = _pool.Spawn(position);
+            EnsureConfigs();
+
+            var args = new ShipView.SpawnArgs(
+                position,
+                new PlayerMotor(_movementConfig, _worldConfig),
+                _shipGunConfig,
+                _shipAoeConfig);
+            var ship = _pool.Spawn(args);
             AttachShip(ship);
             _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
             _shipModel.UpdatePose(new ShipPose(position, Vector2.zero, 0f));
@@ -244,6 +265,19 @@ namespace _Project.Runtime.Ship
         private void OnAoeAttackReleased(AoeAttackReleased attack)
         {
             _combatModel.HandleAoeAttackReleased(attack);
+        }
+
+        private void EnsureConfigs()
+        {
+            if (_configsReady)
+            {
+                return;
+            }
+
+            _movementConfig = _configsService.Get<MovementConfig>(AddressablesConfigPaths.Movement.Ship);
+            _shipGunConfig = _configsService.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.ShipGun);
+            _shipAoeConfig = _configsService.Get<AoeWeaponConfig>(AddressablesConfigPaths.Weapons.ShipLaser);
+            _configsReady = true;
         }
     }
 }

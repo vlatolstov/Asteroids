@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using _Project.Runtime.Abstract.Configs;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Pooling;
+using _Project.Runtime.Movement;
+using _Project.Runtime.Services;
 using Zenject;
 
 namespace _Project.Runtime.Asteroid
@@ -12,17 +15,23 @@ namespace _Project.Runtime.Asteroid
         private readonly AsteroidsModel _asteroidsModel;
         private readonly GameModel _gameModel;
         private readonly IViewPoolsService _poolsService;
+        private readonly IConfigsService _configsService;
+        private readonly IWorldConfig _worldConfig;
 
         private readonly Dictionary<uint, AsteroidView> _activeAsteroids;
         private AsteroidView.Pool _pool;
         private bool _subscriptionsActive;
+        private MovementConfig _movementConfig;
+        private bool _configsReady;
 
         public AsteroidsPresenter(AsteroidsModel asteroidsModel, GameModel gameModel,
-            IViewPoolsService poolsService)
+            IViewPoolsService poolsService, IConfigsService configsService, IWorldConfig worldConfig)
         {
             _asteroidsModel = asteroidsModel;
             _gameModel = gameModel;
             _poolsService = poolsService;
+            _configsService = configsService;
+            _worldConfig = worldConfig;
 
             _activeAsteroids = new Dictionary<uint, AsteroidView>();
         }
@@ -77,7 +86,10 @@ namespace _Project.Runtime.Asteroid
                 return;
             }
 
-            var asteroid = _pool.Spawn(command);
+            EnsureConfigs();
+
+            var args = new AsteroidView.SpawnArgs(command, new InertialMotor(_movementConfig, _worldConfig));
+            var asteroid = _pool.Spawn(args);
 
             if (!RegisterAsteroid(asteroid))
             {
@@ -105,6 +117,18 @@ namespace _Project.Runtime.Asteroid
         private void OnGameStateChanged(GameState state)
         {
             _asteroidsModel.SetGameState(state);
+        }
+
+        private void EnsureConfigs()
+        {
+            if (_configsReady)
+            {
+                return;
+            }
+
+            _movementConfig =
+                _configsService.Get<MovementConfig>(AddressablesConfigPaths.Movement.Asteroid);
+            _configsReady = true;
         }
 
         private bool RegisterAsteroid(AsteroidView asteroid)

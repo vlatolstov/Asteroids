@@ -4,7 +4,6 @@ using _Project.Runtime.SceneManagement;
 using _Project.Runtime.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Runtime.LoadingServices
 {
@@ -24,8 +23,7 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-            var view = await _menuViewProvider.LoadAsync();
-            _viewsContainer.AddView(view);
+            _viewsContainer.AddView(await _menuViewProvider.LoadAsync());
             Debug.Log("Menu loaded.");
         }
     }

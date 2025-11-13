@@ -171,10 +171,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BootstrapContext
       objectReference: {fileID: 0}
-    - target: {fileID: 6596110225805258813, guid: 9381fd801c005124d9c09026c5693c1b, type: 3}
-      propertyPath: _scriptableObjectInstallers.Array.size
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

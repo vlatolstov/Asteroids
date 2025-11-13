@@ -1,21 +1,12 @@
 using _Project.Runtime.Abstract.MVP;
-using _Project.Runtime.Constants;
-using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Runtime.Views
 {
     public class BackgroundView : BaseView
     {
         private BackgroundJitterConfig _config;
-
-        [Inject]
-        private void Construct(IConfigsService configsService)
-        {
-            _config = configsService.Get<BackgroundJitterConfig>(AddressablesConfigPaths.General.BackgroundJitter);
-        }
 
         private Vector3 _baseLocalPosition;
         private Vector2 _currentOffset;
@@ -40,6 +31,11 @@ namespace _Project.Runtime.Views
 
         private void Update()
         {
+            if (_config == null)
+            {
+                return;
+            }
+
             float dt = _config.UseUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
             if (dt <= 0f)
@@ -82,6 +78,11 @@ namespace _Project.Runtime.Views
         public void SetPlayerVelocity(Vector2 velocity)
         {
             _playerVelocity = velocity;
+        }
+
+        public void Initialize(BackgroundJitterConfig config)
+        {
+            _config = config;
         }
     }
 }

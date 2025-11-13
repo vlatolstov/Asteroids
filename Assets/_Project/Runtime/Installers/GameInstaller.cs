@@ -8,7 +8,6 @@ using _Project.Runtime.AssetManagement.Configs;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
-using _Project.Runtime.Pooling;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
 using _Project.Runtime.Services;

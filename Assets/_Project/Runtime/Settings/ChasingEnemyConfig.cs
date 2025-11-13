@@ -1,4 +1,3 @@
-using _Project.Runtime.Abstract.Weapons;
 using UnityEngine;
 
 namespace _Project.Runtime.Settings

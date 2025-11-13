@@ -1,6 +1,5 @@
 using _Project.Runtime.Abstract.MVP;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Runtime.Abstract.Movement
 {
@@ -9,8 +8,7 @@ namespace _Project.Runtime.Abstract.Movement
     {
         private Rigidbody2D _rb;
 
-        [Inject]
-        public TMotor Motor;
+        public TMotor Motor { get; private set; }
         
         protected virtual void Awake()
         {
@@ -19,10 +17,18 @@ namespace _Project.Runtime.Abstract.Movement
 
         protected virtual void FixedUpdate()
         {
-            Motor.MoveRigidbody(_rb);
+            if (Motor != null)
+            {
+                Motor.MoveRigidbody(_rb);
+            }
         }
-        
-        public void ApplyAngularVelocity(float angleRadians)
+
+        protected void SetMotor(TMotor motor)
+        {
+            Motor = motor;
+        }
+
+        protected void ApplyAngularVelocity(float angleRadians)
         {
             _rb.angularVelocity = angleRadians * Mathf.Rad2Deg;
         }

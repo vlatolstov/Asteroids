@@ -17,7 +17,6 @@ namespace _Project.Runtime.Services
     {
         private readonly IReadOnlyList<IConfigLoader> _loaders;
         private readonly Dictionary<Type, Dictionary<string, ScriptableObject>> _configs = new();
-        private UniTaskCompletionSource _tcs;
         private bool _loaded;
 
         public GameConfigsService(IEnumerable<IConfigLoader> loaders)
@@ -25,24 +24,17 @@ namespace _Project.Runtime.Services
             _loaders = loaders.ToList();
         }
 
-        public UniTask LoadAllAsync()
+        public async UniTask LoadAllAsync()
         {
             if (_loaded)
             {
-                return UniTask.CompletedTask;
+                await UniTask.CompletedTask;
             }
-
-            if (_tcs != null)
-            {
-                return _tcs.Task;
-            }
-
-            _tcs = new UniTaskCompletionSource();
-            LoadInternalAsync().Forget();
-            return _tcs.Task;
+            
+            await LoadInternalAsync();
         }
 
-        private async UniTaskVoid LoadInternalAsync()
+        private async UniTask LoadInternalAsync()
         {
             try
             {
@@ -59,15 +51,10 @@ namespace _Project.Runtime.Services
                 }
 
                 _loaded = true;
-                _tcs.TrySetResult();
             }
             catch (Exception ex)
             {
-                _tcs?.TrySetException(ex);
-            }
-            finally
-            {
-                _tcs = null;
+                Debug.Log($"Exception during configs async load. {ex}");
             }
         }
 

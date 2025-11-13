@@ -9,7 +9,6 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Views;
 using _Project.Runtime.Weapons;
 using UnityEngine;
-using Zenject;
 using GM = _Project.Runtime.Utils.GeometryMethods;
 
 namespace _Project.Runtime.Ufo
@@ -22,17 +21,6 @@ namespace _Project.Runtime.Ufo
         private IWorldConfig _world;
         private ChasingEnemyConfig _chase;
         private ProjectileWeapon _gun;
-
-        [Inject]
-        private void Construct(ProjectileWeaponConfig gunConfig, IWorldConfig world, ChasingEnemyConfig chase)
-        {
-            _gunConfig = gunConfig;
-            _world = world;
-            _chase = chase;
-
-            _gun = new ProjectileWeapon(_gunConfig, this);
-            _gun.ProjectileFired += OnProjectileShot;
-        }
 
         private ShipPose _target;
         private GameState _gameState;
@@ -52,9 +40,23 @@ namespace _Project.Runtime.Ufo
             _sr = GetComponent<SpriteRenderer>();
         }
 
+        private void OnDestroy()
+        {
+            if (_gun != null)
+            {
+                _gun.ProjectileFired -= OnProjectileShot;
+                _gun = null;
+            }
+        }
+
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+
+            if (Motor == null)
+            {
+                return;
+            }
             
             bool inside = Motor.IsInsideWorldRect(_selfOffset);
             switch (_entered)
@@ -68,23 +70,49 @@ namespace _Project.Runtime.Ufo
                     break;
             }
 
-            if (_gameState != GameState.Gameplay)
+            if (_gameState != GameState.Gameplay || !_gunConfig)
             {
                 return;
             }
 
             Motor.ChaseTarget(_target);
 
-            _gun.FixedTick();
+            _gun?.FixedTick();
 
-            if (CanAttack())
+            if (_gun != null && CanAttack())
             {
                 _gun.Attack();
             }
         }
 
+        public void Configure(ChasingMotor motor, ProjectileWeaponConfig gunConfig, ChasingEnemyConfig chase,
+            IWorldConfig world)
+        {
+            SetMotor(motor);
+            _gunConfig = gunConfig;
+            _chase = chase;
+            _world = world;
+
+            if (_gun != null)
+            {
+                _gun.ProjectileFired -= OnProjectileShot;
+                _gun = null;
+            }
+
+            if (_gunConfig != null)
+            {
+                _gun = new ProjectileWeapon(_gunConfig, this);
+                _gun.ProjectileFired += OnProjectileShot;
+            }
+        }
+
         private bool CanAttack()
         {
+            if (Motor == null || _gunConfig == null || _chase == null || _world == null)
+            {
+                return false;
+            }
+
             var selfPos = Motor.Position;
             var fwd = GM.AngleToDir(Motor.AngleRadians);
 
@@ -92,7 +120,7 @@ namespace _Project.Runtime.Ufo
             float distAim = deltaAim.magnitude;
 
             float projSpeed = _gunConfig.Projectile.Speed;
-            float tLead = (projSpeed > 0.1f) ? Mathf.Clamp(distAim / projSpeed, 0f, _chase.MaxLeadSeconds) : 0f;
+            float tLead = projSpeed > 0.1f ? Mathf.Clamp(distAim / projSpeed, 0f, _chase.MaxLeadSeconds) : 0f;
 
             var leadPoint = _target.Position + _target.Velocity * tLead;
             leadPoint = GM.ClampPointToRect(leadPoint, _world.WorldRect);
@@ -146,8 +174,8 @@ namespace _Project.Runtime.Ufo
             out int layer, out Source sourceType)
         {
             origin = transform.position;
-            direction = GM.AngleToDir(Motor.AngleRadians);
-            inheritVelocity = Motor.Velocity;
+            direction = Motor != null ? GM.AngleToDir(Motor.AngleRadians) : Vector2.up;
+            inheritVelocity = Motor?.Velocity ?? Vector2.zero;
             layer = gameObject.layer;
             sourceType = Source.Ufo;
             return true;
@@ -155,27 +183,47 @@ namespace _Project.Runtime.Ufo
 
         private void Reinitialize(in UfoSpawnCommand args)
         {
-            Motor.SetWrapMode(false);
+            Motor?.SetWrapMode(false);
             _entered = false;
             _destroyed = false;
             transform.localScale = new Vector3(args.Scale, args.Scale);
             _selfOffset = Mathf.Max(transform.localScale.x, transform.localScale.y) / 2;
             transform.position = args.Pos;
-            Motor.SetPose(args.Pos, args.Vel, args.AngleRad);
+            Motor?.SetPose(args.Pos, args.Vel, args.AngleRad);
 
             _sr.sprite = args.Sprite;
         }
 
-        public class Pool : ViewPool<UfoSpawnCommand, UfoView>
+        public readonly struct SpawnArgs
+        {
+            public readonly UfoSpawnCommand Command;
+            public readonly ChasingMotor Motor;
+            public readonly ProjectileWeaponConfig Gun;
+            public readonly ChasingEnemyConfig Chase;
+            public readonly IWorldConfig World;
+
+            public SpawnArgs(UfoSpawnCommand command, ChasingMotor motor, ProjectileWeaponConfig gun,
+                ChasingEnemyConfig chase, IWorldConfig world)
+            {
+                Command = command;
+                Motor = motor;
+                Gun = gun;
+                Chase = chase;
+                World = world;
+            }
+        }
+
+        public class Pool : ViewPool<SpawnArgs, UfoView>
         {
             public Pool(ViewsContainer viewsContainer, Func<UfoView> factory, Transform parent, int warmup)
                 : base(viewsContainer, factory, parent, warmup)
             {
             }
 
-            protected override void Reinitialize(UfoSpawnCommand args, UfoView item)
+            protected override void Reinitialize(SpawnArgs args, UfoView item)
             {
-                item.Reinitialize(in args);
+                item.Configure(args.Motor, args.Gun, args.Chase, args.World);
+                item.Reinitialize(in args.Command);
             }
         }
     }
