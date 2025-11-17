@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d61f846c43df454aad490b81f2a1aa37, type: 3}
   m_Name: GlobalInstaller
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Runtime.Installers.GlobalInstaller
+  _androidAdsSettings: {fileID: 11400000, guid: 942979696f007a54ba0cc115b211b10c, type: 2}
+  _iOsAdsSettings: {fileID: 11400000, guid: c0298d2070cae054a93a8e2891418397, type: 2}

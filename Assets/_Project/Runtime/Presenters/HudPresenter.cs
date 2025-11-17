@@ -1,4 +1,5 @@
 using System;
+using _Project.Runtime.Abstract.Ads;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.LoadingServices;
@@ -19,13 +20,13 @@ namespace _Project.Runtime.Presenters
     {
         private readonly GameModel _gameModel;
         private readonly ScoreModel _scoreModel;
-        private readonly CombatModel _combatModel;
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
         private readonly SceneLoader _sceneLoader;
         private readonly ViewsContainer _viewsContainer;
         private readonly GameLoadingTaskService _gameLoadingTaskService;
         private readonly IConfigsService _configsService;
+        private readonly IAdsPlayer _adsPlayer;
 
         private HudView _hud;
         private GeneralVisualsConfig _visuals;
@@ -35,22 +36,22 @@ namespace _Project.Runtime.Presenters
         public HudPresenter(GameModel gameModel,
             ShipModel shipModel,
             ScoreModel scoreModel,
-            CombatModel combatModel,
             StatisticsModel statisticsModel,
             ViewsContainer viewsContainer,
             SceneLoader sceneLoader,
             GameLoadingTaskService gameLoadingTaskService,
-            IConfigsService configsService)
+            IConfigsService configsService,
+            IAdsPlayer adsPlayer)
         {
             _gameModel = gameModel;
             _shipModel = shipModel;
             _scoreModel = scoreModel;
-            _combatModel = combatModel;
             _statisticsModel = statisticsModel;
             _sceneLoader = sceneLoader;
             _viewsContainer = viewsContainer;
             _gameLoadingTaskService = gameLoadingTaskService;
             _configsService = configsService;
+            _adsPlayer = adsPlayer;
         }
 
         public void Initialize()
@@ -58,11 +59,12 @@ namespace _Project.Runtime.Presenters
             _gameLoadingTaskService.OnTasksFinished += OnLoadingTaskFinished;
         }
 
+
         public void Dispose()
         {
             _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
 
-            if (_hud != null)
+            if (_hud)
             {
                 _hud.RespawnButtonPressed -= OnRespawnButtonPressed;
                 _hud.BackToMenuButtonPressed -= OnBackToMenuButtonPressed;
@@ -76,6 +78,9 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged -= OnScoreChanged;
             _scoreModel.BestScoreChanged -= OnBestScoreChanged;
+
+            _adsPlayer.InterstitialAdPlayed -= OnInterstitialAdPlayed;
+            _adsPlayer.RewardedAdPlayed -= OnRewardedAdPlayed;
         }
 
         private void OnLoadingTaskFinished()
@@ -92,7 +97,7 @@ namespace _Project.Runtime.Presenters
             }
 
             _hud = _viewsContainer.GetView<HudView>();
-            if (_hud == null)
+            if (!_hud)
             {
                 Debug.LogError("HudView not provided");
                 return;
@@ -114,6 +119,9 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged += OnScoreChanged;
             _scoreModel.BestScoreChanged += OnBestScoreChanged;
+
+            _adsPlayer.InterstitialAdPlayed += OnInterstitialAdPlayed;
+            _adsPlayer.RewardedAdPlayed += OnRewardedAdPlayed;
 
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
@@ -174,17 +182,12 @@ namespace _Project.Runtime.Presenters
 
         private void OnRespawnButtonPressed()
         {
-            _gameModel.SetGameState(GameState.Preparing);
-            _shipModel.RequestSpawn();
-            _hud?.SetNewRecordAchieved(false);
+            _adsPlayer.PlayRewardedAd();
         }
 
         private void OnBackToMenuButtonPressed()
         {
-            UniTask.Void(async () =>
-            {
-                await _sceneLoader.LoadSceneAsync(Constants.Scenes.Menu);
-            });
+            _adsPlayer.PlayInterstitialAd();
         }
 
         private void UpdateGameStatistics()
@@ -213,6 +216,21 @@ namespace _Project.Runtime.Presenters
                 aoeLine;
 
             _hud.SetStatisticsSummary(summary);
+        }
+
+        private void OnRewardedAdPlayed(AdCompletionStatus status)
+        {
+            if (status == AdCompletionStatus.Completed)
+            {
+                _gameModel.SetGameState(GameState.Preparing);
+                _shipModel.RequestSpawn();
+                _hud?.SetNewRecordAchieved(false);
+            }
+        }
+
+        private void OnInterstitialAdPlayed(AdCompletionStatus status)
+        {
+            UniTask.Void(async () => { await _sceneLoader.LoadSceneAsync(Scenes.Menu); });
         }
     }
 }

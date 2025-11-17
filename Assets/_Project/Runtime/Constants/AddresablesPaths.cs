@@ -14,9 +14,14 @@ namespace _Project.Runtime.Constants
         public const string HudView = "UI/HudView";
         public const string MenuView = "UI/MenuView";
     }
-
+    
     public static class AddressablesConfigPaths
     {
+        public static class Ads
+        {
+            public const string UnityAdsSettings = "Settings/AndroidAdsSettings";
+        }
+        
         public static class General
         {
             public const string AsteroidsSpawn = "Configs/General/AsteroidsSpawn";
