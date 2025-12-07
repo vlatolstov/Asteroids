@@ -5,7 +5,7 @@ using Zenject;
 
 namespace _Project.Runtime.Abstract.Services
 {
-    public abstract class BaseLoadingTaskService : IInitializable, ITickable
+    public abstract class BaseLoadingTasksProcessor : IInitializable, ITickable
     {
         private readonly SceneLoader _sceneLoader;
 
@@ -16,7 +16,7 @@ namespace _Project.Runtime.Abstract.Services
 
         protected abstract int SceneIndex { get; }
 
-        protected BaseLoadingTaskService(SceneLoader sceneLoader)
+        protected BaseLoadingTasksProcessor(SceneLoader sceneLoader)
         {
             _sceneLoader = sceneLoader;
         }

@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Models;
 using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
+using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -13,34 +15,43 @@ using Zenject;
 
 namespace _Project.Runtime.Presenters
 {
-    public class AudioPresenter : IInitializable, IDisposable
+    public class GameAudioPresenter : IInitializable, IDisposable
     {
         private readonly CombatModel _combatModel;
         private readonly ShipModel _shipModel;
 
         private readonly IViewPoolsService _poolsService;
         private readonly IConfigsService _configsService;
+        private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
+        private readonly LocalAssetProvider _assetProvider;
 
         private readonly Dictionary<uint, AudioSourceView> _activeViews;
         private AudioSourceView.Pool _audioPool;
         private GeneralSoundsConfig _generalSounds;
+        private BGMView _bgmView;
         private bool _subscriptionsActive;
         private bool _poolsReady;
         private bool _configsReady;
+        private bool _bgmReady;
 
-        public AudioPresenter(CombatModel combatModel, ShipModel shipModel,
-            IViewPoolsService poolsService, IConfigsService configsService)
+        public GameAudioPresenter(CombatModel combatModel, ShipModel shipModel,
+            IViewPoolsService poolsService, IConfigsService configsService,
+            GameLoadingTasksProcessor gameLoadingTasksProcessor, LocalAssetProvider assetProvider)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
             _poolsService = poolsService;
             _configsService = configsService;
+            _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
+            _assetProvider = assetProvider;
 
             _activeViews = new Dictionary<uint, AudioSourceView>();
         }
 
         public void Initialize()
         {
+            _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
+
             if (_poolsService.IsInitialized)
             {
                 OnPoolsInitialized();
@@ -63,6 +74,7 @@ namespace _Project.Runtime.Presenters
 
         public void Dispose()
         {
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
             _poolsService.Initialized -= OnPoolsInitialized;
 
             if (_subscriptionsActive)
@@ -74,6 +86,8 @@ namespace _Project.Runtime.Presenters
                 _shipModel.ShipSpawned -= OnShipSpawned;
                 _subscriptionsActive = false;
             }
+
+            _assetProvider.Unload(AddressablesPrefabsPaths.BGMView);
         }
 
         private void OnPoolsInitialized()
@@ -97,6 +111,28 @@ namespace _Project.Runtime.Presenters
             _combatModel.AoeHit += OnAoeHit;
             _shipModel.ShipSpawned += OnShipSpawned;
             _subscriptionsActive = true;
+        }
+
+        private void OnLoadingTaskFinished()
+        {
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
+            TryAssignBgm();
+        }
+
+        private void TryAssignBgm()
+        {
+            if (_bgmReady)
+            {
+                return;
+            }
+
+            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.BGMView, out _bgmView))
+            {
+                Debug.LogError("BGMView not provided");
+                return;
+            }
+
+            _bgmReady = _bgmView != null;
         }
 
         private void OnProjectileShot(ProjectileShot shot)

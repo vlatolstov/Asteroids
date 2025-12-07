@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using _Project.Runtime.Views;
+using _Project.Runtime.Tools;
 using UnityEngine;
 
 namespace _Project.Runtime.Abstract.MVP
@@ -8,13 +8,12 @@ namespace _Project.Runtime.Abstract.MVP
     public abstract class ViewPoolBase<TView> where TView : BaseView
     {
         private readonly Stack<TView> _items = new();
-        private readonly ViewsContainer _viewsContainer;
         private readonly Func<TView> _factory;
         private readonly Transform _parent;
+        private readonly ReusableIdContainer _idContainer = new();
 
-        protected ViewPoolBase(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup)
+        protected ViewPoolBase(Func<TView> factory, Transform parent, int warmup)
         {
-            _viewsContainer = viewsContainer;
             _factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _parent = parent;
 
@@ -25,12 +24,12 @@ namespace _Project.Runtime.Abstract.MVP
         {
             var item = _items.Count > 0 ? _items.Pop() : CreateItem();
 
+            item.SetId(_idContainer.Acquire());
             item.gameObject.SetActive(true);
             item.transform.SetParent(_parent, true);
 
             reinitialize?.Invoke(item);
 
-            _viewsContainer.AddView(item);
             OnSpawned(item);
             return item;
         }
@@ -42,8 +41,8 @@ namespace _Project.Runtime.Abstract.MVP
                 return;
             }
 
-            _viewsContainer.RemoveView(item);
             OnDespawned(item);
+            _idContainer.Release(item.ViewId);
 
             item.transform.SetParent(_parent, true);
             item.gameObject.SetActive(false);
@@ -51,12 +50,10 @@ namespace _Project.Runtime.Abstract.MVP
         }
 
         protected virtual void OnSpawned(TView item)
-        {
-        }
+        { }
 
         protected virtual void OnDespawned(TView item)
-        {
-        }
+        { }
 
         private TView CreateItem()
         {
@@ -78,10 +75,9 @@ namespace _Project.Runtime.Abstract.MVP
 
     public abstract class ViewPool<TView> : ViewPoolBase<TView> where TView : BaseView
     {
-        protected ViewPool(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup = 0)
-            : base(viewsContainer, factory, parent, warmup)
-        {
-        }
+        protected ViewPool(Func<TView> factory, Transform parent, int warmup = 0)
+            : base(factory, parent, warmup)
+        { }
 
         public TView Spawn()
         {
@@ -94,17 +90,15 @@ namespace _Project.Runtime.Abstract.MVP
         }
 
         protected virtual void Reinitialize(TView item)
-        {
-        }
+        { }
     }
 
     public abstract class ViewPool<TParam1, TView> : ViewPoolBase<TView>
         where TView : BaseView
     {
-        protected ViewPool(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup = 0)
-            : base(viewsContainer, factory, parent, warmup)
-        {
-        }
+        protected ViewPool(Func<TView> factory, Transform parent, int warmup = 0)
+            : base(factory, parent, warmup)
+        { }
 
         public TView Spawn(TParam1 param1)
         {
@@ -122,10 +116,9 @@ namespace _Project.Runtime.Abstract.MVP
     public abstract class ViewPool<TParam1, TParam2, TView> : ViewPoolBase<TView>
         where TView : BaseView
     {
-        protected ViewPool(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup = 0)
-            : base(viewsContainer, factory, parent, warmup)
-        {
-        }
+        protected ViewPool(Func<TView> factory, Transform parent, int warmup = 0)
+            : base(factory, parent, warmup)
+        { }
 
         public TView Spawn(TParam1 param1, TParam2 param2)
         {
@@ -143,10 +136,9 @@ namespace _Project.Runtime.Abstract.MVP
     public abstract class ViewPool<TParam1, TParam2, TParam3, TView> : ViewPoolBase<TView>
         where TView : BaseView
     {
-        protected ViewPool(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup = 0)
-            : base(viewsContainer, factory, parent, warmup)
-        {
-        }
+        protected ViewPool(Func<TView> factory, Transform parent, int warmup = 0)
+            : base(factory, parent, warmup)
+        { }
 
         public TView Spawn(TParam1 param1, TParam2 param2, TParam3 param3)
         {
@@ -164,10 +156,9 @@ namespace _Project.Runtime.Abstract.MVP
     public abstract class ViewPool<TParam1, TParam2, TParam3, TParam4, TView> : ViewPoolBase<TView>
         where TView : BaseView
     {
-        protected ViewPool(ViewsContainer viewsContainer, Func<TView> factory, Transform parent, int warmup = 0)
-            : base(viewsContainer, factory, parent, warmup)
-        {
-        }
+        protected ViewPool(Func<TView> factory, Transform parent, int warmup = 0)
+            : base(factory, parent, warmup)
+        { }
 
         public TView Spawn(TParam1 param1, TParam2 param2, TParam3 param3, TParam4 param4)
         {

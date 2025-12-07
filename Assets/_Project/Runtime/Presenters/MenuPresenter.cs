@@ -1,4 +1,7 @@
 using System;
+using _Project.Runtime.Abstract.AssetManagement;
+using _Project.Runtime.AssetManagement;
+using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.SceneManagement;
 using _Project.Runtime.Score;
@@ -14,62 +17,58 @@ namespace _Project.Runtime.Presenters
 {
     public class MenuPresenter : IInitializable, IDisposable
     {
-        private readonly ViewsContainer _viewsContainer;
         private readonly SceneLoader _sceneLoader;
         private readonly BestScoreService _bestScoreService;
-        private readonly MenuLoadingTaskService _menuLoadingTaskService;
+        private readonly MenuLoadingTasksProcessor _menuLoadingTasksProcessor;
+        private readonly LocalAssetProvider _assetProvider;
 
-        private MenuView _view;
+        private MenuView _menuView;
 
-        public MenuPresenter(ViewsContainer viewsContainer,
-            SceneLoader sceneLoader,
+        public MenuPresenter(SceneLoader sceneLoader,
             BestScoreService bestScoreService,
-            MenuLoadingTaskService menuLoadingTaskService)
+            MenuLoadingTasksProcessor menuLoadingTasksProcessor, LocalAssetProvider assetProvider)
         {
-            _viewsContainer = viewsContainer;
             _sceneLoader = sceneLoader;
             _bestScoreService = bestScoreService;
-            _menuLoadingTaskService = menuLoadingTaskService;
+            _menuLoadingTasksProcessor = menuLoadingTasksProcessor;
+            _assetProvider = assetProvider;
         }
 
         public void Initialize()
         {
-            _menuLoadingTaskService.OnTasksFinished += OnLoadingTaskFinished;
+            _menuLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
         }
 
         public void Dispose()
         {
-            if (!_view)
+            if (_menuView)
             {
-                return;
+                _menuView.StartButtonClicked -= OnStartClicked;
+                _menuView.ExitButtonClicked -= OnExitClicked;
             }
 
-            _viewsContainer.RemoveView(_view);
-            _view.StartButtonClicked -= OnStartClicked;
-            _view.ExitButtonClicked -= OnExitClicked;
+            _assetProvider.Unload(AddressablesPrefabsPaths.MenuView);
         }
 
         private void OnLoadingTaskFinished()
         {
-            _view = _viewsContainer.GetView<MenuView>();
-
-            if (_view)
-            {
-                _view.StartButtonClicked += OnStartClicked;
-                _view.ExitButtonClicked += OnExitClicked;
-                _view.SetBestScore(_bestScoreService.Value);
-            }
-            else
+            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.MenuView, out _menuView) ||
+                !_menuView)
             {
                 Debug.LogError("MenuView not provided");
+                return;
             }
 
-            _menuLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            _menuView.StartButtonClicked += OnStartClicked;
+            _menuView.ExitButtonClicked += OnExitClicked;
+            _menuView.SetBestScore(_bestScoreService.Value);
+
+            _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
         }
 
         private void OnStartClicked()
         {
-            UniTask.Void(async () => { await _sceneLoader.LoadSceneAsync(Constants.Scenes.Game); });
+            UniTask.Void(async () => { await _sceneLoader.LoadSceneAsync(Scenes.Game); });
         }
 
         private void OnExitClicked()

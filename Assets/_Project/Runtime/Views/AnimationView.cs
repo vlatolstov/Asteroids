@@ -42,8 +42,8 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<RuntimeAnimatorController, Vector2, Quaternion, Vector2, AnimationView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<AnimationView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
+            public Pool(Func<AnimationView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
             {
             }
 

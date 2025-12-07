@@ -12,9 +12,14 @@ namespace _Project.Runtime.Ship
 {
     public class ShipView : BaseMovableView<PlayerMotor>, IFireParamsSource
     {
-        [SerializeField] private GameObject _mainEngine;
-        [SerializeField] private GameObject _leftEngine;
-        [SerializeField] private GameObject _rightEngine;
+        [SerializeField]
+        private GameObject _mainEngine;
+
+        [SerializeField]
+        private GameObject _leftEngine;
+
+        [SerializeField]
+        private GameObject _rightEngine;
 
         private ProjectileWeaponConfig _gunConfig;
         private AoeWeaponConfig _aoeWeaponConfig;
@@ -215,10 +220,9 @@ namespace _Project.Runtime.Ship
 
         public class Pool : ViewPool<SpawnArgs, ShipView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<ShipView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
-            {
-            }
+            public Pool(Func<ShipView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
+            { }
 
             protected override void Reinitialize(SpawnArgs args, ShipView item)
             {

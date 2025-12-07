@@ -1,6 +1,5 @@
 using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Analytics;
 using _Project.Runtime.Analytics.Firebase;
 using _Project.Runtime.AssetManagement;
@@ -13,7 +12,6 @@ using _Project.Runtime.Score;
 using _Project.Runtime.Services;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
-using _Project.Runtime.Views;
 using UnityEngine;
 using Zenject;
 
@@ -25,7 +23,6 @@ namespace _Project.Runtime.Installers
         public override void InstallBindings()
         {
             AssetProvidersBindings();
-            ViewsBindings();
             PresentersBindings();
             ModelsBindings();
             ServicesBindings();
@@ -45,9 +42,6 @@ namespace _Project.Runtime.Installers
             Container.Bind<AoeAttackViewProvider>().AsSingle();
             Container.Bind<AnimationViewProvider>().AsSingle();
             Container.Bind<AudioSourceViewProvider>().AsSingle();
-            Container.Bind<BackgroundViewProvider>().AsSingle();
-            Container.Bind<BGMViewProvider>().AsSingle();
-            Container.Bind<HudViewProvider>().AsSingle();
 
             Container.Bind<IConfigLoader>().To<AsteroidsSpawnConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<UfoSpawnConfigLoader>().AsSingle();
@@ -68,19 +62,6 @@ namespace _Project.Runtime.Installers
             Container.Bind<IConfigLoader>().To<BlasterPulseConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<RocketConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<LaserAttackConfigLoader>().AsSingle();
-        }
-
-        private void ViewsBindings()
-        {
-            Container
-                .Bind<BaseView>()
-                .FromComponentsInHierarchy()
-                .AsSingle()
-                .WhenInjectedInto<ViewsContainer>();
-
-            Container
-                .Bind<ViewsContainer>()
-                .AsSingle();
         }
 
         private void PresentersBindings()
@@ -122,7 +103,7 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<AudioPresenter>()
+                .BindInterfacesAndSelfTo<GameAudioPresenter>()
                 .AsSingle();
 
             Container
@@ -131,8 +112,7 @@ namespace _Project.Runtime.Installers
             
             Container
                 .BindInterfacesAndSelfTo<StatisticsPresenter>()
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
         }
 
         private void ModelsBindings()
@@ -185,9 +165,8 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
             
             Container
-                .BindInterfacesAndSelfTo<GameLoadingTaskService>()
-                .AsSingle()
-                .NonLazy();
+                .BindInterfacesAndSelfTo<GameLoadingTasksProcessor>()
+                .AsSingle();
             
             Container
                 .Bind<IAnalyticsLogger>()
@@ -196,8 +175,7 @@ namespace _Project.Runtime.Installers
 
             Container
                 .BindInterfacesAndSelfTo<AnalyticsEventHandler>()
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
         }
     }
 }

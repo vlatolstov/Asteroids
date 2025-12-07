@@ -100,8 +100,8 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<Transform, AoeWeaponConfig, Source, AoeAttackView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<AoeAttackView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
+            public Pool(Func<AoeAttackView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
             {
             }
 

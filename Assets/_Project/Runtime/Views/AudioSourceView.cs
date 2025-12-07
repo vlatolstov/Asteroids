@@ -30,8 +30,8 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<Vector2, AudioClip, AudioSourceView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<AudioSourceView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
+            public Pool(Func<AudioSourceView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
             {
             }
 

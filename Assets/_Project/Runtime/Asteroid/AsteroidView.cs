@@ -3,7 +3,6 @@ using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
-using _Project.Runtime.Views;
 using UnityEngine;
 
 namespace _Project.Runtime.Asteroid
@@ -103,8 +102,8 @@ namespace _Project.Runtime.Asteroid
 
         public class Pool : ViewPool<SpawnArgs, AsteroidView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<AsteroidView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
+            public Pool(Func<AsteroidView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
             {
             }
 

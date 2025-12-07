@@ -1,5 +1,7 @@
 using _Project.Runtime.Abstract.Ads;
+using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.Ads;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.SceneManagement;
 using UnityEngine;
 using Zenject;
@@ -32,12 +34,16 @@ namespace _Project.Runtime.Installers
 
             Container
                 .BindInterfacesAndSelfTo<UnityAdsInitializer>()
-                .AsSingle()
-                .NonLazy();
+                .AsSingle();
 
             Container
                 .BindInterfacesAndSelfTo<UnityAdsPlayer>()
                 .AsSingle();
+            
+            Container
+                .BindInterfacesAndSelfTo<LocalAssetProvider>()
+                .AsSingle()
+                .NonLazy();
         }
     }
 }

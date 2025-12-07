@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace _Project.Runtime.Views
 {
-    [RequireComponent(typeof(Rigidbody2D), 
-        typeof(Collider2D), 
+    [RequireComponent(typeof(Rigidbody2D),
+        typeof(Collider2D),
         typeof(SpriteRenderer))]
     public sealed class ProjectileView : BaseView
     {
@@ -20,7 +20,7 @@ namespace _Project.Runtime.Views
         private SpriteRenderer _sr;
         private float _life;
         private bool _spawned;
-        
+
         public event Action<uint, ProjectileHit> ProjectileHit;
         public event Action<uint> Expired;
 
@@ -44,7 +44,8 @@ namespace _Project.Runtime.Views
         {
             if (_spawned)
             {
-                var hit = new ProjectileHit(_conf, transform.position, transform.rotation, transform.localScale, _source);
+                var hit = new ProjectileHit(_conf, transform.position, transform.rotation, transform.localScale,
+                    _source);
                 ProjectileHit?.Invoke(ViewId, hit);
             }
         }
@@ -76,10 +77,9 @@ namespace _Project.Runtime.Views
 
         public class Pool : ViewPool<ProjectileShot, ProjectileView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<ProjectileView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
-            {
-            }
+            public Pool(Func<ProjectileView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
+            { }
 
             protected override void Reinitialize(ProjectileShot shotData, ProjectileView item)
                 => item.Reinitialize(shotData);

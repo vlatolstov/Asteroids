@@ -1,4 +1,6 @@
 using System;
+using _Project.Runtime.Abstract.AssetManagement;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Data;
 using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
@@ -13,40 +15,42 @@ namespace _Project.Runtime.Presenters
     public class BackgroundPresenter : IInitializable, IDisposable
     {
         private readonly ShipModel _shipModel;
-        private readonly ViewsContainer _viewsContainer;
-        private readonly GameLoadingTaskService _gameLoadingTaskService;
+        private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly IConfigsService _configsService;
+        private readonly LocalAssetProvider _assetProvider;
 
         private BackgroundView _bg;
         private bool _initialized;
 
-        public BackgroundPresenter(ShipModel shipModel, ViewsContainer viewsContainer,
-            GameLoadingTaskService gameLoadingTaskService, IConfigsService configsService)
+        public BackgroundPresenter(ShipModel shipModel,
+            GameLoadingTasksProcessor gameLoadingTasksProcessor, IConfigsService configsService, LocalAssetProvider assetProvider)
         {
             _shipModel = shipModel;
-            _viewsContainer = viewsContainer;
-            _gameLoadingTaskService = gameLoadingTaskService;
+            _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
             _configsService = configsService;
+            _assetProvider = assetProvider;
         }
 
         public void Initialize()
         {
-            _gameLoadingTaskService.OnTasksFinished += OnLoadingTaskFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
         }
 
         public void Dispose()
         {
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
 
             if (_initialized)
             {
                 _shipModel.ShipPoseChanged -= OnShipPoseChanged;
             }
+            
+            _assetProvider.Unload(AddressablesPrefabsPaths.BackgroundView);
         }
 
         private void OnLoadingTaskFinished()
         {
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
             Setup();
         }
 
@@ -57,8 +61,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _bg = _viewsContainer.GetView<BackgroundView>();
-            if (_bg == null)
+            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.BackgroundView, out _bg))
             {
                 Debug.LogError("BackgroundView not provided");
                 return;

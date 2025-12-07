@@ -57,7 +57,7 @@ namespace _Project.Runtime.Ufo
             {
                 return;
             }
-            
+
             bool inside = Motor.IsInsideWorldRect(_selfOffset);
             switch (_entered)
             {
@@ -140,7 +140,8 @@ namespace _Project.Runtime.Ufo
             if (gameObject.layer != other.gameObject.layer && !_destroyed)
             {
                 _destroyed = true;
-                Destroyed?.Invoke(new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
+                Destroyed?.Invoke(
+                    new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
             }
         }
 
@@ -151,7 +152,8 @@ namespace _Project.Runtime.Ufo
                 && !_destroyed)
             {
                 _destroyed = true;
-                Destroyed?.Invoke(new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
+                Destroyed?.Invoke(
+                    new UfoDestroyed(ViewId, transform.position, transform.rotation, transform.localScale));
             }
         }
 
@@ -215,10 +217,9 @@ namespace _Project.Runtime.Ufo
 
         public class Pool : ViewPool<SpawnArgs, UfoView>
         {
-            public Pool(ViewsContainer viewsContainer, Func<UfoView> factory, Transform parent, int warmup)
-                : base(viewsContainer, factory, parent, warmup)
-            {
-            }
+            public Pool(Func<UfoView> factory, Transform parent, int warmup)
+                : base(factory, parent, warmup)
+            { }
 
             protected override void Reinitialize(SpawnArgs args, UfoView item)
             {

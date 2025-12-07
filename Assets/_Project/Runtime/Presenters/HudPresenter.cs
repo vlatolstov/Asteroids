@@ -1,5 +1,7 @@
 using System;
 using _Project.Runtime.Abstract.Ads;
+using _Project.Runtime.Abstract.AssetManagement;
+using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.LoadingServices;
@@ -23,10 +25,10 @@ namespace _Project.Runtime.Presenters
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
         private readonly SceneLoader _sceneLoader;
-        private readonly ViewsContainer _viewsContainer;
-        private readonly GameLoadingTaskService _gameLoadingTaskService;
+        private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly IConfigsService _configsService;
         private readonly IAdsPlayer _adsPlayer;
+        private readonly LocalAssetProvider _assetProvider;
 
         private HudView _hud;
         private GeneralVisualsConfig _visuals;
@@ -37,9 +39,9 @@ namespace _Project.Runtime.Presenters
             ShipModel shipModel,
             ScoreModel scoreModel,
             StatisticsModel statisticsModel,
-            ViewsContainer viewsContainer,
             SceneLoader sceneLoader,
-            GameLoadingTaskService gameLoadingTaskService,
+            GameLoadingTasksProcessor gameLoadingTasksProcessor,
+            LocalAssetProvider assetProvider,
             IConfigsService configsService,
             IAdsPlayer adsPlayer)
         {
@@ -48,21 +50,22 @@ namespace _Project.Runtime.Presenters
             _scoreModel = scoreModel;
             _statisticsModel = statisticsModel;
             _sceneLoader = sceneLoader;
-            _viewsContainer = viewsContainer;
-            _gameLoadingTaskService = gameLoadingTaskService;
+            _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
+            _assetProvider = assetProvider;
             _configsService = configsService;
             _adsPlayer = adsPlayer;
         }
 
         public void Initialize()
         {
-            _gameLoadingTaskService.OnTasksFinished += OnLoadingTaskFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
         }
 
 
         public void Dispose()
         {
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            _assetProvider.Unload(AddressablesPrefabsPaths.HudView);
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
 
             if (_hud)
             {
@@ -85,7 +88,7 @@ namespace _Project.Runtime.Presenters
 
         private void OnLoadingTaskFinished()
         {
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingTaskFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
             InitHud();
         }
 
@@ -96,8 +99,8 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _hud = _viewsContainer.GetView<HudView>();
-            if (!_hud)
+            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.HudView, out _hud) ||
+                !_hud)
             {
                 Debug.LogError("HudView not provided");
                 return;
@@ -144,7 +147,7 @@ namespace _Project.Runtime.Presenters
                     break;
             }
 
-            _hud.UpdateGameState(state);
+            _hud?.UpdateGameState(state);
         }
 
         private void OnPoseChanged(ShipPose pose)

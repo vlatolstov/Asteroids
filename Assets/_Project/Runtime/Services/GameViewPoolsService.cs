@@ -22,7 +22,6 @@ namespace _Project.Runtime.Services
     public sealed class GameViewPoolsService : IDisposable, IViewPoolsService
     {
         private readonly DiContainer _container;
-        private readonly ViewsContainer _viewsContainer;
 
         private readonly ShipViewProvider _shipViewProvider;
         private readonly UfoViewProvider _ufoViewProvider;
@@ -56,7 +55,6 @@ namespace _Project.Runtime.Services
 
         public GameViewPoolsService(
             DiContainer container,
-            ViewsContainer viewsContainer,
             ShipViewProvider shipViewProvider,
             UfoViewProvider ufoViewProvider,
             AsteroidViewProvider asteroidViewProvider,
@@ -66,7 +64,6 @@ namespace _Project.Runtime.Services
             AnimationViewProvider animationViewProvider)
         {
             _container = container;
-            _viewsContainer = viewsContainer;
             _shipViewProvider = shipViewProvider;
             _ufoViewProvider = ufoViewProvider;
             _asteroidViewProvider = asteroidViewProvider;
@@ -157,7 +154,7 @@ namespace _Project.Runtime.Services
         private ShipView.Pool CreateShipPool(GameObject prefab)
         {
             var parent = CreateGroup(ShipGroup);
-            return new ShipView.Pool(_viewsContainer, () =>
+            return new ShipView.Pool(() =>
                 _container.InstantiatePrefabForComponent<ShipView>(prefab, parent),
                 parent, ShipPoolSize);
         }
@@ -165,7 +162,7 @@ namespace _Project.Runtime.Services
         private UfoView.Pool CreateUfoPool(GameObject prefab)
         {
             var parent = CreateGroup(UfoGroup);
-            return new UfoView.Pool(_viewsContainer, () =>
+            return new UfoView.Pool(() =>
                 _container.InstantiatePrefabForComponent<UfoView>(prefab, parent),
                 parent, UfoPoolSize);
         }
@@ -173,7 +170,7 @@ namespace _Project.Runtime.Services
         private AsteroidView.Pool CreateAsteroidPool(GameObject prefab)
         {
             var parent = CreateGroup(AsteroidGroup);
-            return new AsteroidView.Pool(_viewsContainer, () =>
+            return new AsteroidView.Pool(() =>
                 _container.InstantiatePrefabForComponent<AsteroidView>(prefab, parent),
                 parent, AsteroidPoolSize);
         }
@@ -181,7 +178,7 @@ namespace _Project.Runtime.Services
         private ProjectileView.Pool CreateProjectilePool(GameObject prefab)
         {
             var parent = CreateGroup(ProjectileGroup);
-            return new ProjectileView.Pool(_viewsContainer, () =>
+            return new ProjectileView.Pool(() =>
                 _container.InstantiatePrefabForComponent<ProjectileView>(prefab, parent),
                 parent, ProjectilePoolSize);
         }
@@ -189,7 +186,7 @@ namespace _Project.Runtime.Services
         private AoeAttackView.Pool CreateAoePool(GameObject prefab)
         {
             var parent = CreateGroup(AoeGroup);
-            return new AoeAttackView.Pool(_viewsContainer, () =>
+            return new AoeAttackView.Pool(() =>
                 _container.InstantiatePrefabForComponent<AoeAttackView>(prefab, parent),
                 parent, AoePoolSize);
         }
@@ -197,7 +194,7 @@ namespace _Project.Runtime.Services
         private AudioSourceView.Pool CreateAudioPool(GameObject prefab)
         {
             var parent = CreateGroup(AudioGroup);
-            return new AudioSourceView.Pool(_viewsContainer, () =>
+            return new AudioSourceView.Pool(() =>
                 _container.InstantiatePrefabForComponent<AudioSourceView>(prefab, parent),
                 parent, AudioPoolSize);
         }
@@ -205,7 +202,7 @@ namespace _Project.Runtime.Services
         private AnimationView.Pool CreateAnimationPool(GameObject prefab)
         {
             var parent = CreateGroup(AnimationGroup);
-            return new AnimationView.Pool(_viewsContainer, () =>
+            return new AnimationView.Pool( () =>
                 _container.InstantiatePrefabForComponent<AnimationView>(prefab, parent),
                 parent, AnimationPoolSize);
         }

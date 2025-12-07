@@ -11,13 +11,13 @@ namespace _Project.Runtime.Presenters
     {
         private readonly GameModel _gameModel;
         private readonly ShipModel _shipModel;
-        private readonly GameLoadingTaskService _gameLoadingTaskService;
+        private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
 
-        public GameStatePresenter(GameModel model, ShipModel shipModel, GameLoadingTaskService gameLoadingTaskService)
+        public GameStatePresenter(GameModel model, ShipModel shipModel, GameLoadingTasksProcessor gameLoadingTasksProcessor)
         {
             _gameModel = model;
             _shipModel = shipModel;
-            _gameLoadingTaskService = gameLoadingTaskService;
+            _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
         }
         
         public void Initialize()
@@ -25,19 +25,19 @@ namespace _Project.Runtime.Presenters
             _shipModel.ShipSpawned += OnShipSpawned;
             _shipModel.ShipDestroyed += OnShipDestroyed;
 
-            _gameLoadingTaskService.OnTasksFinished += OnLoadingFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingFinished;
         }
 
         public void Dispose()
         {
             _shipModel.ShipSpawned -= OnShipSpawned;
             _shipModel.ShipDestroyed -= OnShipDestroyed;
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingFinished;
         }
 
         private void OnLoadingFinished()
         {
-            _gameLoadingTaskService.OnTasksFinished -= OnLoadingFinished;
+            _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingFinished;
             _gameModel.SetGameState(GameState.Gameplay);
         }
 

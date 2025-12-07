@@ -4,11 +4,11 @@ using Cysharp.Threading.Tasks;
 
 namespace _Project.Runtime.LoadingServices
 {
-    public class BootstrapLoadingTaskService : BaseLoadingTaskService
+    public class BootstrapLoadingTasksProcessor : BaseLoadingTasksProcessor
     {
         private SceneLoader _sceneLoader;
 
-        public BootstrapLoadingTaskService(SceneLoader sceneLoader) : base(sceneLoader)
+        public BootstrapLoadingTasksProcessor(SceneLoader sceneLoader) : base(sceneLoader)
         {
             _sceneLoader = sceneLoader;
         }
