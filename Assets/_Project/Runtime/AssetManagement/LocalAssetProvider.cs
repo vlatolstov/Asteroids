@@ -18,7 +18,7 @@ namespace _Project.Runtime.AssetManagement
                 loadedAsset = default;
                 return false;
             }
-            
+
             if (!go.TryGetComponent(out loadedAsset))
             {
                 Debug.LogError($"Cant get component of type {typeof(T)} on {path}");
@@ -41,7 +41,8 @@ namespace _Project.Runtime.AssetManagement
 
         public void Unload(string path)
         {
-            if (UnloadInternal(path))
+            if (_cachedGameObjects != null &&
+                UnloadInternal(path))
             {
                 _cachedGameObjects.Remove(path);
             }
@@ -68,9 +69,9 @@ namespace _Project.Runtime.AssetManagement
             if (go)
             {
                 go.SetActive(false);
+                Addressables.ReleaseInstance(go);
             }
 
-            Addressables.ReleaseInstance(go);
             return true;
         }
     }
