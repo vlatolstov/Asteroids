@@ -35,13 +35,7 @@ namespace _Project.Runtime.Installers
 
         private void AssetProvidersBindings()
         {
-            Container.Bind<UfoViewProvider>().AsSingle();
-            Container.Bind<ShipViewProvider>().AsSingle();
-            Container.Bind<AsteroidViewProvider>().AsSingle();
-            Container.Bind<ProjectileViewProvider>().AsSingle();
-            Container.Bind<AoeAttackViewProvider>().AsSingle();
-            Container.Bind<AnimationViewProvider>().AsSingle();
-            Container.Bind<AudioSourceViewProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SceneAssetProvider>().AsSingle();
 
             Container.Bind<IConfigLoader>().To<AsteroidsSpawnConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<UfoSpawnConfigLoader>().AsSingle();

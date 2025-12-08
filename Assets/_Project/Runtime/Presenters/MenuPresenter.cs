@@ -1,5 +1,4 @@
 using System;
-using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
@@ -20,13 +19,13 @@ namespace _Project.Runtime.Presenters
         private readonly SceneLoader _sceneLoader;
         private readonly BestScoreService _bestScoreService;
         private readonly MenuLoadingTasksProcessor _menuLoadingTasksProcessor;
-        private readonly LocalAssetProvider _assetProvider;
+        private readonly SceneAssetProvider _assetProvider;
 
         private MenuView _menuView;
 
         public MenuPresenter(SceneLoader sceneLoader,
             BestScoreService bestScoreService,
-            MenuLoadingTasksProcessor menuLoadingTasksProcessor, LocalAssetProvider assetProvider)
+            MenuLoadingTasksProcessor menuLoadingTasksProcessor, SceneAssetProvider assetProvider)
         {
             _sceneLoader = sceneLoader;
             _bestScoreService = bestScoreService;
@@ -46,13 +45,11 @@ namespace _Project.Runtime.Presenters
                 _menuView.StartButtonClicked -= OnStartClicked;
                 _menuView.ExitButtonClicked -= OnExitClicked;
             }
-
-            _assetProvider.Unload(AddressablesPrefabsPaths.MenuView);
         }
 
         private void OnLoadingTaskFinished()
         {
-            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.MenuView, out _menuView) ||
+            if (!_assetProvider.TryGetLoadedComponent(out _menuView) ||
                 !_menuView)
             {
                 Debug.LogError("MenuView not provided");

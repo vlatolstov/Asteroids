@@ -45,19 +45,6 @@ namespace _Project.Runtime.Ship
 
         public void Initialize()
         {
-            if (_poolsService.IsInitialized)
-            {
-                OnPoolsInitialized();
-            }
-            else
-            {
-                _poolsService.Initialized += OnPoolsInitialized;
-            }
-        }
-
-        private void OnPoolsInitialized()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
             _pool = _poolsService.GetPool<ShipView.Pool>();
             Subscribe();
         }
@@ -88,8 +75,6 @@ namespace _Project.Runtime.Ship
 
         public void Dispose()
         {
-            _poolsService.Initialized -= OnPoolsInitialized;
-
             if (_subscriptionsActive)
             {
                 _inputModel.FireGunPressed -= OnGunAttackSignal;

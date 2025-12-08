@@ -19,6 +19,8 @@ namespace _Project.Runtime.Installers
 
         private void BindServices()
         {
+            Container.BindInterfacesAndSelfTo<SceneAssetProvider>().AsSingle();
+            
             Container
                 .BindInterfacesAndSelfTo<BestScoreService>()
                 .AsSingle();

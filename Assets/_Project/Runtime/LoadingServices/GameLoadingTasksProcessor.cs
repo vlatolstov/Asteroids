@@ -1,8 +1,13 @@
 using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.Asteroid;
+using _Project.Runtime.Constants;
 using _Project.Runtime.SceneManagement;
 using _Project.Runtime.Services;
+using _Project.Runtime.Ship;
+using _Project.Runtime.Ufo;
+using _Project.Runtime.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -10,14 +15,12 @@ namespace _Project.Runtime.LoadingServices
 {
     public class GameLoadingTasksProcessor : BaseLoadingTasksProcessor
     {
-        private readonly IViewPoolsService _poolsService;
-        private readonly LocalAssetProvider _assetProvider;
+        private readonly SceneAssetProvider _assetProvider;
         private readonly IConfigsService _configsService;
 
-        public GameLoadingTasksProcessor(SceneLoader sceneLoader, IViewPoolsService poolsService,
-            IConfigsService configsService, LocalAssetProvider assetProvider) : base(sceneLoader)
+        public GameLoadingTasksProcessor(SceneLoader sceneLoader,
+            IConfigsService configsService, SceneAssetProvider assetProvider) : base(sceneLoader)
         {
-            _poolsService = poolsService;
             _configsService = configsService;
             _assetProvider = assetProvider;
         }
@@ -26,11 +29,22 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<HudView>(AddressablesPrefabsPaths.HudView, true));
+            _assetProvider.RegisterLoader(
+                new LocalGameObjectLoader<BackgroundView>(AddressablesPrefabsPaths.BackgroundView, true));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<BGMView>(AddressablesPrefabsPaths.BGMView, true));
+
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<ShipView>(AddressablesPrefabsPaths.ShipView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<UfoView>(AddressablesPrefabsPaths.UfoView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AsteroidView>(AddressablesPrefabsPaths.AsteroidView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<ProjectileView>(AddressablesPrefabsPaths.ProjectileView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AoeAttackView>(AddressablesPrefabsPaths.AoeAttackView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AudioSourceView>(AddressablesPrefabsPaths.AudioSourceView));
+            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AnimationView>(AddressablesPrefabsPaths.AnimationView));
+            
+            await _assetProvider.LoadAllAsync();
+
             await _configsService.LoadAllAsync();
-            await _poolsService.LoadPoolsAsync();
-            await _assetProvider.LoadAsync(Constants.AddressablesPrefabsPaths.HudView);
-            await _assetProvider.LoadAsync(Constants.AddressablesPrefabsPaths.BackgroundView);
-            await _assetProvider.LoadAsync(Constants.AddressablesPrefabsPaths.BGMView);
 
             Debug.Log("Game loaded");
             await UniTask.NextFrame();

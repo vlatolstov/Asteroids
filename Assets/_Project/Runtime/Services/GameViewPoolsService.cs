@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Asteroid;
+using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -13,29 +13,16 @@ namespace _Project.Runtime.Services
 {
     public interface IViewPoolsService
     {
-        bool IsInitialized { get; }
-        event Action Initialized;
         TPool GetPool<TPool>() where TPool : class;
-        UniTask LoadPoolsAsync();
     }
 
-    public sealed class GameViewPoolsService : IDisposable, IViewPoolsService
+    public sealed class GameViewPoolsService : IDisposable, IInitializable, IViewPoolsService
     {
         private readonly DiContainer _container;
-
-        private readonly ShipViewProvider _shipViewProvider;
-        private readonly UfoViewProvider _ufoViewProvider;
-        private readonly AsteroidViewProvider _asteroidViewProvider;
-        private readonly ProjectileViewProvider _projectileViewProvider;
-        private readonly AoeAttackViewProvider _aoeAttackViewProvider;
-        private readonly AudioSourceViewProvider _audioSourceViewProvider;
-        private readonly AnimationViewProvider _animationViewProvider;
-
+        private readonly SceneAssetProvider _assetProvider;
+        private readonly GameLoadingTasksProcessor _processor;
         private readonly Dictionary<Type, object> _pools;
         private Transform _root;
-
-        public bool IsInitialized { get; private set; }
-        public event Action Initialized;
 
         private const int ShipPoolSize = 2;
         private const int UfoPoolSize = 20;
@@ -55,37 +42,40 @@ namespace _Project.Runtime.Services
 
         public GameViewPoolsService(
             DiContainer container,
-            ShipViewProvider shipViewProvider,
-            UfoViewProvider ufoViewProvider,
-            AsteroidViewProvider asteroidViewProvider,
-            ProjectileViewProvider projectileViewProvider,
-            AoeAttackViewProvider aoeAttackViewProvider,
-            AudioSourceViewProvider audioSourceViewProvider,
-            AnimationViewProvider animationViewProvider)
+            SceneAssetProvider assetProvider, GameLoadingTasksProcessor processor)
         {
             _container = container;
-            _shipViewProvider = shipViewProvider;
-            _ufoViewProvider = ufoViewProvider;
-            _asteroidViewProvider = asteroidViewProvider;
-            _projectileViewProvider = projectileViewProvider;
-            _aoeAttackViewProvider = aoeAttackViewProvider;
-            _audioSourceViewProvider = audioSourceViewProvider;
-            _animationViewProvider = animationViewProvider;
+            _assetProvider = assetProvider;
+            _processor = processor;
 
             _pools = new Dictionary<Type, object>();
         }
-
-        public async UniTask LoadPoolsAsync()
+        
+        public void Initialize()
         {
-            if (IsInitialized)
-            {
-                await UniTask.CompletedTask;
-            }
-
-            await LoadInternalAsync();
+            _processor.OnTasksFinished += OnTaskProcessorFinished;
         }
 
-        private async UniTask LoadInternalAsync()
+        public void Dispose()
+        {
+            _processor.OnTasksFinished -= OnTaskProcessorFinished;
+            
+            if (_root)
+            {
+                UnityEngine.Object.Destroy(_root.gameObject);
+                _root = null;
+            }
+
+            _pools.Clear();
+        }
+        
+        private void OnTaskProcessorFinished()
+        {
+            _processor.OnTasksFinished -= OnTaskProcessorFinished;
+            LoadPools();
+        }
+
+        private void LoadPools()
         {
             try
             {
@@ -94,24 +84,40 @@ namespace _Project.Runtime.Services
                     _root = new GameObject("[ViewPools]").transform;
                 }
 
-                var shipPrefab = await _shipViewProvider.LoadPrefabAsync();
-                var ufoPrefab = await _ufoViewProvider.LoadPrefabAsync();
-                var asteroidPrefab = await _asteroidViewProvider.LoadPrefabAsync();
-                var projectilePrefab = await _projectileViewProvider.LoadPrefabAsync();
-                var aoePrefab = await _aoeAttackViewProvider.LoadPrefabAsync();
-                var audioPrefab = await _audioSourceViewProvider.LoadPrefabAsync();
-                var animationPrefab = await _animationViewProvider.LoadPrefabAsync();
+                if (_assetProvider.TryGetLoadedComponent(out ShipView shipPrefab))
+                {
+                    RegisterPool(CreateShipPool(shipPrefab.gameObject));
+                }
 
-                RegisterPool(CreateShipPool(shipPrefab));
-                RegisterPool(CreateUfoPool(ufoPrefab));
-                RegisterPool(CreateAsteroidPool(asteroidPrefab));
-                RegisterPool(CreateProjectilePool(projectilePrefab));
-                RegisterPool(CreateAoePool(aoePrefab));
-                RegisterPool(CreateAudioPool(audioPrefab));
-                RegisterPool(CreateAnimationPool(animationPrefab));
+                if (_assetProvider.TryGetLoadedComponent(out UfoView ufoPrefab))
+                {
+                    RegisterPool(CreateUfoPool(ufoPrefab.gameObject));
+                }
 
-                IsInitialized = true;
-                Initialized?.Invoke();
+                if (_assetProvider.TryGetLoadedComponent(out AsteroidView asteroidPrefab))
+                {
+                    RegisterPool(CreateAsteroidPool(asteroidPrefab.gameObject));
+                }
+
+                if (_assetProvider.TryGetLoadedComponent(out ProjectileView projectilePrefab))
+                {
+                    RegisterPool(CreateProjectilePool(projectilePrefab.gameObject));
+                }
+
+                if (_assetProvider.TryGetLoadedComponent(out AoeAttackView aoePrefab))
+                {
+                    RegisterPool(CreateAoePool(aoePrefab.gameObject));
+                }
+
+                if (_assetProvider.TryGetLoadedComponent(out AudioSourceView audioPrefab))
+                {
+                    RegisterPool(CreateAudioPool(audioPrefab.gameObject));
+                }
+
+                if (_assetProvider.TryGetLoadedComponent(out AnimationView animationPrefab))
+                {
+                    RegisterPool(CreateAnimationPool(animationPrefab.gameObject));
+                }
             }
             catch (Exception ex)
             {
@@ -119,25 +125,8 @@ namespace _Project.Runtime.Services
             }
         }
 
-        public void Dispose()
-        {
-            if (_root)
-            {
-                UnityEngine.Object.Destroy(_root.gameObject);
-                _root = null;
-            }
-
-            _pools.Clear();
-            IsInitialized = false;
-        }
-
         public TPool GetPool<TPool>() where TPool : class
         {
-            if (!IsInitialized)
-            {
-                throw new InvalidOperationException("Pools have not been initialized yet.");
-            }
-
             if (_pools.TryGetValue(typeof(TPool), out var pool))
             {
                 return (TPool)pool;
@@ -155,7 +144,7 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(ShipGroup);
             return new ShipView.Pool(() =>
-                _container.InstantiatePrefabForComponent<ShipView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<ShipView>(prefab, parent),
                 parent, ShipPoolSize);
         }
 
@@ -163,7 +152,7 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(UfoGroup);
             return new UfoView.Pool(() =>
-                _container.InstantiatePrefabForComponent<UfoView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<UfoView>(prefab, parent),
                 parent, UfoPoolSize);
         }
 
@@ -171,7 +160,7 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(AsteroidGroup);
             return new AsteroidView.Pool(() =>
-                _container.InstantiatePrefabForComponent<AsteroidView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<AsteroidView>(prefab, parent),
                 parent, AsteroidPoolSize);
         }
 
@@ -179,7 +168,7 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(ProjectileGroup);
             return new ProjectileView.Pool(() =>
-                _container.InstantiatePrefabForComponent<ProjectileView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<ProjectileView>(prefab, parent),
                 parent, ProjectilePoolSize);
         }
 
@@ -187,7 +176,7 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(AoeGroup);
             return new AoeAttackView.Pool(() =>
-                _container.InstantiatePrefabForComponent<AoeAttackView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<AoeAttackView>(prefab, parent),
                 parent, AoePoolSize);
         }
 
@@ -195,15 +184,15 @@ namespace _Project.Runtime.Services
         {
             var parent = CreateGroup(AudioGroup);
             return new AudioSourceView.Pool(() =>
-                _container.InstantiatePrefabForComponent<AudioSourceView>(prefab, parent),
+                    _container.InstantiatePrefabForComponent<AudioSourceView>(prefab, parent),
                 parent, AudioPoolSize);
         }
 
         private AnimationView.Pool CreateAnimationPool(GameObject prefab)
         {
             var parent = CreateGroup(AnimationGroup);
-            return new AnimationView.Pool( () =>
-                _container.InstantiatePrefabForComponent<AnimationView>(prefab, parent),
+            return new AnimationView.Pool(() =>
+                    _container.InstantiatePrefabForComponent<AnimationView>(prefab, parent),
                 parent, AnimationPoolSize);
         }
 

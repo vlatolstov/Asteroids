@@ -23,7 +23,7 @@ namespace _Project.Runtime.Presenters
         private readonly IViewPoolsService _poolsService;
         private readonly IConfigsService _configsService;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
-        private readonly LocalAssetProvider _assetProvider;
+        private readonly SceneAssetProvider _assetProvider;
 
         private readonly Dictionary<uint, AudioSourceView> _activeViews;
         private AudioSourceView.Pool _audioPool;
@@ -36,7 +36,7 @@ namespace _Project.Runtime.Presenters
 
         public GameAudioPresenter(CombatModel combatModel, ShipModel shipModel,
             IViewPoolsService poolsService, IConfigsService configsService,
-            GameLoadingTasksProcessor gameLoadingTasksProcessor, LocalAssetProvider assetProvider)
+            GameLoadingTasksProcessor gameLoadingTasksProcessor, SceneAssetProvider assetProvider)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
@@ -52,14 +52,9 @@ namespace _Project.Runtime.Presenters
         {
             _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
 
-            if (_poolsService.IsInitialized)
-            {
-                OnPoolsInitialized();
-            }
-            else
-            {
-                _poolsService.Initialized += OnPoolsInitialized;
-            }
+            _audioPool = _poolsService.GetPool<AudioSourceView.Pool>();
+            _poolsReady = true;
+            TrySubscribe();
 
             UniTask.Void(LoadConfigAsync);
         }
@@ -75,7 +70,6 @@ namespace _Project.Runtime.Presenters
         public void Dispose()
         {
             _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
-            _poolsService.Initialized -= OnPoolsInitialized;
 
             if (_subscriptionsActive)
             {
@@ -86,17 +80,8 @@ namespace _Project.Runtime.Presenters
                 _shipModel.ShipSpawned -= OnShipSpawned;
                 _subscriptionsActive = false;
             }
-
-            _assetProvider.Unload(AddressablesPrefabsPaths.BGMView);
         }
 
-        private void OnPoolsInitialized()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
-            _audioPool = _poolsService.GetPool<AudioSourceView.Pool>();
-            _poolsReady = true;
-            TrySubscribe();
-        }
 
         private void TrySubscribe()
         {
@@ -126,7 +111,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.BGMView, out _bgmView))
+            if (!_assetProvider.TryGetLoadedComponent(out _bgmView))
             {
                 Debug.LogError("BGMView not provided");
                 return;

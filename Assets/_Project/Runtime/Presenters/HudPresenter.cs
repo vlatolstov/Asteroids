@@ -1,6 +1,5 @@
 using System;
 using _Project.Runtime.Abstract.Ads;
-using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
@@ -28,7 +27,7 @@ namespace _Project.Runtime.Presenters
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly IConfigsService _configsService;
         private readonly IAdsPlayer _adsPlayer;
-        private readonly LocalAssetProvider _assetProvider;
+        private readonly SceneAssetProvider _assetProvider;
 
         private HudView _hud;
         private GeneralVisualsConfig _visuals;
@@ -41,7 +40,7 @@ namespace _Project.Runtime.Presenters
             StatisticsModel statisticsModel,
             SceneLoader sceneLoader,
             GameLoadingTasksProcessor gameLoadingTasksProcessor,
-            LocalAssetProvider assetProvider,
+            SceneAssetProvider assetProvider,
             IConfigsService configsService,
             IAdsPlayer adsPlayer)
         {
@@ -64,7 +63,6 @@ namespace _Project.Runtime.Presenters
 
         public void Dispose()
         {
-            _assetProvider.Unload(AddressablesPrefabsPaths.HudView);
             _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
 
             if (_hud)
@@ -99,7 +97,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.HudView, out _hud) ||
+            if (!_assetProvider.TryGetLoadedComponent(out _hud) ||
                 !_hud)
             {
                 Debug.LogError("HudView not provided");

@@ -1,5 +1,4 @@
 using System;
-using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Data;
 using _Project.Runtime.Constants;
@@ -17,13 +16,15 @@ namespace _Project.Runtime.Presenters
         private readonly ShipModel _shipModel;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly IConfigsService _configsService;
-        private readonly LocalAssetProvider _assetProvider;
+        private readonly SceneAssetProvider _assetProvider;
 
         private BackgroundView _bg;
         private bool _initialized;
 
         public BackgroundPresenter(ShipModel shipModel,
-            GameLoadingTasksProcessor gameLoadingTasksProcessor, IConfigsService configsService, LocalAssetProvider assetProvider)
+            GameLoadingTasksProcessor gameLoadingTasksProcessor, 
+            IConfigsService configsService,
+            SceneAssetProvider assetProvider)
         {
             _shipModel = shipModel;
             _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
@@ -44,8 +45,6 @@ namespace _Project.Runtime.Presenters
             {
                 _shipModel.ShipPoseChanged -= OnShipPoseChanged;
             }
-            
-            _assetProvider.Unload(AddressablesPrefabsPaths.BackgroundView);
         }
 
         private void OnLoadingTaskFinished()
@@ -61,13 +60,14 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedAsset(AddressablesPrefabsPaths.BackgroundView, out _bg))
+            if (!_assetProvider.TryGetLoadedComponent(out _bg))
             {
                 Debug.LogError("BackgroundView not provided");
                 return;
             }
 
-            var config = _configsService.Get<Settings.BackgroundJitterConfig>(AddressablesConfigPaths.General.BackgroundJitter);
+            var config =
+                _configsService.Get<Settings.BackgroundJitterConfig>(AddressablesConfigPaths.General.BackgroundJitter);
             _bg.Initialize(config);
 
             _shipModel.ShipPoseChanged += OnShipPoseChanged;

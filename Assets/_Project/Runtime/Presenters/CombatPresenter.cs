@@ -32,31 +32,6 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            if (_poolsService.IsInitialized)
-            {
-                OnPoolsInitialized();
-            }
-            else
-            {
-                _poolsService.Initialized += OnPoolsInitialized;
-            }
-        }
-
-        public void Dispose()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
-
-            if (_subscriptionsActive)
-            {
-                _combatModel.ProjectileShot -= OnProjectileShot;
-                _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
-                _subscriptionsActive = false;
-            }
-        }
-
-        private void OnPoolsInitialized()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
             _projectilePool = _poolsService.GetPool<ProjectileView.Pool>();
             _aoePool = _poolsService.GetPool<AoeAttackView.Pool>();
 
@@ -68,6 +43,16 @@ namespace _Project.Runtime.Presenters
             _combatModel.ProjectileShot += OnProjectileShot;
             _combatModel.AoeAttackReleased += OnAoeAttackReleased;
             _subscriptionsActive = true;
+        }
+
+        public void Dispose()
+        {
+            if (_subscriptionsActive)
+            {
+                _combatModel.ProjectileShot -= OnProjectileShot;
+                _combatModel.AoeAttackReleased -= OnAoeAttackReleased;
+                _subscriptionsActive = false;
+            }
         }
 
         private void OnProjectileShot(ProjectileShot shot)

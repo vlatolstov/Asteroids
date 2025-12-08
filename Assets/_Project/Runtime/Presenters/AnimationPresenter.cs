@@ -47,14 +47,9 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            if (_poolsService.IsInitialized)
-            {
-                OnPoolsInitialized();
-            }
-            else
-            {
-                _poolsService.Initialized += OnPoolsInitialized;
-            }
+            _pool = _poolsService.GetPool<AnimationView.Pool>();
+            _poolsReady = true;
+            TrySubscribe();
 
             UniTask.Void(LoadConfigAsync);
         }
@@ -69,8 +64,6 @@ namespace _Project.Runtime.Presenters
 
         public void Dispose()
         {
-            _poolsService.Initialized -= OnPoolsInitialized;
-
             if (_subscriptionsActive)
             {
                 _combatModel.ProjectileHit -= OnProjectileHit;
@@ -79,14 +72,6 @@ namespace _Project.Runtime.Presenters
                 _asteroidsModel.AsteroidDestroyed -= OnAsteroidDestroyed;
                 _subscriptionsActive = false;
             }
-        }
-
-        private void OnPoolsInitialized()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
-            _pool = _poolsService.GetPool<AnimationView.Pool>();
-            _poolsReady = true;
-            TrySubscribe();
         }
 
         private void TrySubscribe()

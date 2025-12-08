@@ -38,33 +38,6 @@ namespace _Project.Runtime.Asteroid
 
         public void Initialize()
         {
-            if (_poolsService.IsInitialized)
-            {
-                OnPoolsInitialized();
-            }
-            else
-            {
-                _poolsService.Initialized += OnPoolsInitialized;
-            }
-        }
-
-        public void Dispose()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
-
-            if (_subscriptionsActive)
-            {
-                _asteroidsModel.AsteroidSpawnRequested -= OnSpawnCommand;
-                _asteroidsModel.AsteroidDespawnRequested -= OnDespawnCommand;
-
-                _gameModel.GameStateChanged -= OnGameStateChanged;
-                _subscriptionsActive = false;
-            }
-        }
-
-        private void OnPoolsInitialized()
-        {
-            _poolsService.Initialized -= OnPoolsInitialized;
             _pool = _poolsService.GetPool<AsteroidView.Pool>();
 
             if (_subscriptionsActive)
@@ -77,6 +50,18 @@ namespace _Project.Runtime.Asteroid
             _gameModel.GameStateChanged += OnGameStateChanged;
             _subscriptionsActive = true;
             _asteroidsModel.SetGameState(_gameModel.CurrentState);
+        }
+
+        public void Dispose()
+        {
+            if (_subscriptionsActive)
+            {
+                _asteroidsModel.AsteroidSpawnRequested -= OnSpawnCommand;
+                _asteroidsModel.AsteroidDespawnRequested -= OnDespawnCommand;
+
+                _gameModel.GameStateChanged -= OnGameStateChanged;
+                _subscriptionsActive = false;
+            }
         }
 
         private void OnSpawnCommand(AsteroidSpawnCommand command)

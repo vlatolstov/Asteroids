@@ -9,11 +9,11 @@ namespace _Project.Runtime.Presenters
 {
     public class StatisticsPresenter : IInitializable, IDisposable
     {
-        private StatisticsModel _statisticsModel;
-        private GameModel _gameModel;
-        private CombatModel _combatModel;
-        private UfoModel _ufoModel;
-        private AsteroidsModel _asteroidsModel;
+        private readonly StatisticsModel _statisticsModel;
+        private readonly GameModel _gameModel;
+        private readonly CombatModel _combatModel;
+        private readonly UfoModel _ufoModel;
+        private readonly AsteroidsModel _asteroidsModel;
 
         public StatisticsPresenter(
             StatisticsModel statisticsModel, GameModel gameModel, CombatModel combatModel, UfoModel ufoModel,
