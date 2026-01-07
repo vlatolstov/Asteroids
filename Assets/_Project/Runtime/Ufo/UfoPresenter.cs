@@ -34,6 +34,7 @@ namespace _Project.Runtime.Ufo
         private ProjectileWeaponConfig _gunConfig;
         private ChasingEnemyConfig _chaseConfig;
         private bool _configsReady;
+        private bool _initialized;
 
         public UfoPresenter(UfoModel ufoModel, ShipModel shipModel, CombatModel combatModel,
             GameModel gameModel, IViewPoolsService poolsService, IConfigsService configsService,
@@ -52,24 +53,19 @@ namespace _Project.Runtime.Ufo
 
         public void Initialize()
         {
-            _pool = _poolsService.GetPool<UfoView.Pool>();
-
-            if (_subscriptionsActive)
+            if (_poolsService.IsReady)
             {
+                OnPoolsReady();
                 return;
             }
 
-            _shipModel.ShipPoseChanged += OnShipPoseChanged;
-            _gameModel.GameStateChanged += OnGameStateChanged;
-            _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
-            _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
-            _subscriptionsActive = true;
-            _gameState = _gameModel.CurrentState;
-            _ufoModel.SetGameState(_gameState);
+            _poolsService.Ready += OnPoolsReady;
         }
 
         public void Dispose()
         {
+            _poolsService.Ready -= OnPoolsReady;
+
             if (_subscriptionsActive)
             {
                 _shipModel.ShipPoseChanged -= OnShipPoseChanged;
@@ -165,6 +161,33 @@ namespace _Project.Runtime.Ufo
         private void OnUfoFiredProjectile(ProjectileShot shot)
         {
             _combatModel.HandleProjectileShot(shot);
+        }
+
+        private void OnPoolsReady()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            _poolsService.Ready -= OnPoolsReady;
+
+            _pool = _poolsService.GetPool<UfoView.Pool>();
+
+            if (_subscriptionsActive)
+            {
+                _initialized = true;
+                return;
+            }
+
+            _shipModel.ShipPoseChanged += OnShipPoseChanged;
+            _gameModel.GameStateChanged += OnGameStateChanged;
+            _ufoModel.UfoSpawnRequested += OnUfoSpawnCommand;
+            _ufoModel.UfoDespawnRequested += OnUfoDespawnCommand;
+            _subscriptionsActive = true;
+            _gameState = _gameModel.CurrentState;
+            _ufoModel.SetGameState(_gameState);
+            _initialized = true;
         }
 
         private void EnsureConfigs()

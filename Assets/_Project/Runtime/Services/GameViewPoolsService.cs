@@ -13,6 +13,8 @@ namespace _Project.Runtime.Services
 {
     public interface IViewPoolsService
     {
+        event Action Ready;
+        bool IsReady { get; }
         TPool GetPool<TPool>() where TPool : class;
     }
 
@@ -23,6 +25,8 @@ namespace _Project.Runtime.Services
         private readonly GameLoadingTasksProcessor _processor;
         private readonly Dictionary<Type, object> _pools;
         private Transform _root;
+        public bool IsReady { get; private set; }
+        public event Action Ready;
 
         private const int ShipPoolSize = 2;
         private const int UfoPoolSize = 20;
@@ -53,12 +57,20 @@ namespace _Project.Runtime.Services
         
         public void Initialize()
         {
+            if (_processor.IsFinished)
+            {
+                LoadPools();
+                return;
+            }
+
             _processor.OnTasksFinished += OnTaskProcessorFinished;
         }
 
         public void Dispose()
         {
             _processor.OnTasksFinished -= OnTaskProcessorFinished;
+            Ready = null;
+            IsReady = false;
             
             if (_root)
             {
@@ -77,6 +89,11 @@ namespace _Project.Runtime.Services
 
         private void LoadPools()
         {
+            if (IsReady)
+            {
+                return;
+            }
+
             try
             {
                 if (!_root)
@@ -118,6 +135,9 @@ namespace _Project.Runtime.Services
                 {
                     RegisterPool(CreateAnimationPool(animationPrefab.gameObject));
                 }
+
+                IsReady = true;
+                Ready?.Invoke();
             }
             catch (Exception ex)
             {

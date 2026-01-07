@@ -11,7 +11,7 @@ namespace _Project.Runtime.Abstract.Services
 
         private UniTask _pendingTask;
         private bool _inProgress;
-        
+        public bool IsFinished { get; private set; }
         public event Action OnTasksFinished;
 
         protected abstract int SceneIndex { get; }
@@ -25,6 +25,7 @@ namespace _Project.Runtime.Abstract.Services
         {
             _pendingTask = GetTasks();
             _inProgress = true;
+            IsFinished = false;
         }
 
         public void Tick()
@@ -41,6 +42,7 @@ namespace _Project.Runtime.Abstract.Services
 
             if (_pendingTask.Status == UniTaskStatus.Succeeded)
             {
+                IsFinished = true;
                 _sceneLoader.Finish(SceneIndex);
                 OnTasksFinished?.Invoke();
             }

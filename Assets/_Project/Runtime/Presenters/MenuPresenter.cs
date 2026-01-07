@@ -35,7 +35,14 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            _menuLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
+            if (_menuLoadingTasksProcessor.IsFinished)
+            {
+                OnLoadingTaskFinished();
+            }
+            else
+            {
+                _menuLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
+            }
         }
 
         public void Dispose()

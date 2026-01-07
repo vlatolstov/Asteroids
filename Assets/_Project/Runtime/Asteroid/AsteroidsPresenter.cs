@@ -23,6 +23,7 @@ namespace _Project.Runtime.Asteroid
         private bool _subscriptionsActive;
         private MovementConfig _movementConfig;
         private bool _configsReady;
+        private bool _initialized;
 
         public AsteroidsPresenter(AsteroidsModel asteroidsModel, GameModel gameModel,
             IViewPoolsService poolsService, IConfigsService configsService, IWorldConfig worldConfig)
@@ -38,22 +39,19 @@ namespace _Project.Runtime.Asteroid
 
         public void Initialize()
         {
-            _pool = _poolsService.GetPool<AsteroidView.Pool>();
-
-            if (_subscriptionsActive)
+            if (_poolsService.IsReady)
             {
+                OnPoolsReady();
                 return;
             }
 
-            _asteroidsModel.AsteroidSpawnRequested += OnSpawnCommand;
-            _asteroidsModel.AsteroidDespawnRequested += OnDespawnCommand;
-            _gameModel.GameStateChanged += OnGameStateChanged;
-            _subscriptionsActive = true;
-            _asteroidsModel.SetGameState(_gameModel.CurrentState);
+            _poolsService.Ready += OnPoolsReady;
         }
 
         public void Dispose()
         {
+            _poolsService.Ready -= OnPoolsReady;
+
             if (_subscriptionsActive)
             {
                 _asteroidsModel.AsteroidSpawnRequested -= OnSpawnCommand;
@@ -148,6 +146,30 @@ namespace _Project.Runtime.Asteroid
         private void OnAsteroidDestroyed(AsteroidDestroyed destroyed)
         {
             _asteroidsModel.HandleAsteroidDestroyed(destroyed);
+        }
+
+        private void OnPoolsReady()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            _poolsService.Ready -= OnPoolsReady;
+            _pool = _poolsService.GetPool<AsteroidView.Pool>();
+
+            if (_subscriptionsActive)
+            {
+                _initialized = true;
+                return;
+            }
+
+            _asteroidsModel.AsteroidSpawnRequested += OnSpawnCommand;
+            _asteroidsModel.AsteroidDespawnRequested += OnDespawnCommand;
+            _gameModel.GameStateChanged += OnGameStateChanged;
+            _subscriptionsActive = true;
+            _asteroidsModel.SetGameState(_gameModel.CurrentState);
+            _initialized = true;
         }
     }
 }

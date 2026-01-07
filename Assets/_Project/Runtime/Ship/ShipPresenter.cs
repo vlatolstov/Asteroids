@@ -29,6 +29,7 @@ namespace _Project.Runtime.Ship
         private ProjectileWeaponConfig _shipGunConfig;
         private AoeWeaponConfig _shipAoeConfig;
         private bool _configsReady;
+        private bool _initialized;
 
         public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel,
             IViewPoolsService poolsService, GameModel gameModel, IConfigsService configsService,
@@ -45,8 +46,13 @@ namespace _Project.Runtime.Ship
 
         public void Initialize()
         {
-            _pool = _poolsService.GetPool<ShipView.Pool>();
-            Subscribe();
+            if (_poolsService.IsReady)
+            {
+                OnPoolsReady();
+                return;
+            }
+
+            _poolsService.Ready += OnPoolsReady;
         }
 
         private void Subscribe()
@@ -85,10 +91,11 @@ namespace _Project.Runtime.Ship
                 _gameModel.GameStateChanged -= OnGameStateChanged;
 
                 _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
-                _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
-                _subscriptionsActive = false;
+            _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
+            _subscriptionsActive = false;
             }
 
+            _poolsService.Ready -= OnPoolsReady;
             DetachShip();
         }
 
@@ -98,6 +105,19 @@ namespace _Project.Runtime.Ship
             {
                 _shipModel.RequestSpawn();
             }
+        }
+
+        private void OnPoolsReady()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            _poolsService.Ready -= OnPoolsReady;
+            _pool = _poolsService.GetPool<ShipView.Pool>();
+            _initialized = true;
+            Subscribe();
         }
         
         private void AttachShip(ShipView shipView)

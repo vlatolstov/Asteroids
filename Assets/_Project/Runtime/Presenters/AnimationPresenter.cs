@@ -9,7 +9,6 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
-using Cysharp.Threading.Tasks;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -28,8 +27,6 @@ namespace _Project.Runtime.Presenters
         private AnimationView.Pool _pool;
         private GeneralVisualsConfig _visuals;
         private bool _subscriptionsActive;
-        private bool _poolsReady;
-        private bool _configReady;
 
         public AnimationPresenter(CombatModel combatModel, ShipModel shipModel,
             AsteroidsModel asteroidsModel, UfoModel ufoModel,
@@ -47,23 +44,19 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            _pool = _poolsService.GetPool<AnimationView.Pool>();
-            _poolsReady = true;
-            TrySubscribe();
+            if (_poolsService.IsReady)
+            {
+                OnPoolsReady();
+                return;
+            }
 
-            UniTask.Void(LoadConfigAsync);
-        }
-
-        private async UniTaskVoid LoadConfigAsync()
-        {
-            await _configsService.LoadAllAsync();
-            _visuals = _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
-            _configReady = true;
-            TrySubscribe();
+            _poolsService.Ready += OnPoolsReady;
         }
 
         public void Dispose()
         {
+            _poolsService.Ready -= OnPoolsReady;
+
             if (_subscriptionsActive)
             {
                 _combatModel.ProjectileHit -= OnProjectileHit;
@@ -76,7 +69,7 @@ namespace _Project.Runtime.Presenters
 
         private void TrySubscribe()
         {
-            if (_subscriptionsActive || !_poolsReady || !_configReady)
+            if (_subscriptionsActive || _pool == null || _visuals == null)
             {
                 return;
             }
@@ -86,6 +79,16 @@ namespace _Project.Runtime.Presenters
             _ufoModel.UfoDestroyed += OnUfoDestroyed;
             _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
             _subscriptionsActive = true;
+        }
+
+        private void OnPoolsReady()
+        {
+            _poolsService.Ready -= OnPoolsReady;
+
+            _pool = _poolsService.GetPool<AnimationView.Pool>();
+            _visuals = _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
+
+            TrySubscribe();
         }
 
         private void OnProjectileHit(ProjectileHit hit)

@@ -19,6 +19,7 @@ namespace _Project.Runtime.Presenters
         private ProjectileView.Pool _projectilePool;
         private AoeAttackView.Pool _aoePool;
         private bool _subscriptionsActive;
+        private bool _initialized;
 
         public CombatPresenter(CombatModel combatModel, IViewPoolsService poolsService)
         {
@@ -32,21 +33,19 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            _projectilePool = _poolsService.GetPool<ProjectileView.Pool>();
-            _aoePool = _poolsService.GetPool<AoeAttackView.Pool>();
-
-            if (_subscriptionsActive)
+            if (_poolsService.IsReady)
             {
+                OnPoolsReady();
                 return;
             }
 
-            _combatModel.ProjectileShot += OnProjectileShot;
-            _combatModel.AoeAttackReleased += OnAoeAttackReleased;
-            _subscriptionsActive = true;
+            _poolsService.Ready += OnPoolsReady;
         }
 
         public void Dispose()
         {
+            _poolsService.Ready -= OnPoolsReady;
+
             if (_subscriptionsActive)
             {
                 _combatModel.ProjectileShot -= OnProjectileShot;
@@ -84,6 +83,30 @@ namespace _Project.Runtime.Presenters
         private void OnAoeAttackExpired(uint viewId)
         {
             DespawnAoe(viewId);
+        }
+
+        private void OnPoolsReady()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            _poolsService.Ready -= OnPoolsReady;
+
+            _projectilePool = _poolsService.GetPool<ProjectileView.Pool>();
+            _aoePool = _poolsService.GetPool<AoeAttackView.Pool>();
+
+            if (_subscriptionsActive)
+            {
+                _initialized = true;
+                return;
+            }
+
+            _combatModel.ProjectileShot += OnProjectileShot;
+            _combatModel.AoeAttackReleased += OnAoeAttackReleased;
+            _subscriptionsActive = true;
+            _initialized = true;
         }
 
         private void SpawnProjectile(ProjectileShot shot)

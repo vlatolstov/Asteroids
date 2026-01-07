@@ -30,12 +30,13 @@ namespace _Project.Runtime.Installers
 #endif
                 .AsSingle();
 
-            Container
-                .BindInterfacesAndSelfTo<UnityAdsInitializer>()
+            Container.Bind(typeof(IAdsInitializer), typeof(IInitializable))
+                .To<UnityAdsInitializer>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<UnityAdsPlayer>()
+                .Bind<IAdsPlayer>()
+                .To<UnityAdsPlayer>()
                 .AsSingle();
         }
     }

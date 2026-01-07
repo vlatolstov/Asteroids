@@ -9,7 +9,6 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Views;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -50,26 +49,29 @@ namespace _Project.Runtime.Presenters
 
         public void Initialize()
         {
-            _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
+            if (_gameLoadingTasksProcessor.IsFinished)
+            {
+                OnLoadingTaskFinished();
+            }
+            else
+            {
+                _gameLoadingTasksProcessor.OnTasksFinished += OnLoadingTaskFinished;
+            }
 
-            _audioPool = _poolsService.GetPool<AudioSourceView.Pool>();
-            _poolsReady = true;
-            TrySubscribe();
-
-            UniTask.Void(LoadConfigAsync);
-        }
-
-        private async UniTaskVoid LoadConfigAsync()
-        {
-            await _configsService.LoadAllAsync();
-            _generalSounds = _configsService.Get<GeneralSoundsConfig>(AddressablesConfigPaths.General.GeneralSounds);
-            _configsReady = true;
-            TrySubscribe();
+            if (_poolsService.IsReady)
+            {
+                OnPoolsReady();
+            }
+            else
+            {
+                _poolsService.Ready += OnPoolsReady;
+            }
         }
 
         public void Dispose()
         {
             _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
+            _poolsService.Ready -= OnPoolsReady;
 
             if (_subscriptionsActive)
             {
@@ -101,7 +103,19 @@ namespace _Project.Runtime.Presenters
         private void OnLoadingTaskFinished()
         {
             _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
+            _generalSounds = _configsService.Get<GeneralSoundsConfig>(AddressablesConfigPaths.General.GeneralSounds);
+            _configsReady = true;
             TryAssignBgm();
+            TrySubscribe();
+        }
+
+        private void OnPoolsReady()
+        {
+            _poolsService.Ready -= OnPoolsReady;
+
+            _audioPool = _poolsService.GetPool<AudioSourceView.Pool>();
+            _poolsReady = true;
+            TrySubscribe();
         }
 
         private void TryAssignBgm()
