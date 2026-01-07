@@ -20,7 +20,6 @@ namespace _Project.Runtime.Score
         private readonly IConfigsService _configsService;
 
         private ScoreConfig _scoreConfig;
-        private GameState _previousGameState;
         private bool _ready;
 
         public ScorePresenter(GameModel gameModel, AsteroidsModel asteroidsModel,
@@ -31,8 +30,6 @@ namespace _Project.Runtime.Score
             _ufoModel = ufoModel;
             _scoreModel = scoreModel;
             _configsService = configsService;
-
-            _previousGameState = _gameModel.CurrentState;
         }
         
         public void Initialize()
@@ -44,6 +41,9 @@ namespace _Project.Runtime.Score
         {
             await _configsService.LoadAllAsync();
             _scoreConfig = _configsService.Get<ScoreConfig>(AddressablesConfigPaths.General.Score);
+
+            _scoreModel.ApplyConfig(_scoreConfig);
+            _scoreModel.SetInitialState(_gameModel.CurrentState);
 
             _asteroidsModel.AsteroidDestroyed += OnAsteroidDestroyed;
             _ufoModel.UfoDestroyed += OnUfoDestroyed;
@@ -65,33 +65,17 @@ namespace _Project.Runtime.Score
 
         private void OnGameStateChanged(GameState state)
         {
-            if (state == _previousGameState)
-            {
-                return;
-            }
-
-            if (state == GameState.Gameplay &&
-                _previousGameState is GameState.Preparing or GameState.Gameplay)
-            {
-                _scoreModel.ChangeTotalScore(0);
-            }
+            _scoreModel.HandleGameStateChanged(state);
         }
 
         private void OnAsteroidDestroyed(AsteroidDestroyed destroyed)
         {
-            int amount = destroyed.Size switch
-            {
-                AsteroidSize.Large => _scoreConfig.LargeAsteroidScore,
-                AsteroidSize.Small => _scoreConfig.SmallAsteroidScore,
-                _ => throw new Exception("Unknown asteroid size")
-            };
-
-            _scoreModel.AddScore(amount);
+            _scoreModel.HandleAsteroidDestroyed(destroyed);
         }
 
         private void OnUfoDestroyed(UfoDestroyed _)
         {
-            _scoreModel.AddScore(_scoreConfig.UfoScore);
+            _scoreModel.HandleUfoDestroyed(_);
         }
     }
 }

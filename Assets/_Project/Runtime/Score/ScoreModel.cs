@@ -1,4 +1,6 @@
 using System;
+using _Project.Runtime.Data;
+using _Project.Runtime.Settings;
 
 namespace _Project.Runtime.Score
 {
@@ -7,14 +9,58 @@ namespace _Project.Runtime.Score
         private readonly BestScoreService _bestScoreService;
 
         private int _totalScore;
+        private ScoreConfig _scoreConfig;
+        private GameState _previousGameState;
+        private bool _hasGameState;
         public int BestScore => _bestScoreService.Value;
+        public bool IsNewRecord { get; private set; }
 
         public event Action<int> TotalScoreChanged;
         public event Action<int> BestScoreChanged;
+        public event Action<bool> NewRecordChanged;
 
         public ScoreModel(BestScoreService bestScoreService)
         {
             _bestScoreService = bestScoreService;
+        }
+
+        public void ApplyConfig(ScoreConfig scoreConfig)
+        {
+            _scoreConfig = scoreConfig;
+        }
+
+        public void SetInitialState(GameState state)
+        {
+            _previousGameState = state;
+            _hasGameState = true;
+        }
+
+        public void HandleGameStateChanged(GameState state)
+        {
+            if (!_hasGameState)
+            {
+                _previousGameState = state;
+                _hasGameState = true;
+                return;
+            }
+
+            if (state == _previousGameState)
+            {
+                return;
+            }
+
+            if (state == GameState.Gameplay &&
+                _previousGameState is GameState.Preparing or GameState.Gameplay)
+            {
+                ChangeTotalScore(0);
+            }
+
+            if (state is GameState.Preparing or GameState.Gameplay)
+            {
+                SetNewRecord(false);
+            }
+
+            _previousGameState = state;
         }
 
         public void AddScore(int amount)
@@ -27,6 +73,33 @@ namespace _Project.Runtime.Score
             _totalScore += amount;
             TotalScoreChanged?.Invoke(_totalScore);
             TryUpdateBestScore(_totalScore);
+        }
+
+        public void HandleAsteroidDestroyed(AsteroidDestroyed destroyed)
+        {
+            if (_scoreConfig == null)
+            {
+                return;
+            }
+
+            int amount = destroyed.Size switch
+            {
+                AsteroidSize.Large => _scoreConfig.LargeAsteroidScore,
+                AsteroidSize.Small => _scoreConfig.SmallAsteroidScore,
+                _ => throw new Exception("Unknown asteroid size")
+            };
+
+            AddScore(amount);
+        }
+
+        public void HandleUfoDestroyed(UfoDestroyed _)
+        {
+            if (_scoreConfig == null)
+            {
+                return;
+            }
+
+            AddScore(_scoreConfig.UfoScore);
         }
 
         public void ChangeTotalScore(int newScore)
@@ -45,6 +118,18 @@ namespace _Project.Runtime.Score
 
             _bestScoreService.SetBestScore(candidate);
             BestScoreChanged?.Invoke(BestScore);
+            SetNewRecord(true);
+        }
+
+        private void SetNewRecord(bool value)
+        {
+            if (IsNewRecord == value)
+            {
+                return;
+            }
+
+            IsNewRecord = value;
+            NewRecordChanged?.Invoke(IsNewRecord);
         }
     }
 }

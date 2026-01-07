@@ -10,9 +10,6 @@ namespace _Project.Runtime.Views
     [RequireComponent(typeof(UIDocument))]
     public class HudView : BaseView
     {
-        private const string CONTROLS_TEXT =
-            "W - forward, A - left, D - right.\nSpace - shoot gun. Ctrl - release laser.";
-
         private const float LargeWidthThreshold = 1280f;
         private const float ExtraLargeWidthThreshold = 1600f;
         private const float CompactWidthThreshold = 960f;
@@ -145,15 +142,12 @@ namespace _Project.Runtime.Views
             switch (state)
             {
                 case GameState.Preparing:
-                    _statisticsSummary = string.Empty;
-                    UpdateStatsPanelVisibility(false);
-                    _overlay.Preparing(CONTROLS_TEXT);
-                    _overlay.SetBestScore(_bestScore);
-                    _isNewRecordAchieved = false;
-                    _shipData.SetVisible(false);
-                    _weaponsPanel.style.display = DisplayStyle.None;
-                    break;
                 case GameState.Gameplay:
+                    if (state == GameState.Preparing)
+                    {
+                        _statisticsSummary = string.Empty;
+                    }
+
                     UpdateStatsPanelVisibility(false);
                     _overlay.Gameplay();
                     _isNewRecordAchieved = false;

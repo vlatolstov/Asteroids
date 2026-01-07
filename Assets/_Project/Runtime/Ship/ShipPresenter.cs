@@ -73,10 +73,7 @@ namespace _Project.Runtime.Ship
             _shipModel.ShipDespawnCommandRequested += OnShipDespawnCommand;
             _subscriptionsActive = true;
 
-            if (_gameModel.CurrentState == GameState.Gameplay)
-            {
-                _shipModel.RequestSpawn();
-            }
+            _shipModel.HandleGameStateChanged(_gameModel.CurrentState);
         }
 
         public void Dispose()
@@ -101,10 +98,7 @@ namespace _Project.Runtime.Ship
 
         private void OnGameStateChanged(GameState state)
         {
-            if (state == GameState.Gameplay)
-            {
-                _shipModel.RequestSpawn();
-            }
+            _shipModel.HandleGameStateChanged(state);
         }
 
         private void OnPoolsReady()

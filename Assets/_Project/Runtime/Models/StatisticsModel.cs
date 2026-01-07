@@ -1,4 +1,5 @@
 using _Project.Runtime.Data;
+using UnityEngine;
 
 namespace _Project.Runtime.Models
 {
@@ -77,6 +78,30 @@ namespace _Project.Runtime.Models
             ShipAoeAttacks = 0;
             ShipAoeHits = 0;
             UfoProjectileShots = 0;
+        }
+
+        public string BuildSummary()
+        {
+            int asteroidTotal = LargeAsteroidsDestroyed + SmallAsteroidsDestroyed;
+            float projectileAccuracy = ShipProjectileShots > 0
+                ? (float)ShipProjectileHits / ShipProjectileShots
+                : 0f;
+
+            int projectilePercent = Mathf.RoundToInt(projectileAccuracy * 100f);
+
+            string projectileLine = ShipProjectileShots > 0
+                ? $"Guns: {ShipProjectileHits}/{ShipProjectileShots} hits ({projectilePercent}%)"
+                : "Guns: no shots";
+
+            string aoeLine = ShipAoeAttacks > 0
+                ? $"Laser: {ShipAoeHits} hits from {ShipAoeAttacks}"
+                : "Laser: no bursts";
+
+            return
+                $"Asteroids: {asteroidTotal} ({LargeAsteroidsDestroyed} large /{SmallAsteroidsDestroyed} small)\n" +
+                $"UFOs: {UfoDestroyed}\n" +
+                projectileLine + "\n" +
+                aoeLine;
         }
     }
 }

@@ -9,9 +9,7 @@ using _Project.Runtime.Score;
 using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
-using _Project.Runtime.SceneManagement;
 using _Project.Runtime.Views;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
@@ -23,7 +21,6 @@ namespace _Project.Runtime.Presenters
         private readonly ScoreModel _scoreModel;
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
-        private readonly SceneLoader _sceneLoader;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly IConfigsService _configsService;
         private readonly IAdsPlayer _adsPlayer;
@@ -31,14 +28,12 @@ namespace _Project.Runtime.Presenters
 
         private HudView _hud;
         private GeneralVisualsConfig _visuals;
-        private int _lastBestScore;
         private bool _hudReady;
 
         public HudPresenter(GameModel gameModel,
             ShipModel shipModel,
             ScoreModel scoreModel,
             StatisticsModel statisticsModel,
-            SceneLoader sceneLoader,
             GameLoadingTasksProcessor gameLoadingTasksProcessor,
             SceneAssetProvider assetProvider,
             IConfigsService configsService,
@@ -48,7 +43,6 @@ namespace _Project.Runtime.Presenters
             _shipModel = shipModel;
             _scoreModel = scoreModel;
             _statisticsModel = statisticsModel;
-            _sceneLoader = sceneLoader;
             _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
             _assetProvider = assetProvider;
             _configsService = configsService;
@@ -86,9 +80,7 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged -= OnScoreChanged;
             _scoreModel.BestScoreChanged -= OnBestScoreChanged;
-
-            _adsPlayer.InterstitialAdPlayed -= OnInterstitialAdPlayed;
-            _adsPlayer.RewardedAdPlayed -= OnRewardedAdPlayed;
+            _scoreModel.NewRecordChanged -= OnNewRecordChanged;
         }
 
         private void OnLoadingTaskFinished()
@@ -113,11 +105,8 @@ namespace _Project.Runtime.Presenters
 
             _visuals ??= _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
 
-            _lastBestScore = _scoreModel.BestScore;
-
             _hud.RespawnButtonPressed += OnRespawnButtonPressed;
             _hud.BackToMenuButtonPressed += OnBackToMenuButtonPressed;
-            _hud.SetNewRecordAchieved(false);
 
             _shipModel.ShipPoseChanged += OnPoseChanged;
             _shipModel.ProjectileWeaponStateChanged += OnProjectileWeaponStateChanged;
@@ -127,29 +116,21 @@ namespace _Project.Runtime.Presenters
 
             _scoreModel.TotalScoreChanged += OnScoreChanged;
             _scoreModel.BestScoreChanged += OnBestScoreChanged;
-
-            _adsPlayer.InterstitialAdPlayed += OnInterstitialAdPlayed;
-            _adsPlayer.RewardedAdPlayed += OnRewardedAdPlayed;
+            _scoreModel.NewRecordChanged += OnNewRecordChanged;
 
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
             _hud.UpdateBestScore(_scoreModel.BestScore);
+            _hud.SetNewRecordAchieved(_scoreModel.IsNewRecord);
 
-            _shipModel.RequestSpawn();
             _hudReady = true;
         }
 
         private void OnGameStateChanged(GameState state)
         {
-            switch (state)
+            if (state == GameState.GameOver)
             {
-                case GameState.GameOver:
-                    UpdateGameStatistics();
-                    break;
-                case GameState.Preparing:
-                case GameState.Gameplay:
-                    _hud?.SetNewRecordAchieved(false);
-                    break;
+                _hud?.SetStatisticsSummary(_statisticsModel.BuildSummary());
             }
 
             _hud?.UpdateGameState(state);
@@ -178,14 +159,12 @@ namespace _Project.Runtime.Presenters
 
         private void OnBestScoreChanged(int bestScore)
         {
-            bool isNewRecord = bestScore > _lastBestScore;
-            _lastBestScore = bestScore;
-
             _hud.UpdateBestScore(bestScore);
-            if (isNewRecord)
-            {
-                _hud.SetNewRecordAchieved(true);
-            }
+        }
+
+        private void OnNewRecordChanged(bool isNewRecord)
+        {
+            _hud?.SetNewRecordAchieved(isNewRecord);
         }
 
         private void OnRespawnButtonPressed()
@@ -198,47 +177,5 @@ namespace _Project.Runtime.Presenters
             _adsPlayer.PlayInterstitialAd();
         }
 
-        private void UpdateGameStatistics()
-        {
-            var stats = _statisticsModel;
-
-            int asteroidTotal = stats.LargeAsteroidsDestroyed + stats.SmallAsteroidsDestroyed;
-            float projectileAccuracy = stats.ShipProjectileShots > 0
-                ? (float)stats.ShipProjectileHits / stats.ShipProjectileShots
-                : 0f;
-
-            int projectilePercent = Mathf.RoundToInt(projectileAccuracy * 100f);
-
-            string projectileLine = stats.ShipProjectileShots > 0
-                ? $"Guns: {stats.ShipProjectileHits}/{stats.ShipProjectileShots} hits ({projectilePercent}%)"
-                : "Guns: no shots";
-
-            string aoeLine = stats.ShipAoeAttacks > 0
-                ? $"Laser: {stats.ShipAoeHits} hits from {stats.ShipAoeAttacks}"
-                : "Laser: no bursts";
-
-            string summary =
-                $"Asteroids: {asteroidTotal} ({stats.LargeAsteroidsDestroyed} large /{stats.SmallAsteroidsDestroyed} small)\n" +
-                $"UFOs: {stats.UfoDestroyed}\n" +
-                projectileLine + "\n" +
-                aoeLine;
-
-            _hud.SetStatisticsSummary(summary);
-        }
-
-        private void OnRewardedAdPlayed(AdCompletionStatus status)
-        {
-            if (status == AdCompletionStatus.Completed)
-            {
-                _gameModel.SetGameState(GameState.Preparing);
-                _shipModel.RequestSpawn();
-                _hud?.SetNewRecordAchieved(false);
-            }
-        }
-
-        private void OnInterstitialAdPlayed(AdCompletionStatus status)
-        {
-            UniTask.Void(async () => { await _sceneLoader.LoadSceneAsync(Scenes.Menu); });
-        }
     }
 }

@@ -34,6 +34,14 @@ namespace _Project.Runtime.Ship
             ShipSpawnCommandRequested?.Invoke(_worldConfig.WorldRect.center);
         }
 
+        public void HandleGameStateChanged(GameState state)
+        {
+            if (state == GameState.Preparing)
+            {
+                RequestSpawn();
+            }
+        }
+
         public void RequestDespawn()
         {
             _shipInGame = false;
