@@ -97,7 +97,7 @@ namespace _Project.Runtime.Ship
         {
             DisposeWeapons();
 
-            if (_gunConfig == null || _aoeWeaponConfig == null)
+            if (!_gunConfig || !_aoeWeaponConfig)
             {
                 return;
             }
