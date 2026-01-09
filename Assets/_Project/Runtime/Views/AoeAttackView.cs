@@ -16,7 +16,7 @@ namespace _Project.Runtime.Views
         private Animator _animator;
         private Collider2D _collider;
 
-        private AoeAttackConfig _conf;
+        private AoeAttackResource _attackResource;
         private AoeAttackData _attackData;
         private AoeWeaponData _weaponData;
 
@@ -59,17 +59,17 @@ namespace _Project.Runtime.Views
         private void OnTriggerEnter2D(Collider2D other)
         {
             var target = other.transform;
-            var hit = new AoeHit(_conf, _attackData, target.position, target.rotation, Vector2.one, _source);
+            var hit = new AoeHit(_attackResource, _attackData, target.position, target.rotation, Vector2.one, _source);
             AoeHit?.Invoke(hit);
         }
 
         private void Reinitialize(AoeAttackReleased attack)
         {
-            _conf = attack.Weapon.Attack;
+            _attackResource = attack.Weapon.Attack;
             _attackData = attack.AttackData ?? new AoeAttackData();
             _weaponData = attack.WeaponData ?? new AoeWeaponData();
             _life = _attackData.Duration;
-            _follow = _attackData.AttachMode == (int)AoeAttackConfig.AttachMode.FollowEmitter;
+            _follow = _attackData.AttachMode == (int)AoeAttackResource.AttachMode.FollowEmitter;
             _emitter = attack.Emitter;
             _collider.enabled = true;
             _source = attack.Source;
@@ -79,13 +79,13 @@ namespace _Project.Runtime.Views
             var worldPos = attack.Emitter.TransformPoint(0f, _centerOffset, 0f);
             transform.SetPositionAndRotation(worldPos, _emitter.rotation);
 
-            if (!_conf.AttackAnimation)
+            if (!_attackResource.AttackAnimation)
             {
-                _sr.sprite = _conf.AttackSprite;
+                _sr.sprite = _attackResource.AttackSprite;
             }
             else
             {
-                _animator.runtimeAnimatorController = _conf.AttackAnimation;
+                _animator.runtimeAnimatorController = _attackResource.AttackAnimation;
                 _animator.Rebind();
                 _animator.Update(0f);
             }

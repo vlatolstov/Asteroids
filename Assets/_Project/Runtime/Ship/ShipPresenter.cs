@@ -19,7 +19,7 @@ namespace _Project.Runtime.Ship
         private readonly CombatModel _combatModel;
         private readonly InputModel _inputModel;
         private readonly IViewPoolsService _poolsService;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly IWorldConfig _worldConfig;
 
@@ -28,17 +28,17 @@ namespace _Project.Runtime.Ship
         private bool _subscriptionsActive;
 
         private MovementConfigData _movementConfig;
-        private ProjectileWeaponConfig _shipGunConfig;
+        private ProjectileWeaponResource _shipGunResource;
         private ProjectileWeaponData _shipGunData;
         private ProjectileAttackData _shipGunAttackData;
-        private AoeWeaponConfig _shipAoeConfig;
+        private AoeWeaponResource _shipAoeResource;
         private AoeWeaponData _shipAoeData;
         private AoeAttackData _shipAoeAttackData;
-        private bool _configsReady;
+        private bool _resourcesReady;
         private bool _initialized;
 
         public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel,
-            IViewPoolsService poolsService, GameModel gameModel, IConfigsService configsService,
+            IViewPoolsService poolsService, GameModel gameModel, IResourcesService resourcesService,
             IRemoteConfigProvider remoteConfigProvider, IWorldConfig worldConfig)
         {
             _shipModel = shipModel;
@@ -46,7 +46,7 @@ namespace _Project.Runtime.Ship
             _inputModel = inputModel;
             _poolsService = poolsService;
             _gameModel = gameModel;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _remoteConfigProvider = remoteConfigProvider;
             _worldConfig = worldConfig;
         }
@@ -219,15 +219,15 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
-            EnsureConfigs();
+            EnsureData();
 
             var args = new ShipView.SpawnArgs(
                 position,
                 new PlayerMotor(_movementConfig, _worldConfig),
-                _shipGunConfig,
+                _shipGunResource,
                 _shipGunData,
                 _shipGunAttackData,
-                _shipAoeConfig,
+                _shipAoeResource,
                 _shipAoeData,
                 _shipAoeAttackData);
             var ship = _pool.Spawn(args);
@@ -277,9 +277,9 @@ namespace _Project.Runtime.Ship
             _combatModel.HandleAoeAttackReleased(attack);
         }
 
-        private void EnsureConfigs()
+        private void EnsureData()
         {
-            if (_configsReady)
+            if (_resourcesReady)
             {
                 return;
             }
@@ -309,9 +309,9 @@ namespace _Project.Runtime.Ship
                 _shipAoeAttackData = new AoeAttackData();
             }
 
-            _shipGunConfig = _configsService.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.ShipGun);
-            _shipAoeConfig = _configsService.Get<AoeWeaponConfig>(AddressablesConfigPaths.Weapons.ShipLaser);
-            _configsReady = true;
+            _shipGunResource = _resourcesService.Get<ProjectileWeaponResource>(AddressablesResourcePaths.Weapons.ShipGun);
+            _shipAoeResource = _resourcesService.Get<AoeWeaponResource>(AddressablesResourcePaths.Weapons.ShipLaser);
+            _resourcesReady = true;
         }
     }
 }

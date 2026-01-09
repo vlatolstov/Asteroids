@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: da7ec8d6d76e476bab75ab174351f05f, type: 3}
-  m_Name: ShipLaser
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeWeaponConfig
+  m_Name: ShipLaserResource
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.AoeWeaponResource
   <WeaponCooldown>k__BackingField: 2
   <MuzzleOffset>k__BackingField: 0
   <Attack>k__BackingField: {fileID: 11400000, guid: 853fa93e5fe07c44cac56ca9ef3ee80b, type: 2}

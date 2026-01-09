@@ -10,6 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f252cd138254e379fce3099dcc51d93, type: 3}
-  m_Name: GeneralSoundsConfig
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.GeneralSoundsConfig
+  m_Name: GeneralSoundsResource
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.GeneralSoundsResource
   <ShipSpawn>k__BackingField: {fileID: 8300000, guid: ecdf292dd110f4a49bd982a3e64e355c, type: 3}

@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: ca1950fe4e18f784c98300ca59ec4d54
   m_SerializeEntries:
   - m_GUID: 072f5e4fdfa57ad42b430675d6ede473
-    m_Address: Configs/Weapons/ShipLaser
+    m_Address: Resources/Weapons/ShipLaser
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -36,17 +36,17 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3f1e2ee2279b3d84289289210243b144
-    m_Address: Configs/Weapons/ShipGun
+    m_Address: Resources/Weapons/ShipGun
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5cbc4340fdb8c1545853f19aee8916da
-    m_Address: Configs/Attacks/BlasterPulse
+    m_Address: Resources/Attacks/BlasterPulse
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5cf0b98c3e2391644a2d9bcee93ecccd
-    m_Address: Configs/General/UfoSpawn
+    m_Address: Resources/General/UfoSpawn
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -61,7 +61,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 853fa93e5fe07c44cac56ca9ef3ee80b
-    m_Address: Configs/Attacks/LaserAttack
+    m_Address: Resources/Attacks/LaserAttack
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -76,17 +76,17 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a103538ca2a9c534496cd6efe1d950d7
-    m_Address: Configs/General/GeneralSounds
+    m_Address: Resources/General/GeneralSounds
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab688df7655faff47a2df1a7d0df26a2
-    m_Address: Configs/Attacks/Rocket
+    m_Address: Resources/Attacks/Rocket
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b8118449f9506d943a13fd36809cd97f
-    m_Address: Configs/General/GeneralVisuals
+    m_Address: Resources/General/GeneralVisuals
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -106,12 +106,12 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e9a0aca1123923944972f0daa8dcff81
-    m_Address: Configs/Weapons/UfoBlaster
+    m_Address: Resources/Weapons/UfoBlaster
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: efe598da038e46e4fa78090d4c31e36a
-    m_Address: Configs/General/AsteroidsSpawn
+    m_Address: Resources/General/AsteroidsSpawn
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

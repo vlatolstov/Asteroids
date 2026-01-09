@@ -12,7 +12,7 @@ namespace _Project.Runtime.RemoteConfig
         Local,
         Remote
     }
-    
+
     public sealed class FirebaseRemoteConfigProvider : IRemoteConfigProvider
     {
         private const string DefaultJsonResourcePath = "RemoteConfig/numeric_config_default";
@@ -37,28 +37,26 @@ namespace _Project.Runtime.RemoteConfig
             _initialized = true;
 
             string defaultsJson = LoadDefaultsJson();
+            var remote = FirebaseRemoteConfig.DefaultInstance;
+            await remote.SetDefaultsAsync(new Dictionary<string, object>
+            {
+                { RemoteConfigKeys.NumericConfigJson, defaultsJson }
+            });
+
             _configMap = _parser.Parse(defaultsJson);
-
             _source = ConfigSource.Local;
-            try
-            {
-                var remote = FirebaseRemoteConfig.DefaultInstance;
-                await remote.FetchAsync(TimeSpan.Zero);
-                await remote.ActivateAsync();
-
-                string json = remote.GetValue(RemoteConfigKeys.NumericConfigJson).StringValue;
-                if (!string.IsNullOrWhiteSpace(json))
-                {
-                    var remoteMap = _parser.Parse(json);
-                    MergeConfigs(remoteMap);
-                    _source = ConfigSource.Remote;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.LogWarning($"[RemoteConfig] Failed to fetch/activate config, using defaults. {ex}");
-            }
             
+            await remote.FetchAsync(TimeSpan.Zero);
+            await remote.ActivateAsync();
+            string json = remote.GetValue(RemoteConfigKeys.NumericConfigJson).StringValue;
+
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var remoteMap = _parser.Parse(json);
+                MergeConfigs(remoteMap);
+                _source = ConfigSource.Remote;
+            }
+
             return _source;
         }
 

@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cc98b1ed8b6b434f8aae4ae530ba76d2, type: 3}
-  m_Name: UfoSpawnConfig
-  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.UfoSpawnConfig
+  m_Name: UfoSpawnResource
+  m_EditorClassIdentifier: Assembly-CSharp::Runtime.Settings.UfoSpawnResource
   _sprites:
   - {fileID: -6943943784618129602, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}
   - {fileID: 897318961094254164, guid: 62aab4d17d5d98242892693f27bc15aa, type: 3}

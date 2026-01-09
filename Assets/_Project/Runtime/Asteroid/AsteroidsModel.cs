@@ -14,9 +14,9 @@ namespace _Project.Runtime.Asteroid
     public class AsteroidsModel : ITickable, IInitializable
     {
         private readonly IWorldConfig _world;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly IRemoteConfigProvider _remoteConfigProvider;
-        private AsteroidsSpawnConfig _assets;
+        private AsteroidsSpawnResource _assets;
         private AsteroidsSpawnData _data;
 
         public event Action<AsteroidSpawnCommand> AsteroidSpawnRequested;
@@ -30,11 +30,11 @@ namespace _Project.Runtime.Asteroid
         private GameState _gameState;
         private bool _ready;
 
-        public AsteroidsModel(IWorldConfig world, IConfigsService configsService,
+        public AsteroidsModel(IWorldConfig world, IResourcesService resourcesService,
             IRemoteConfigProvider remoteConfigProvider)
         {
             _world = world;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _remoteConfigProvider = remoteConfigProvider;
         }
         
@@ -42,8 +42,8 @@ namespace _Project.Runtime.Asteroid
         {
             UniTask.Void(async () =>
             {
-                await _configsService.LoadAllAsync();
-                _assets = _configsService.Get<AsteroidsSpawnConfig>(AddressablesConfigPaths.General.AsteroidsSpawn);
+                await _resourcesService.LoadAllAsync();
+                _assets = _resourcesService.Get<AsteroidsSpawnResource>(AddressablesResourcePaths.General.AsteroidsSpawn);
                 if (!_remoteConfigProvider.TryGet(Config.Asteroids.Spawn, out _data))
                 {
                     Debug.LogWarning("[RemoteConfig] Missing asteroids spawn data.");

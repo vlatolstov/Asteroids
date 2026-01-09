@@ -16,12 +16,12 @@ namespace _Project.Runtime.LoadingServices
     public class GameLoadingTasksProcessor : BaseLoadingTasksProcessor
     {
         private readonly SceneAssetProvider _assetProvider;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
 
         public GameLoadingTasksProcessor(SceneLoader sceneLoader,
-            IConfigsService configsService, SceneAssetProvider assetProvider) : base(sceneLoader)
+            IResourcesService resourcesService, SceneAssetProvider assetProvider) : base(sceneLoader)
         {
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _assetProvider = assetProvider;
         }
 
@@ -44,7 +44,7 @@ namespace _Project.Runtime.LoadingServices
             
             await _assetProvider.LoadAllAsync();
 
-            await _configsService.LoadAllAsync();
+            await _resourcesService.LoadAllAsync();
 
             Debug.Log("Game loaded");
             await UniTask.NextFrame();

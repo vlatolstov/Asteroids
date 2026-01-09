@@ -20,27 +20,27 @@ namespace _Project.Runtime.Presenters
         private readonly ShipModel _shipModel;
 
         private readonly IViewPoolsService _poolsService;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
         private readonly SceneAssetProvider _assetProvider;
 
         private readonly Dictionary<uint, AudioSourceView> _activeViews;
         private AudioSourceView.Pool _audioPool;
-        private GeneralSoundsConfig _generalSounds;
+        private GeneralSoundsResource _generalSounds;
         private BGMView _bgmView;
         private bool _subscriptionsActive;
         private bool _poolsReady;
-        private bool _configsReady;
+        private bool _resourcesReady;
         private bool _bgmReady;
 
         public GameAudioPresenter(CombatModel combatModel, ShipModel shipModel,
-            IViewPoolsService poolsService, IConfigsService configsService,
+            IViewPoolsService poolsService, IResourcesService resourcesService,
             GameLoadingTasksProcessor gameLoadingTasksProcessor, SceneAssetProvider assetProvider)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
             _poolsService = poolsService;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
             _assetProvider = assetProvider;
 
@@ -87,7 +87,7 @@ namespace _Project.Runtime.Presenters
 
         private void TrySubscribe()
         {
-            if (_subscriptionsActive || !_poolsReady || !_configsReady)
+            if (_subscriptionsActive || !_poolsReady || !_resourcesReady)
             {
                 return;
             }
@@ -103,8 +103,8 @@ namespace _Project.Runtime.Presenters
         private void OnLoadingTaskFinished()
         {
             _gameLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
-            _generalSounds = _configsService.Get<GeneralSoundsConfig>(AddressablesConfigPaths.General.GeneralSounds);
-            _configsReady = true;
+            _generalSounds = _resourcesService.Get<GeneralSoundsResource>(AddressablesResourcePaths.General.GeneralSounds);
+            _resourcesReady = true;
             TryAssignBgm();
             TrySubscribe();
         }

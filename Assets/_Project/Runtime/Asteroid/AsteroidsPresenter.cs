@@ -23,7 +23,7 @@ namespace _Project.Runtime.Asteroid
         private AsteroidView.Pool _pool;
         private bool _subscriptionsActive;
         private MovementConfigData _movementConfig;
-        private bool _configsReady;
+        private bool _resourcesReady;
         private bool _initialized;
 
         public AsteroidsPresenter(AsteroidsModel asteroidsModel, GameModel gameModel,
@@ -70,7 +70,7 @@ namespace _Project.Runtime.Asteroid
                 return;
             }
 
-            EnsureConfigs();
+            EnsureData();
 
             var args = new AsteroidView.SpawnArgs(command, new InertialMotor(_movementConfig, _worldConfig));
             var asteroid = _pool.Spawn(args);
@@ -103,9 +103,9 @@ namespace _Project.Runtime.Asteroid
             _asteroidsModel.SetGameState(state);
         }
 
-        private void EnsureConfigs()
+        private void EnsureData()
         {
-            if (_configsReady)
+            if (_resourcesReady)
             {
                 return;
             }
@@ -114,7 +114,7 @@ namespace _Project.Runtime.Asteroid
             {
                 _movementConfig = new MovementConfigData();
             }
-            _configsReady = true;
+            _resourcesReady = true;
         }
 
         private bool RegisterAsteroid(AsteroidView asteroid)

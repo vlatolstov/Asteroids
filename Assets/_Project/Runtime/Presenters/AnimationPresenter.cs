@@ -22,23 +22,23 @@ namespace _Project.Runtime.Presenters
         private readonly UfoModel _ufoModel;
 
         private readonly IViewPoolsService _poolsService;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
 
         private readonly Dictionary<uint, AnimationView> _activeViews;
         private AnimationView.Pool _pool;
-        private GeneralVisualsConfig _visuals;
+        private GeneralVisualsResource _visuals;
         private bool _subscriptionsActive;
 
         public AnimationPresenter(CombatModel combatModel, ShipModel shipModel,
             AsteroidsModel asteroidsModel, UfoModel ufoModel,
-            IViewPoolsService poolsService, IConfigsService configsService)
+            IViewPoolsService poolsService, IResourcesService resourcesService)
         {
             _combatModel = combatModel;
             _shipModel = shipModel;
             _asteroidsModel = asteroidsModel;
             _ufoModel = ufoModel;
             _poolsService = poolsService;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
 
             _activeViews = new Dictionary<uint, AnimationView>();
         }
@@ -87,7 +87,7 @@ namespace _Project.Runtime.Presenters
             _poolsService.Ready -= OnPoolsReady;
 
             _pool = _poolsService.GetPool<AnimationView.Pool>();
-            _visuals = _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
+            _visuals = _resourcesService.Get<GeneralVisualsResource>(AddressablesResourcePaths.General.GeneralVisuals);
 
             TrySubscribe();
         }

@@ -20,7 +20,7 @@ namespace _Project.Runtime.Ufo
         private readonly CombatModel _combatModel;
         private readonly GameModel _gameModel;
         private readonly IViewPoolsService _poolsService;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly IWorldConfig _worldConfig;
 
@@ -32,15 +32,15 @@ namespace _Project.Runtime.Ufo
         private GameState _gameState;
 
         private MovementConfigData _movementConfig;
-        private ProjectileWeaponConfig _gunConfig;
+        private ProjectileWeaponResource _gunResource;
         private ProjectileWeaponData _gunData;
         private ProjectileAttackData _gunAttackData;
         private ChasingUfoData _chaseConfig;
-        private bool _configsReady;
+        private bool _resourcesReady;
         private bool _initialized;
 
         public UfoPresenter(UfoModel ufoModel, ShipModel shipModel, CombatModel combatModel,
-            GameModel gameModel, IViewPoolsService poolsService, IConfigsService configsService,
+            GameModel gameModel, IViewPoolsService poolsService, IResourcesService resourcesService,
             IRemoteConfigProvider remoteConfigProvider, IWorldConfig worldConfig)
         {
             _ufoModel = ufoModel;
@@ -48,7 +48,7 @@ namespace _Project.Runtime.Ufo
             _combatModel = combatModel;
             _gameModel = gameModel;
             _poolsService = poolsService;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _remoteConfigProvider = remoteConfigProvider;
             _worldConfig = worldConfig;
 
@@ -108,12 +108,12 @@ namespace _Project.Runtime.Ufo
                 return;
             }
 
-            EnsureConfigs();
+            EnsureData();
 
             var args = new UfoView.SpawnArgs(
                 command,
                 new ChasingMotor(_movementConfig, _worldConfig, _chaseConfig),
-                _gunConfig,
+                _gunResource,
                 _gunData,
                 _gunAttackData,
                 _chaseConfig,
@@ -196,9 +196,9 @@ namespace _Project.Runtime.Ufo
             _initialized = true;
         }
 
-        private void EnsureConfigs()
+        private void EnsureData()
         {
-            if (_configsReady)
+            if (_resourcesReady)
             {
                 return;
             }
@@ -223,8 +223,8 @@ namespace _Project.Runtime.Ufo
                 _chaseConfig = new ChasingUfoData();
             }
 
-            _gunConfig = _configsService.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.UfoBlaster);
-            _configsReady = true;
+            _gunResource = _resourcesService.Get<ProjectileWeaponResource>(AddressablesResourcePaths.Weapons.UfoBlaster);
+            _resourcesReady = true;
         }
     }
 }

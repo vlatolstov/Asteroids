@@ -3,7 +3,7 @@ using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Analytics;
 using _Project.Runtime.Analytics.Firebase;
 using _Project.Runtime.AssetManagement;
-using _Project.Runtime.AssetManagement.Configs;
+using _Project.Runtime.AssetManagement.ResourceLoaders;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
@@ -37,18 +37,18 @@ namespace _Project.Runtime.Installers
         {
             Container.BindInterfacesAndSelfTo<SceneAssetProvider>().AsSingle();
 
-            Container.Bind<IConfigLoader>().To<AsteroidsSpawnConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<UfoSpawnConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<GeneralSoundsConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<GeneralVisualsConfigLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<AsteroidsSpawnResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<UfoSpawnResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<GeneralSoundsResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<GeneralVisualsResourceLoader>().AsSingle();
 
-            Container.Bind<IConfigLoader>().To<ShipGunConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<ShipLaserConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<UfoBlasterConfigLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<ShipGunResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<ShipLaserResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<UfoBlasterResourceLoader>().AsSingle();
 
-            Container.Bind<IConfigLoader>().To<BlasterPulseConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<RocketConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<LaserAttackConfigLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<BlasterPulseResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<RocketResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<LaserAttackResourceLoader>().AsSingle();
         }
 
         private void PresentersBindings()
@@ -144,7 +144,7 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameConfigsService>()
+                .BindInterfacesAndSelfTo<GameResourcesService>()
                 .AsSingle();
 
             Container

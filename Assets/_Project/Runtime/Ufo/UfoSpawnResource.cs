@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace _Project.Runtime.Ufo
 {
-    [CreateAssetMenu(fileName = "UfoSpawnConfig", menuName = "Settings/UFO Spawn Config")]
-    public sealed class UfoSpawnConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "UfoSpawnResource", menuName = "Resources/UFO Spawn")]
+    public sealed class UfoSpawnResource : ScriptableObject
     {
         [SerializeField]
         private Sprite[] _sprites;

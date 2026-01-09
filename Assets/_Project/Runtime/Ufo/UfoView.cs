@@ -17,7 +17,7 @@ namespace _Project.Runtime.Ufo
         typeof(SpriteRenderer))]
     public class UfoView : BaseMovableView<ChasingMotor>, IFireParamsSource
     {
-        private ProjectileWeaponConfig _gunConfig;
+        private ProjectileWeaponResource _gunResource;
         private ProjectileWeaponData _gunData;
         private ProjectileAttackData _gunAttackData;
         private IWorldConfig _world;
@@ -72,7 +72,7 @@ namespace _Project.Runtime.Ufo
                     break;
             }
 
-            if (_gameState != GameState.Gameplay || !_gunConfig)
+            if (_gameState != GameState.Gameplay || !_gunResource)
             {
                 return;
             }
@@ -87,11 +87,11 @@ namespace _Project.Runtime.Ufo
             }
         }
 
-        public void Configure(ChasingMotor motor, ProjectileWeaponConfig gunConfig, ProjectileWeaponData gunData,
+        public void Configure(ChasingMotor motor, ProjectileWeaponResource gunResource, ProjectileWeaponData gunData,
             ProjectileAttackData gunAttackData, ChasingUfoData chase, IWorldConfig world)
         {
             SetMotor(motor);
-            _gunConfig = gunConfig;
+            _gunResource = gunResource;
             _gunData = gunData;
             _gunAttackData = gunAttackData;
             _chase = chase;
@@ -103,16 +103,16 @@ namespace _Project.Runtime.Ufo
                 _gun = null;
             }
 
-            if (_gunConfig != null)
+            if (_gunResource != null)
             {
-                _gun = new ProjectileWeapon(_gunConfig, _gunData, _gunAttackData, this);
+                _gun = new ProjectileWeapon(_gunResource, _gunData, _gunAttackData, this);
                 _gun.ProjectileFired += OnProjectileShot;
             }
         }
 
         private bool CanAttack()
         {
-            if (Motor == null || _gunConfig == null || _gunAttackData == null || _chase == null || _world == null)
+            if (Motor == null || _gunResource == null || _gunAttackData == null || _chase == null || _world == null)
             {
                 return false;
             }
@@ -204,13 +204,13 @@ namespace _Project.Runtime.Ufo
         {
             public readonly UfoSpawnCommand Command;
             public readonly ChasingMotor Motor;
-            public readonly ProjectileWeaponConfig Gun;
+            public readonly ProjectileWeaponResource Gun;
             public readonly ProjectileWeaponData GunData;
             public readonly ProjectileAttackData GunAttackData;
             public readonly ChasingUfoData Chase;
             public readonly IWorldConfig World;
 
-            public SpawnArgs(UfoSpawnCommand command, ChasingMotor motor, ProjectileWeaponConfig gun,
+            public SpawnArgs(UfoSpawnCommand command, ChasingMotor motor, ProjectileWeaponResource gun,
                 ProjectileWeaponData gunData, ProjectileAttackData gunAttackData, ChasingUfoData chase,
                 IWorldConfig world)
             {

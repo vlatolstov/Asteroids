@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Weapons
 {
-    public class ProjectileWeapon : BaseWeapon<ProjectileWeaponConfig>
+    public class ProjectileWeapon : BaseWeapon<ProjectileWeaponResource>
     {
         private readonly ProjectileWeaponData _data;
         private readonly ProjectileAttackData _attackData;
@@ -18,8 +18,8 @@ namespace _Project.Runtime.Weapons
 
         public event Action<ProjectileShot> ProjectileFired;
 
-        public ProjectileWeapon(ProjectileWeaponConfig config, ProjectileWeaponData data,
-            ProjectileAttackData attackData, IFireParamsSource source) : base(config, source)
+        public ProjectileWeapon(ProjectileWeaponResource resource, ProjectileWeaponData data,
+            ProjectileAttackData attackData, IFireParamsSource source) : base(resource, source)
         {
             _data = data ?? new ProjectileWeaponData();
             _attackData = attackData ?? new ProjectileAttackData();
@@ -98,7 +98,7 @@ namespace _Project.Runtime.Weapons
         {
             var attack = new ProjectileShot(origin, Quaternion.LookRotation(dir), 
                 scale: Vector2.one, ApplySpread(dir),
-                inheritVelocity, layer, Config, _attackData, sourceType);
+                inheritVelocity, layer, Resource, _attackData, sourceType);
             
             ProjectileFired?.Invoke(attack);
         }

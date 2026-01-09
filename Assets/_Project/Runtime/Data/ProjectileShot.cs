@@ -6,7 +6,7 @@ namespace _Project.Runtime.Data
 {
     public readonly struct ProjectileHit
     {
-        public readonly ProjectileConfig Projectile;
+        public readonly ProjectileResource Projectile;
         public readonly ProjectileAttackData AttackData;
         public readonly Vector2 Position;
         public readonly Quaternion Rotation;
@@ -14,7 +14,7 @@ namespace _Project.Runtime.Data
 
         public readonly Source Source;
 
-        public ProjectileHit(ProjectileConfig projectile, ProjectileAttackData attackData, Vector2 position,
+        public ProjectileHit(ProjectileResource projectile, ProjectileAttackData attackData, Vector2 position,
             Quaternion rotation, Vector2 scale, Source source)
         {
             Projectile = projectile;
@@ -35,13 +35,13 @@ namespace _Project.Runtime.Data
         public readonly Vector2 Direction;
         public readonly Vector2 InheritVelocity;
         public readonly int Layer;
-        public readonly ProjectileWeaponConfig Weapon;
+        public readonly ProjectileWeaponResource Weapon;
         public readonly ProjectileAttackData AttackData;
         public readonly Source Source;
 
         public ProjectileShot(Vector2 position, Quaternion rotation,
             Vector2 scale, Vector2 direction,
-            Vector2 inheritVelocity, int layer, ProjectileWeaponConfig weapon, ProjectileAttackData attackData,
+            Vector2 inheritVelocity, int layer, ProjectileWeaponResource weapon, ProjectileAttackData attackData,
             Source source)
         {
             Position = position;
@@ -59,12 +59,12 @@ namespace _Project.Runtime.Data
     public readonly struct AoeAttackReleased
     {
         public readonly Transform Emitter;
-        public readonly AoeWeaponConfig Weapon;
+        public readonly AoeWeaponResource Weapon;
         public readonly AoeWeaponData WeaponData;
         public readonly AoeAttackData AttackData;
         public readonly Source Source;
 
-        public AoeAttackReleased(Transform emitter, AoeWeaponConfig weapon, AoeWeaponData weaponData,
+        public AoeAttackReleased(Transform emitter, AoeWeaponResource weapon, AoeWeaponData weaponData,
             AoeAttackData attackData, Source source)
         {
             Emitter = emitter;
@@ -77,14 +77,14 @@ namespace _Project.Runtime.Data
 
     public readonly struct AoeHit
     {
-        public readonly AoeAttackConfig Attack;
+        public readonly AoeAttackResource Attack;
         public readonly AoeAttackData AttackData;
         public readonly Vector2 Position;
         public readonly Quaternion Rotation;
         public readonly Vector2 Scale;
         public readonly Source Source;
 
-        public AoeHit(AoeAttackConfig attack, AoeAttackData attackData, Vector2 position, Quaternion rotation,
+        public AoeHit(AoeAttackResource attack, AoeAttackData attackData, Vector2 position, Quaternion rotation,
             Vector2 scale, Source source)
         {
             Attack = attack;

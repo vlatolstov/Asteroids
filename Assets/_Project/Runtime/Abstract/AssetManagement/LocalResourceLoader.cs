@@ -6,14 +6,14 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace _Project.Runtime.Abstract.AssetManagement
 {
-    public interface IConfigLoader : IDisposable
+    public interface IResourceLoader : IDisposable
     {
-        Type ConfigType { get; }
+        Type ResourceType { get; }
         string Key { get; }
         UniTask<ScriptableObject> LoadAsync();
     }
 
-    public abstract class LocalConfigLoader<T> : IConfigLoader where T : ScriptableObject
+    public abstract class LocalResourceLoader<T> : IResourceLoader where T : ScriptableObject
     {
         private AsyncOperationHandle<T>? _handle;
 
@@ -21,7 +21,7 @@ namespace _Project.Runtime.Abstract.AssetManagement
 
         public virtual string Key => AssetPath;
 
-        public Type ConfigType => typeof(T);
+        public Type ResourceType => typeof(T);
 
         public async UniTask<ScriptableObject> LoadAsync()
         {

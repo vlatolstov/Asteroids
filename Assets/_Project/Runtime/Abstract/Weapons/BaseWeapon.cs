@@ -3,17 +3,17 @@ using Zenject;
 
 namespace _Project.Runtime.Abstract.Weapons
 {
-    public abstract class BaseWeapon<TWeaponConfig> : IFixedTickable where TWeaponConfig : WeaponConfig
+    public abstract class BaseWeapon<TWeaponResource> : IFixedTickable where TWeaponResource : WeaponResource
     {
-        protected readonly TWeaponConfig Config;
+        protected readonly TWeaponResource Resource;
         protected readonly IFireParamsSource Source;
         
         protected float Cooldown;
         
 
-        protected BaseWeapon(TWeaponConfig config, IFireParamsSource source)
+        protected BaseWeapon(TWeaponResource resource, IFireParamsSource source)
         {
-            Config = config;
+            Resource = resource;
             Source = source;
         }
 

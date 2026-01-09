@@ -14,9 +14,9 @@ namespace _Project.Runtime.Ufo
 {
     public class UfoModel : ITickable, IInitializable
     {
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly IRemoteConfigProvider _remoteConfigProvider;
-        private UfoSpawnConfig _assets;
+        private UfoSpawnResource _assets;
         private UfoSpawnData _data;
         private readonly IWorldConfig _world;
 
@@ -30,10 +30,10 @@ namespace _Project.Runtime.Ufo
         private GameState _gameState;
         private bool _ready;
 
-        public UfoModel(IConfigsService configsService, IWorldConfig world,
+        public UfoModel(IResourcesService resourcesService, IWorldConfig world,
             IRemoteConfigProvider remoteConfigProvider)
         {
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _world = world;
             _remoteConfigProvider = remoteConfigProvider;
 
@@ -45,8 +45,8 @@ namespace _Project.Runtime.Ufo
         {
             UniTask.Void(async () =>
             {
-                await _configsService.LoadAllAsync();
-                _assets = _configsService.Get<UfoSpawnConfig>(AddressablesConfigPaths.General.UfoSpawn);
+                await _resourcesService.LoadAllAsync();
+                _assets = _resourcesService.Get<UfoSpawnResource>(AddressablesResourcePaths.General.UfoSpawn);
                 if (!_remoteConfigProvider.TryGet(Config.Ufo.Spawn, out _data))
                 {
                     Debug.LogWarning("[RemoteConfig] Missing Ufo spawn data.");

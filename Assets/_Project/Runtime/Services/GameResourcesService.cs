@@ -7,19 +7,19 @@ using UnityEngine;
 
 namespace _Project.Runtime.Services
 {
-    public interface IConfigsService : IDisposable
+    public interface IResourcesService : IDisposable
     {
         UniTask LoadAllAsync();
         T Get<T>(string key = null) where T : ScriptableObject;
     }
 
-    public sealed class GameConfigsService : IConfigsService
+    public sealed class GameResourcesService : IResourcesService
     {
-        private readonly IReadOnlyList<IConfigLoader> _loaders;
-        private readonly Dictionary<Type, Dictionary<string, ScriptableObject>> _configs = new();
+        private readonly IReadOnlyList<IResourceLoader> _loaders;
+        private readonly Dictionary<Type, Dictionary<string, ScriptableObject>> _resources = new();
         private bool _loaded;
 
-        public GameConfigsService(IEnumerable<IConfigLoader> loaders)
+        public GameResourcesService(IEnumerable<IResourceLoader> loaders)
         {
             _loaders = loaders.ToList();
         }
@@ -41,10 +41,10 @@ namespace _Project.Runtime.Services
                 foreach (var loader in _loaders)
                 {
                     var so = await loader.LoadAsync();
-                    if (!_configs.TryGetValue(loader.ConfigType, out var dict))
+                    if (!_resources.TryGetValue(loader.ResourceType, out var dict))
                     {
                         dict = new Dictionary<string, ScriptableObject>();
-                        _configs[loader.ConfigType] = dict;
+                        _resources[loader.ResourceType] = dict;
                     }
 
                     dict[loader.Key] = so;
@@ -54,7 +54,7 @@ namespace _Project.Runtime.Services
             }
             catch (Exception ex)
             {
-                Debug.Log($"Exception during configs async load. {ex}");
+                Debug.Log($"Exception during resources async load. {ex}");
             }
         }
 
@@ -62,12 +62,12 @@ namespace _Project.Runtime.Services
         {
             if (!_loaded)
             {
-                throw new InvalidOperationException("Configs not loaded yet.");
+                throw new InvalidOperationException("Resources not loaded yet.");
             }
 
-            if (!_configs.TryGetValue(typeof(T), out var dict) || dict.Count == 0)
+            if (!_resources.TryGetValue(typeof(T), out var dict) || dict.Count == 0)
             {
-                throw new KeyNotFoundException($"No configs of type {typeof(T).Name} are loaded.");
+                throw new KeyNotFoundException($"No resources of type {typeof(T).Name} are loaded.");
             }
 
             if (key == null)
@@ -75,7 +75,7 @@ namespace _Project.Runtime.Services
                 if (dict.Count > 1)
                 {
                     throw new InvalidOperationException(
-                        $"Multiple configs of type {typeof(T).Name} are loaded. Specify a key.");
+                        $"Multiple resources of type {typeof(T).Name} are loaded. Specify a key.");
                 }
 
                 return (T)dict.Values.First();
@@ -86,7 +86,7 @@ namespace _Project.Runtime.Services
                 return (T)so;
             }
 
-            throw new KeyNotFoundException($"Config {typeof(T).Name} with key '{key}' not found.");
+            throw new KeyNotFoundException($"Resource {typeof(T).Name} with key '{key}' not found.");
         }
 
         public void Dispose()
@@ -96,7 +96,7 @@ namespace _Project.Runtime.Services
                 loader.Dispose();
             }
 
-            _configs.Clear();
+            _resources.Clear();
         }
     }
 }

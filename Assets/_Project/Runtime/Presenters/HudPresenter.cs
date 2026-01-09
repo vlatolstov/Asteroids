@@ -22,12 +22,12 @@ namespace _Project.Runtime.Presenters
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
-        private readonly IConfigsService _configsService;
+        private readonly IResourcesService _resourcesService;
         private readonly IAdsPlayer _adsPlayer;
         private readonly SceneAssetProvider _assetProvider;
 
         private HudView _hud;
-        private GeneralVisualsConfig _visuals;
+        private GeneralVisualsResource _visuals;
         private bool _hudReady;
 
         public HudPresenter(GameModel gameModel,
@@ -36,7 +36,7 @@ namespace _Project.Runtime.Presenters
             StatisticsModel statisticsModel,
             GameLoadingTasksProcessor gameLoadingTasksProcessor,
             SceneAssetProvider assetProvider,
-            IConfigsService configsService,
+            IResourcesService resourcesService,
             IAdsPlayer adsPlayer)
         {
             _gameModel = gameModel;
@@ -45,7 +45,7 @@ namespace _Project.Runtime.Presenters
             _statisticsModel = statisticsModel;
             _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
             _assetProvider = assetProvider;
-            _configsService = configsService;
+            _resourcesService = resourcesService;
             _adsPlayer = adsPlayer;
         }
 
@@ -103,7 +103,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _visuals ??= _configsService.Get<GeneralVisualsConfig>(AddressablesConfigPaths.General.GeneralVisuals);
+            _visuals ??= _resourcesService.Get<GeneralVisualsResource>(AddressablesResourcePaths.General.GeneralVisuals);
 
             _hud.RespawnButtonPressed += OnRespawnButtonPressed;
             _hud.BackToMenuButtonPressed += OnBackToMenuButtonPressed;

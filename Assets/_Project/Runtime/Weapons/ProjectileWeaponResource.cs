@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
-    [CreateAssetMenu(fileName = "AoeWeaponConfig", menuName = "Settings/Weapons/AOE Weapon", order = 0)]
-    public class AoeWeaponConfig : WeaponConfig
+    [CreateAssetMenu(fileName = "ProjectileWeaponResource", menuName = "Resources/Weapons/Projectile Weapon", order = 0)]
+    public class ProjectileWeaponResource : WeaponResource
     {
         [Header("Logic")]
         [field: SerializeField]
-        public AoeAttackConfig Attack { get; private set; }
+        public ProjectileResource Projectile { get; private set; }
 
         [Header("Representation")]
         [SerializeField]

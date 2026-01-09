@@ -4,8 +4,8 @@ using Random = UnityEngine.Random;
 
 namespace _Project.Runtime.Weapons
 {
-    [CreateAssetMenu(fileName = "AoeAttackConfig", menuName = "Settings/Weapons/AOE Attack", order = 0)]
-    public class AoeAttackConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "AoeAttackResource", menuName = "Resources/Weapons/AOE Attack", order = 0)]
+    public class AoeAttackResource : ScriptableObject
     {
         [Serializable]
         public enum AttachMode

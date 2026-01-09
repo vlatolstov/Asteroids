@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
-    [CreateAssetMenu(fileName = "ProjectileConfig", menuName = "Settings/Weapons/Projectile")]
-    public class ProjectileConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "ProjectileResource", menuName = "Resources/Weapons/Projectile")]
+    public class ProjectileResource : ScriptableObject
     {
         [Header("Representation")]
         [SerializeField,

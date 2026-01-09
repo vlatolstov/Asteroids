@@ -16,7 +16,7 @@ namespace _Project.Runtime.Views
         private float _defaultLife = 1f;
 
         private Source _source;
-        private ProjectileConfig _conf;
+        private ProjectileResource _projectileResource;
         private ProjectileAttackData _attackData;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
@@ -46,7 +46,7 @@ namespace _Project.Runtime.Views
         {
             if (_spawned)
             {
-                var hit = new ProjectileHit(_conf, _attackData, transform.position, transform.rotation,
+                var hit = new ProjectileHit(_projectileResource, _attackData, transform.position, transform.rotation,
                     transform.localScale, _source);
                 ProjectileHit?.Invoke(ViewId, hit);
             }
@@ -54,7 +54,7 @@ namespace _Project.Runtime.Views
 
         public void Reinitialize(ProjectileShot shotData)
         {
-            _conf = shotData.Weapon.Projectile;
+            _projectileResource = shotData.Weapon.Projectile;
             _attackData = shotData.AttackData ?? new ProjectileAttackData();
 
             transform.position = shotData.Position;
@@ -70,7 +70,7 @@ namespace _Project.Runtime.Views
             float lifeTime = _attackData.Lifetime;
             _life = lifeTime > 0 ? lifeTime : _defaultLife;
 
-            _sr.sprite = _conf.AttackSprite;
+            _sr.sprite = _projectileResource.AttackSprite;
 
             gameObject.layer = shotData.Layer;
             _source = shotData.Source;

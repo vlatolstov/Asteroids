@@ -15,7 +15,7 @@ namespace _Project.Runtime.Constants
         public const string MenuView = "UI/MenuView";
     }
     
-    public static class AddressablesConfigPaths
+    public static class AddressablesResourcePaths
     {
         public static class Ads
         {
@@ -24,24 +24,24 @@ namespace _Project.Runtime.Constants
         
         public static class General
         {
-            public const string AsteroidsSpawn = "Configs/General/AsteroidsSpawn";
-            public const string UfoSpawn = "Configs/General/UfoSpawn";
-            public const string GeneralSounds = "Configs/General/GeneralSounds";
-            public const string GeneralVisuals = "Configs/General/GeneralVisuals";
+            public const string AsteroidsSpawn = "Resources/General/AsteroidsSpawn";
+            public const string UfoSpawn = "Resources/General/UfoSpawn";
+            public const string GeneralSounds = "Resources/General/GeneralSounds";
+            public const string GeneralVisuals = "Resources/General/GeneralVisuals";
         }
 
         public static class Weapons
         {
-            public const string ShipGun = "Configs/Weapons/ShipGun";
-            public const string ShipLaser = "Configs/Weapons/ShipLaser";
-            public const string UfoBlaster = "Configs/Weapons/UfoBlaster";
+            public const string ShipGun = "Resources/Weapons/ShipGun";
+            public const string ShipLaser = "Resources/Weapons/ShipLaser";
+            public const string UfoBlaster = "Resources/Weapons/UfoBlaster";
         }
 
         public static class Attacks
         {
-            public const string BlasterPulse = "Configs/Attacks/BlasterPulse";
-            public const string Rocket = "Configs/Attacks/Rocket";
-            public const string LaserAttack = "Configs/Attacks/LaserAttack";
+            public const string BlasterPulse = "Resources/Attacks/BlasterPulse";
+            public const string Rocket = "Resources/Attacks/Rocket";
+            public const string LaserAttack = "Resources/Attacks/LaserAttack";
         }
     }
 }

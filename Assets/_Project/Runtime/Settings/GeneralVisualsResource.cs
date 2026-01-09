@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace _Project.Runtime.Settings
 {
-    [CreateAssetMenu(fileName = "GeneralVisualsConfig", menuName = "Settings/General Visuals Config", order = 0)]
-    public class GeneralVisualsConfig : ScriptableObject
+    [CreateAssetMenu(fileName = "GeneralVisualsResource", menuName = "Resources/General Visuals", order = 0)]
+    public class GeneralVisualsResource : ScriptableObject
     {
         [field: SerializeField]
         public RuntimeAnimatorController ShipDestroyed { get; private set; }

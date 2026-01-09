@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace _Project.Runtime.Weapons
 {
-    public class AoeWeapon : BaseWeapon<AoeWeaponConfig>
+    public class AoeWeapon : BaseWeapon<AoeWeaponResource>
     {
         private readonly AoeWeaponData _data;
         private readonly AoeAttackData _attackData;
@@ -16,8 +16,8 @@ namespace _Project.Runtime.Weapons
 
         public event Action<AoeAttackReleased> AttackReleased;
 
-        public AoeWeapon(AoeWeaponConfig config, AoeWeaponData data, AoeAttackData attackData, IFireParamsSource source)
-            : base(config, source)
+        public AoeWeapon(AoeWeaponResource resource, AoeWeaponData data, AoeAttackData attackData, IFireParamsSource source)
+            : base(resource, source)
         {
             _data = data ?? new AoeWeaponData();
             _attackData = attackData ?? new AoeAttackData();
@@ -47,7 +47,7 @@ namespace _Project.Runtime.Weapons
             var originTransform = mb.transform;
 
             _charges--;
-            var attack = new AoeAttackReleased(originTransform, Config, _data, _attackData, sourceType);
+            var attack = new AoeAttackReleased(originTransform, Resource, _data, _attackData, sourceType);
             AttackReleased?.Invoke(attack);
 
             Cooldown = Mathf.Max(0f, _data.WeaponCooldown);

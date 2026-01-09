@@ -2,6 +2,7 @@ using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Firebase;
 using UnityEngine;
 
 namespace _Project.Runtime.LoadingServices
@@ -22,8 +23,16 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
+            var status = await FirebaseApp.CheckAndFixDependenciesAsync();
+            if (status != DependencyStatus.Available)
+            {
+                Debug.LogError($"Firebase init failed: {status}");
+                return;
+            }
+            
             var source = await _remoteConfigProvider.InitializeAsync();
-            Debug.Log("Remote config loaded from source: " + source);
+            Debug.Log("Numeric configs loaded from source: " + source);
+            
             await _sceneLoader.LoadSceneAsync(Constants.Scenes.Menu);
         }
     }
