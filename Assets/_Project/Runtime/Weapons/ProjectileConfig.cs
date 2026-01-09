@@ -5,16 +5,6 @@ namespace _Project.Runtime.Weapons
     [CreateAssetMenu(fileName = "ProjectileConfig", menuName = "Settings/Weapons/Projectile")]
     public class ProjectileConfig : ScriptableObject
     {
-        [Header("Logic")]
-        [field: SerializeField]
-        public Vector2 Size { get; private set; }
-
-        [field: SerializeField]
-        public float Speed { get; private set; }
-
-        [field: SerializeField]
-        public float Lifetime { get; private set; }
-
         [Header("Representation")]
         [SerializeField,
          Tooltip("Range of the projectile appearances, randomly picked to spawn")]

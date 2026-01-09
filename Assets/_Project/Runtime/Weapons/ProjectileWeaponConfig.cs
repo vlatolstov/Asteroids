@@ -10,15 +10,6 @@ namespace _Project.Runtime.Weapons
         [field: SerializeField]
         public ProjectileConfig Projectile { get; private set; }
 
-        [field: SerializeField]
-        public float Spread { get; private set; }
-
-        [field: SerializeField]
-        public int BulletsPerShot { get; private set; }
-
-        [field: SerializeField]
-        public float BulletsInterval { get; private set; }
-
         [Header("Representation")]
         [SerializeField]
         private AudioClip[] _attackSounds;

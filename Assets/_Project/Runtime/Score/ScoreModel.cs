@@ -1,6 +1,6 @@
 using System;
 using _Project.Runtime.Data;
-using _Project.Runtime.Settings;
+using _Project.Runtime.RemoteConfig;
 
 namespace _Project.Runtime.Score
 {
@@ -9,7 +9,7 @@ namespace _Project.Runtime.Score
         private readonly BestScoreService _bestScoreService;
 
         private int _totalScore;
-        private ScoreConfig _scoreConfig;
+        private ScoreData _scoreConfig;
         private GameState _previousGameState;
         private bool _hasGameState;
         public int BestScore => _bestScoreService.Value;
@@ -24,7 +24,7 @@ namespace _Project.Runtime.Score
             _bestScoreService = bestScoreService;
         }
 
-        public void ApplyConfig(ScoreConfig scoreConfig)
+        public void ApplyConfig(ScoreData scoreConfig)
         {
             _scoreConfig = scoreConfig;
         }
@@ -84,8 +84,8 @@ namespace _Project.Runtime.Score
 
             int amount = destroyed.Size switch
             {
-                AsteroidSize.Large => _scoreConfig.LargeAsteroidScore,
-                AsteroidSize.Small => _scoreConfig.SmallAsteroidScore,
+                AsteroidSize.Large => _scoreConfig.LargeAsteroid,
+                AsteroidSize.Small => _scoreConfig.SmallAsteroid,
                 _ => throw new Exception("Unknown asteroid size")
             };
 
@@ -99,7 +99,7 @@ namespace _Project.Runtime.Score
                 return;
             }
 
-            AddScore(_scoreConfig.UfoScore);
+            AddScore(_scoreConfig.Ufo);
         }
 
         public void ChangeTotalScore(int newScore)

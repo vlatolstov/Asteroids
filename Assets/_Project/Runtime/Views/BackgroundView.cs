@@ -1,12 +1,12 @@
 using _Project.Runtime.Abstract.MVP;
-using _Project.Runtime.Settings;
+using _Project.Runtime.RemoteConfig;
 using UnityEngine;
 
 namespace _Project.Runtime.Views
 {
     public class BackgroundView : BaseView
     {
-        private BackgroundJitterConfig _config;
+        private BackgroundJitterData _config;
 
         private Vector3 _baseLocalPosition;
         private Vector2 _currentOffset;
@@ -80,7 +80,7 @@ namespace _Project.Runtime.Views
             _playerVelocity = velocity;
         }
 
-        public void Initialize(BackgroundJitterConfig config)
+        public void Initialize(BackgroundJitterData config)
         {
             _config = config;
         }

@@ -16,11 +16,6 @@ namespace _Project.Runtime.AssetManagement.Configs
         protected override string AssetPath => AddressablesConfigPaths.General.UfoSpawn;
     }
 
-    public class ScoreConfigLoader : LocalConfigLoader<ScoreConfig>
-    {
-        protected override string AssetPath => AddressablesConfigPaths.General.Score;
-    }
-
     public class GeneralSoundsConfigLoader : LocalConfigLoader<GeneralSoundsConfig>
     {
         protected override string AssetPath => AddressablesConfigPaths.General.GeneralSounds;
@@ -31,8 +26,4 @@ namespace _Project.Runtime.AssetManagement.Configs
         protected override string AssetPath => AddressablesConfigPaths.General.GeneralVisuals;
     }
 
-    public class BackgroundJitterConfigLoader : LocalConfigLoader<BackgroundJitterConfig>
-    {
-        protected override string AssetPath => AddressablesConfigPaths.General.BackgroundJitter;
-    }
 }

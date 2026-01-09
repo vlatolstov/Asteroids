@@ -1,5 +1,6 @@
 using _Project.Runtime.Abstract.Ads;
 using _Project.Runtime.Ads;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.SceneManagement;
 using UnityEngine;
 using Zenject;
@@ -17,6 +18,15 @@ namespace _Project.Runtime.Installers
 
         public override void InstallBindings()
         {
+            Container
+                .Bind<NumericConfigParser>()
+                .AsSingle();
+
+            Container
+                .Bind<IRemoteConfigProvider>()
+                .To<FirebaseRemoteConfigProvider>()
+                .AsSingle();
+
             Container
                 .Bind<SceneLoader>()
                 .AsSingle();

@@ -14,19 +14,6 @@ namespace _Project.Runtime.Weapons
             Static
         }
 
-        [Header("Logic")]
-        [field: SerializeField]
-        public float Length { get; private set; }
-
-        [field: SerializeField]
-        public float Width { get; private set; }
-
-        [field: SerializeField]
-        public float Duration { get; private set; }
-
-        [field: SerializeField]
-        public AttachMode Mode { get; private set; }
-
         [Header("Representation")]
         [SerializeField]
         [Tooltip("Range of the projectile appearances, randomly picked to spawn")]

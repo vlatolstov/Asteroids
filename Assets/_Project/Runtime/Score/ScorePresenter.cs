@@ -3,8 +3,7 @@ using _Project.Runtime.Asteroid;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
-using _Project.Runtime.Services;
-using _Project.Runtime.Settings;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Ufo;
 using Cysharp.Threading.Tasks;
 using Zenject;
@@ -17,19 +16,19 @@ namespace _Project.Runtime.Score
         private readonly UfoModel _ufoModel;
         private readonly GameModel _gameModel;
         private readonly ScoreModel _scoreModel;
-        private readonly IConfigsService _configsService;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
 
-        private ScoreConfig _scoreConfig;
+        private ScoreData _scoreConfig;
         private bool _ready;
 
         public ScorePresenter(GameModel gameModel, AsteroidsModel asteroidsModel,
-            UfoModel ufoModel, ScoreModel scoreModel, IConfigsService configsService)
+            UfoModel ufoModel, ScoreModel scoreModel, IRemoteConfigProvider remoteConfigProvider)
         {
             _gameModel = gameModel;
             _asteroidsModel = asteroidsModel;
             _ufoModel = ufoModel;
             _scoreModel = scoreModel;
-            _configsService = configsService;
+            _remoteConfigProvider = remoteConfigProvider;
         }
         
         public void Initialize()
@@ -39,8 +38,12 @@ namespace _Project.Runtime.Score
 
         private async UniTaskVoid SetupAsync()
         {
-            await _configsService.LoadAllAsync();
-            _scoreConfig = _configsService.Get<ScoreConfig>(AddressablesConfigPaths.General.Score);
+            await UniTask.CompletedTask;
+
+            if (!_remoteConfigProvider.TryGet(Config.Score, out _scoreConfig))
+            {
+                _scoreConfig = new ScoreData();
+            }
 
             _scoreModel.ApplyConfig(_scoreConfig);
             _scoreModel.SetInitialState(_gameModel.CurrentState);

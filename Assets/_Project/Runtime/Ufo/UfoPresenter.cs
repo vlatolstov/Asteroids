@@ -5,8 +5,8 @@ using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Movement;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Services;
-using _Project.Runtime.Settings;
 using _Project.Runtime.Weapons;
 using _Project.Runtime.Ship;
 using Zenject;
@@ -21,6 +21,7 @@ namespace _Project.Runtime.Ufo
         private readonly GameModel _gameModel;
         private readonly IViewPoolsService _poolsService;
         private readonly IConfigsService _configsService;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly IWorldConfig _worldConfig;
 
         private readonly Dictionary<uint, UfoView> _activeUfo;
@@ -30,15 +31,17 @@ namespace _Project.Runtime.Ufo
         private ShipPose _targetShip;
         private GameState _gameState;
 
-        private MovementConfig _movementConfig;
+        private MovementConfigData _movementConfig;
         private ProjectileWeaponConfig _gunConfig;
-        private ChasingEnemyConfig _chaseConfig;
+        private ProjectileWeaponData _gunData;
+        private ProjectileAttackData _gunAttackData;
+        private ChasingUfoData _chaseConfig;
         private bool _configsReady;
         private bool _initialized;
 
         public UfoPresenter(UfoModel ufoModel, ShipModel shipModel, CombatModel combatModel,
             GameModel gameModel, IViewPoolsService poolsService, IConfigsService configsService,
-            IWorldConfig worldConfig)
+            IRemoteConfigProvider remoteConfigProvider, IWorldConfig worldConfig)
         {
             _ufoModel = ufoModel;
             _shipModel = shipModel;
@@ -46,6 +49,7 @@ namespace _Project.Runtime.Ufo
             _gameModel = gameModel;
             _poolsService = poolsService;
             _configsService = configsService;
+            _remoteConfigProvider = remoteConfigProvider;
             _worldConfig = worldConfig;
 
             _activeUfo = new Dictionary<uint, UfoView>();
@@ -110,6 +114,8 @@ namespace _Project.Runtime.Ufo
                 command,
                 new ChasingMotor(_movementConfig, _worldConfig, _chaseConfig),
                 _gunConfig,
+                _gunData,
+                _gunAttackData,
                 _chaseConfig,
                 _worldConfig);
             var ufo = _pool.Spawn(args);
@@ -197,9 +203,27 @@ namespace _Project.Runtime.Ufo
                 return;
             }
 
-            _movementConfig = _configsService.Get<MovementConfig>(AddressablesConfigPaths.Movement.Ufo);
+            if (!_remoteConfigProvider.TryGet(Config.Ufo.Movement, out _movementConfig))
+            {
+                _movementConfig = new MovementConfigData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Weapon.UfoBlaster, out _gunData))
+            {
+                _gunData = new ProjectileWeaponData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Attack.BlasterPulse, out _gunAttackData))
+            {
+                _gunAttackData = new ProjectileAttackData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Ufo.Chasing, out _chaseConfig))
+            {
+                _chaseConfig = new ChasingUfoData();
+            }
+
             _gunConfig = _configsService.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.UfoBlaster);
-            _chaseConfig = _configsService.Get<ChasingEnemyConfig>(AddressablesConfigPaths.Movement.UfoChasing);
             _configsReady = true;
         }
     }

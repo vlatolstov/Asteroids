@@ -4,6 +4,7 @@ using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Movement;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Services;
 using _Project.Runtime.Weapons;
 using UnityEngine;
@@ -19,21 +20,26 @@ namespace _Project.Runtime.Ship
         private readonly InputModel _inputModel;
         private readonly IViewPoolsService _poolsService;
         private readonly IConfigsService _configsService;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly IWorldConfig _worldConfig;
 
         private ShipView _activeShip;
         private ShipView.Pool _pool;
         private bool _subscriptionsActive;
 
-        private MovementConfig _movementConfig;
+        private MovementConfigData _movementConfig;
         private ProjectileWeaponConfig _shipGunConfig;
+        private ProjectileWeaponData _shipGunData;
+        private ProjectileAttackData _shipGunAttackData;
         private AoeWeaponConfig _shipAoeConfig;
+        private AoeWeaponData _shipAoeData;
+        private AoeAttackData _shipAoeAttackData;
         private bool _configsReady;
         private bool _initialized;
 
         public ShipPresenter(ShipModel shipModel, CombatModel combatModel, InputModel inputModel,
             IViewPoolsService poolsService, GameModel gameModel, IConfigsService configsService,
-            IWorldConfig worldConfig)
+            IRemoteConfigProvider remoteConfigProvider, IWorldConfig worldConfig)
         {
             _shipModel = shipModel;
             _combatModel = combatModel;
@@ -41,6 +47,7 @@ namespace _Project.Runtime.Ship
             _poolsService = poolsService;
             _gameModel = gameModel;
             _configsService = configsService;
+            _remoteConfigProvider = remoteConfigProvider;
             _worldConfig = worldConfig;
         }
 
@@ -218,7 +225,11 @@ namespace _Project.Runtime.Ship
                 position,
                 new PlayerMotor(_movementConfig, _worldConfig),
                 _shipGunConfig,
-                _shipAoeConfig);
+                _shipGunData,
+                _shipGunAttackData,
+                _shipAoeConfig,
+                _shipAoeData,
+                _shipAoeAttackData);
             var ship = _pool.Spawn(args);
             AttachShip(ship);
             _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
@@ -273,7 +284,31 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
-            _movementConfig = _configsService.Get<MovementConfig>(AddressablesConfigPaths.Movement.Ship);
+            if (!_remoteConfigProvider.TryGet(Config.Ship.Movement, out _movementConfig))
+            {
+                _movementConfig = new MovementConfigData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Weapon.ShipGun, out _shipGunData))
+            {
+                _shipGunData = new ProjectileWeaponData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Attack.Rocket, out _shipGunAttackData))
+            {
+                _shipGunAttackData = new ProjectileAttackData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Weapon.ShipLaser, out _shipAoeData))
+            {
+                _shipAoeData = new AoeWeaponData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Attack.LaserAttack, out _shipAoeAttackData))
+            {
+                _shipAoeAttackData = new AoeAttackData();
+            }
+
             _shipGunConfig = _configsService.Get<ProjectileWeaponConfig>(AddressablesConfigPaths.Weapons.ShipGun);
             _shipAoeConfig = _configsService.Get<AoeWeaponConfig>(AddressablesConfigPaths.Weapons.ShipLaser);
             _configsReady = true;

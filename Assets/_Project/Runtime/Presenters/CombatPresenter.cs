@@ -150,7 +150,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var attack = _aoePool.Spawn(aoe.Emitter, aoe.Weapon, aoe.Source);
+            var attack = _aoePool.Spawn(aoe);
 
             if (!_activeAoe.TryAdd(attack.ViewId, attack))
             {

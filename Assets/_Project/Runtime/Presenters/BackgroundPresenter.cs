@@ -1,10 +1,9 @@
 using System;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Data;
-using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Ship;
-using _Project.Runtime.Services;
 using _Project.Runtime.Views;
 using UnityEngine;
 using Zenject;
@@ -15,20 +14,20 @@ namespace _Project.Runtime.Presenters
     {
         private readonly ShipModel _shipModel;
         private readonly GameLoadingTasksProcessor _gameLoadingTasksProcessor;
-        private readonly IConfigsService _configsService;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly SceneAssetProvider _assetProvider;
 
         private BackgroundView _bg;
         private bool _initialized;
 
         public BackgroundPresenter(ShipModel shipModel,
-            GameLoadingTasksProcessor gameLoadingTasksProcessor, 
-            IConfigsService configsService,
+            GameLoadingTasksProcessor gameLoadingTasksProcessor,
+            IRemoteConfigProvider remoteConfigProvider,
             SceneAssetProvider assetProvider)
         {
             _shipModel = shipModel;
             _gameLoadingTasksProcessor = gameLoadingTasksProcessor;
-            _configsService = configsService;
+            _remoteConfigProvider = remoteConfigProvider;
             _assetProvider = assetProvider;
         }
 
@@ -73,8 +72,11 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var config =
-                _configsService.Get<Settings.BackgroundJitterConfig>(AddressablesConfigPaths.General.BackgroundJitter);
+            if (!_remoteConfigProvider.TryGet(Constants.Config.Background.Jitter, out BackgroundJitterData config))
+            {
+                Debug.LogWarning("[RemoteConfig] Missing background jitter data.");
+                config = new BackgroundJitterData();
+            }
             _bg.Initialize(config);
 
             _shipModel.ShipPoseChanged += OnShipPoseChanged;

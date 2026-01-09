@@ -10,12 +10,6 @@ namespace _Project.Runtime.Weapons
         [field: SerializeField]
         public AoeAttackConfig Attack { get; private set; }
 
-        [field: SerializeField]
-        public int Charges { get; private set; }
-
-        [field: SerializeField]
-        public float ChargeRate { get; private set; }
-
         [Header("Representation")]
         [SerializeField]
         private AudioClip[] _attackSounds;

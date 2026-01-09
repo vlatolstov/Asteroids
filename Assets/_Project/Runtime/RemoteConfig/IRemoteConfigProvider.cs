@@ -4,7 +4,7 @@ namespace _Project.Runtime.RemoteConfig
 {
     public interface IRemoteConfigProvider
     {
-        UniTask InitializeAsync();
+        UniTask<ConfigSource> InitializeAsync();
         bool TryGet<T>(string key, out T value);
     }
 }

@@ -26,18 +26,8 @@ namespace _Project.Runtime.Constants
         {
             public const string AsteroidsSpawn = "Configs/General/AsteroidsSpawn";
             public const string UfoSpawn = "Configs/General/UfoSpawn";
-            public const string Score = "Configs/General/Score";
             public const string GeneralSounds = "Configs/General/GeneralSounds";
             public const string GeneralVisuals = "Configs/General/GeneralVisuals";
-            public const string BackgroundJitter = "Configs/General/BackgroundJitter";
-        }
-
-        public static class Movement
-        {
-            public const string Ship = "Configs/Movement/Ship";
-            public const string Asteroid = "Configs/Movement/Asteroid";
-            public const string Ufo = "Configs/Movement/Ufo";
-            public const string UfoChasing = "Configs/Movement/UfoChasing";
         }
 
         public static class Weapons

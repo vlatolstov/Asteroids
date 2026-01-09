@@ -5,7 +5,7 @@ using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
-using _Project.Runtime.Settings;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Views;
 using _Project.Runtime.Weapons;
 using UnityEngine;
@@ -18,8 +18,10 @@ namespace _Project.Runtime.Ufo
     public class UfoView : BaseMovableView<ChasingMotor>, IFireParamsSource
     {
         private ProjectileWeaponConfig _gunConfig;
+        private ProjectileWeaponData _gunData;
+        private ProjectileAttackData _gunAttackData;
         private IWorldConfig _world;
-        private ChasingEnemyConfig _chase;
+        private ChasingUfoData _chase;
         private ProjectileWeapon _gun;
 
         private ShipPose _target;
@@ -85,11 +87,13 @@ namespace _Project.Runtime.Ufo
             }
         }
 
-        public void Configure(ChasingMotor motor, ProjectileWeaponConfig gunConfig, ChasingEnemyConfig chase,
-            IWorldConfig world)
+        public void Configure(ChasingMotor motor, ProjectileWeaponConfig gunConfig, ProjectileWeaponData gunData,
+            ProjectileAttackData gunAttackData, ChasingUfoData chase, IWorldConfig world)
         {
             SetMotor(motor);
             _gunConfig = gunConfig;
+            _gunData = gunData;
+            _gunAttackData = gunAttackData;
             _chase = chase;
             _world = world;
 
@@ -101,14 +105,14 @@ namespace _Project.Runtime.Ufo
 
             if (_gunConfig != null)
             {
-                _gun = new ProjectileWeapon(_gunConfig, this);
+                _gun = new ProjectileWeapon(_gunConfig, _gunData, _gunAttackData, this);
                 _gun.ProjectileFired += OnProjectileShot;
             }
         }
 
         private bool CanAttack()
         {
-            if (Motor == null || _gunConfig == null || _chase == null || _world == null)
+            if (Motor == null || _gunConfig == null || _gunAttackData == null || _chase == null || _world == null)
             {
                 return false;
             }
@@ -119,7 +123,7 @@ namespace _Project.Runtime.Ufo
             var deltaAim = _target.Position - selfPos;
             float distAim = deltaAim.magnitude;
 
-            float projSpeed = _gunConfig.Projectile.Speed;
+            float projSpeed = _gunAttackData?.Speed ?? 0f;
             float tLead = projSpeed > 0.1f ? Mathf.Clamp(distAim / projSpeed, 0f, _chase.MaxLeadSeconds) : 0f;
 
             var leadPoint = _target.Position + _target.Velocity * tLead;
@@ -201,15 +205,20 @@ namespace _Project.Runtime.Ufo
             public readonly UfoSpawnCommand Command;
             public readonly ChasingMotor Motor;
             public readonly ProjectileWeaponConfig Gun;
-            public readonly ChasingEnemyConfig Chase;
+            public readonly ProjectileWeaponData GunData;
+            public readonly ProjectileAttackData GunAttackData;
+            public readonly ChasingUfoData Chase;
             public readonly IWorldConfig World;
 
             public SpawnArgs(UfoSpawnCommand command, ChasingMotor motor, ProjectileWeaponConfig gun,
-                ChasingEnemyConfig chase, IWorldConfig world)
+                ProjectileWeaponData gunData, ProjectileAttackData gunAttackData, ChasingUfoData chase,
+                IWorldConfig world)
             {
                 Command = command;
                 Motor = motor;
                 Gun = gun;
+                GunData = gunData;
+                GunAttackData = gunAttackData;
                 Chase = chase;
                 World = world;
             }
@@ -223,7 +232,7 @@ namespace _Project.Runtime.Ufo
 
             protected override void Reinitialize(SpawnArgs args, UfoView item)
             {
-                item.Configure(args.Motor, args.Gun, args.Chase, args.World);
+                item.Configure(args.Motor, args.Gun, args.GunData, args.GunAttackData, args.Chase, args.World);
                 item.Reinitialize(in args.Command);
             }
         }

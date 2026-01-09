@@ -2,6 +2,7 @@ using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Services;
 using _Project.Runtime.Utils;
 using Cysharp.Threading.Tasks;
@@ -14,7 +15,9 @@ namespace _Project.Runtime.Ufo
     public class UfoModel : ITickable, IInitializable
     {
         private readonly IConfigsService _configsService;
-        private UfoSpawnConfig _spawnConfig;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
+        private UfoSpawnConfig _assets;
+        private UfoSpawnData _data;
         private readonly IWorldConfig _world;
 
         public event Action<UfoSpawnCommand> UfoSpawnRequested;
@@ -27,10 +30,12 @@ namespace _Project.Runtime.Ufo
         private GameState _gameState;
         private bool _ready;
 
-        public UfoModel(IConfigsService configsService, IWorldConfig world)
+        public UfoModel(IConfigsService configsService, IWorldConfig world,
+            IRemoteConfigProvider remoteConfigProvider)
         {
             _configsService = configsService;
             _world = world;
+            _remoteConfigProvider = remoteConfigProvider;
 
             _time = 0f;
             _inGame = 0;
@@ -41,8 +46,14 @@ namespace _Project.Runtime.Ufo
             UniTask.Void(async () =>
             {
                 await _configsService.LoadAllAsync();
-                _spawnConfig = _configsService.Get<UfoSpawnConfig>(AddressablesConfigPaths.General.UfoSpawn);
-                _nextAt = _spawnConfig.InitialDelay;
+                _assets = _configsService.Get<UfoSpawnConfig>(AddressablesConfigPaths.General.UfoSpawn);
+                if (!_remoteConfigProvider.TryGet(Config.Ufo.Spawn, out _data))
+                {
+                    Debug.LogWarning("[RemoteConfig] Missing Ufo spawn data.");
+                    _data = new UfoSpawnData();
+                }
+
+                _nextAt = _data.InitialDelay;
                 _ready = true;
             });
         }
@@ -61,12 +72,12 @@ namespace _Project.Runtime.Ufo
                 return;
             }
 
-            if (_inGame < _spawnConfig.MaxAlive)
+            if (_inGame < _data.MaxAlive)
             {
                 SpawnOne();
             }
 
-            _nextAt = _time + _spawnConfig.Interval;
+            _nextAt = _time + _data.Interval;
         }
 
         public void SetGameState(GameState gameState)
@@ -104,20 +115,20 @@ namespace _Project.Runtime.Ufo
             switch (side)
             {
                 case 0:
-                    x = rect.xMin - _spawnConfig.EdgeOffset;
+                    x = rect.xMin - _data.EdgeOffset;
                     y = Mathf.Lerp(rect.yMin, rect.yMax, t);
                     break;
                 case 1:
-                    x = rect.xMax + _spawnConfig.EdgeOffset;
+                    x = rect.xMax + _data.EdgeOffset;
                     y = Mathf.Lerp(rect.yMin, rect.yMax, t);
                     break;
                 case 2:
                     x = Mathf.Lerp(rect.xMin, rect.xMax, t);
-                    y = rect.yMin - _spawnConfig.EdgeOffset;
+                    y = rect.yMin - _data.EdgeOffset;
                     break;
                 default:
                     x = Mathf.Lerp(rect.xMin, rect.xMax, t);
-                    y = rect.yMax + _spawnConfig.EdgeOffset;
+                    y = rect.yMax + _data.EdgeOffset;
                     break;
             }
 
@@ -126,13 +137,13 @@ namespace _Project.Runtime.Ufo
             var toCenter = rect.center - pos;
             var dir = toCenter.sqrMagnitude > 1e-6f ? toCenter.normalized : Vector2.up;
 
-            float jitterDeg = Random.Range(-_spawnConfig.EntryAngleJitterDeg, _spawnConfig.EntryAngleJitterDeg);
+            float jitterDeg = Random.Range(-_data.EntryAngleJitterDeg, _data.EntryAngleJitterDeg);
             dir = GeometryMethods.RotateVector(dir, Mathf.Deg2Rad * jitterDeg);
 
-            Vector2 vel = dir * _spawnConfig.Speed;
+            Vector2 vel = dir * _data.Speed;
             float angRad = GeometryMethods.DirToAngle(dir);
 
-            var command = new UfoSpawnCommand(_spawnConfig.Sprite, _spawnConfig.Scale, pos, vel, angRad);
+            var command = new UfoSpawnCommand(_assets.Sprite, _data.Scale, pos, vel, angRad);
             UfoSpawnRequested?.Invoke(command);
         }
     }

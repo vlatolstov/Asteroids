@@ -4,6 +4,7 @@ using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Abstract.Weapons;
 using _Project.Runtime.Data;
 using _Project.Runtime.Movement;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Views;
 using _Project.Runtime.Weapons;
 using UnityEngine;
@@ -22,7 +23,11 @@ namespace _Project.Runtime.Ship
         private GameObject _rightEngine;
 
         private ProjectileWeaponConfig _gunConfig;
+        private ProjectileWeaponData _gunData;
+        private ProjectileAttackData _gunAttackData;
         private AoeWeaponConfig _aoeWeaponConfig;
+        private AoeWeaponData _aoeData;
+        private AoeAttackData _aoeAttackData;
 
         private ProjectileWeapon _gun;
         private ProjectileWeaponState _projState;
@@ -85,11 +90,17 @@ namespace _Project.Runtime.Ship
             DisposeWeapons();
         }
 
-        public void Configure(PlayerMotor motor, ProjectileWeaponConfig gunConfig, AoeWeaponConfig aoeWeaponConfig)
+        public void Configure(PlayerMotor motor, ProjectileWeaponConfig gunConfig, ProjectileWeaponData gunData,
+            ProjectileAttackData gunAttackData, AoeWeaponConfig aoeWeaponConfig, AoeWeaponData aoeData,
+            AoeAttackData aoeAttackData)
         {
             SetMotor(motor);
             _gunConfig = gunConfig;
+            _gunData = gunData;
+            _gunAttackData = gunAttackData;
             _aoeWeaponConfig = aoeWeaponConfig;
+            _aoeData = aoeData;
+            _aoeAttackData = aoeAttackData;
             InitializeWeapons();
         }
 
@@ -102,8 +113,8 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
-            _gun = new ProjectileWeapon(_gunConfig, this);
-            _aoeWeapon = new AoeWeapon(_aoeWeaponConfig, this);
+            _gun = new ProjectileWeapon(_gunConfig, _gunData, _gunAttackData, this);
+            _aoeWeapon = new AoeWeapon(_aoeWeaponConfig, _aoeData, _aoeAttackData, this);
 
             _gun.ProjectileFired += OnProjectileAttack;
             _aoeWeapon.AttackReleased += OnAoeAttack;
@@ -207,14 +218,24 @@ namespace _Project.Runtime.Ship
             public readonly Vector2 Position;
             public readonly PlayerMotor Motor;
             public readonly ProjectileWeaponConfig Gun;
+            public readonly ProjectileWeaponData GunData;
+            public readonly ProjectileAttackData GunAttackData;
             public readonly AoeWeaponConfig Aoe;
+            public readonly AoeWeaponData AoeData;
+            public readonly AoeAttackData AoeAttackData;
 
-            public SpawnArgs(Vector2 position, PlayerMotor motor, ProjectileWeaponConfig gun, AoeWeaponConfig aoe)
+            public SpawnArgs(Vector2 position, PlayerMotor motor, ProjectileWeaponConfig gun,
+                ProjectileWeaponData gunData, ProjectileAttackData gunAttackData, AoeWeaponConfig aoe,
+                AoeWeaponData aoeData, AoeAttackData aoeAttackData)
             {
                 Position = position;
                 Motor = motor;
                 Gun = gun;
+                GunData = gunData;
+                GunAttackData = gunAttackData;
                 Aoe = aoe;
+                AoeData = aoeData;
+                AoeAttackData = aoeAttackData;
             }
         }
 
@@ -226,7 +247,8 @@ namespace _Project.Runtime.Ship
 
             protected override void Reinitialize(SpawnArgs args, ShipView item)
             {
-                item.Configure(args.Motor, args.Gun, args.Aoe);
+                item.Configure(args.Motor, args.Gun, args.GunData, args.GunAttackData, args.Aoe, args.AoeData,
+                    args.AoeAttackData);
                 item.Reinitialize(args.Position);
             }
 

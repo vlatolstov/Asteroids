@@ -12,7 +12,6 @@ namespace _Project.Runtime.RemoteConfig
         public AsteroidsSpawnData AsteroidsSpawn;
         public UfoSpawnData UfoSpawn;
         public ScoreData Score;
-        
         public WeaponsGroup Weapons;
     }
 
@@ -138,7 +137,7 @@ namespace _Project.Runtime.RemoteConfig
     [Serializable]
     public sealed class ProjectileAttackData
     {
-        public Vector2 Size;
+        public Vector2Data Size;
         public float Speed;
         public float Lifetime;
     }
@@ -150,5 +149,17 @@ namespace _Project.Runtime.RemoteConfig
         public float Width;
         public float Duration;
         public int AttachMode;
+    }
+
+    [Serializable]
+    public struct Vector2Data
+    {
+        public float X;
+        public float Y;
+
+        public Vector2 ToVector2()
+        {
+            return new Vector2(X, Y);
+        }
     }
 }

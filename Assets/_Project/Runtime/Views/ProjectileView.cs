@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Weapons;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace _Project.Runtime.Views
 
         private Source _source;
         private ProjectileConfig _conf;
+        private ProjectileAttackData _attackData;
         private Rigidbody2D _rb;
         private SpriteRenderer _sr;
         private float _life;
@@ -44,8 +46,8 @@ namespace _Project.Runtime.Views
         {
             if (_spawned)
             {
-                var hit = new ProjectileHit(_conf, transform.position, transform.rotation, transform.localScale,
-                    _source);
+                var hit = new ProjectileHit(_conf, _attackData, transform.position, transform.rotation,
+                    transform.localScale, _source);
                 ProjectileHit?.Invoke(ViewId, hit);
             }
         }
@@ -53,18 +55,19 @@ namespace _Project.Runtime.Views
         public void Reinitialize(ProjectileShot shotData)
         {
             _conf = shotData.Weapon.Projectile;
+            _attackData = shotData.AttackData ?? new ProjectileAttackData();
 
             transform.position = shotData.Position;
-            transform.localScale = _conf.Size;
+            transform.localScale = _attackData.Size.ToVector2();
 
             var dir = shotData.Direction;
-            var projectileVelocity = _conf.Speed * dir;
+            var projectileVelocity = _attackData.Speed * dir;
 
             transform.up = dir;
 
             _rb.linearVelocity = shotData.InheritVelocity + projectileVelocity;
 
-            float lifeTime = _conf.Lifetime;
+            float lifeTime = _attackData.Lifetime;
             _life = lifeTime > 0 ? lifeTime : _defaultLife;
 
             _sr.sprite = _conf.AttackSprite;

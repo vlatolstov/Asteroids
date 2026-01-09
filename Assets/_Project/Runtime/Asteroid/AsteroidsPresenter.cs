@@ -5,6 +5,7 @@ using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
 using _Project.Runtime.Movement;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Services;
 using Zenject;
 
@@ -15,23 +16,23 @@ namespace _Project.Runtime.Asteroid
         private readonly AsteroidsModel _asteroidsModel;
         private readonly GameModel _gameModel;
         private readonly IViewPoolsService _poolsService;
-        private readonly IConfigsService _configsService;
+        private readonly IRemoteConfigProvider _remoteConfigProvider;
         private readonly IWorldConfig _worldConfig;
 
         private readonly Dictionary<uint, AsteroidView> _activeAsteroids;
         private AsteroidView.Pool _pool;
         private bool _subscriptionsActive;
-        private MovementConfig _movementConfig;
+        private MovementConfigData _movementConfig;
         private bool _configsReady;
         private bool _initialized;
 
         public AsteroidsPresenter(AsteroidsModel asteroidsModel, GameModel gameModel,
-            IViewPoolsService poolsService, IConfigsService configsService, IWorldConfig worldConfig)
+            IViewPoolsService poolsService, IRemoteConfigProvider remoteConfigProvider, IWorldConfig worldConfig)
         {
             _asteroidsModel = asteroidsModel;
             _gameModel = gameModel;
             _poolsService = poolsService;
-            _configsService = configsService;
+            _remoteConfigProvider = remoteConfigProvider;
             _worldConfig = worldConfig;
 
             _activeAsteroids = new Dictionary<uint, AsteroidView>();
@@ -109,8 +110,10 @@ namespace _Project.Runtime.Asteroid
                 return;
             }
 
-            _movementConfig =
-                _configsService.Get<MovementConfig>(AddressablesConfigPaths.Movement.Asteroid);
+            if (!_remoteConfigProvider.TryGet(Config.Asteroids.Movement, out _movementConfig))
+            {
+                _movementConfig = new MovementConfigData();
+            }
             _configsReady = true;
         }
 

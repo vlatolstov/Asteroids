@@ -1,7 +1,7 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.Movement;
 using _Project.Runtime.Data;
-using _Project.Runtime.Settings;
+using _Project.Runtime.RemoteConfig;
 using UnityEngine;
 using GM = _Project.Runtime.Utils.GeometryMethods;
 
@@ -9,13 +9,13 @@ namespace _Project.Runtime.Movement
 {
     public class ChasingMotor : BaseMotor2D
     {
-        private readonly ChasingEnemyConfig _chaseConfig;
+        private readonly ChasingUfoData _chaseConfig;
         
         private float _previousError;
         private ShipPose _target;
 
-        public ChasingMotor(MovementConfig config, IWorldConfig world, 
-            ChasingEnemyConfig chaseConfig) : base(config, world)
+        public ChasingMotor(MovementConfigData config, IWorldConfig world,
+            ChasingUfoData chaseConfig) : base(config, world)
         {
             _chaseConfig = chaseConfig;
         }

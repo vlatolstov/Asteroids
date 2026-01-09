@@ -1,5 +1,5 @@
 using _Project.Runtime.Abstract.Configs;
-using _Project.Runtime.Movement;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Utils;
 using UnityEngine;
 
@@ -11,10 +11,10 @@ namespace _Project.Runtime.Abstract.Movement
         private float _turnAxis;
         private bool _wrapEnabled;
         
-        protected readonly MovementConfig Config;
+        protected readonly MovementConfigData Config;
         protected readonly IWorldConfig World;
         
-        protected BaseMotor2D(MovementConfig config, IWorldConfig world)
+        protected BaseMotor2D(MovementConfigData config, IWorldConfig world)
         {
             Config = config;
             World = world;

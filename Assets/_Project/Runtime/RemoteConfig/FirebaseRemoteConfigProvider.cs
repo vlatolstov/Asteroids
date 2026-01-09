@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace _Project.Runtime.RemoteConfig
 {
+    public enum ConfigSource
+    {
+        Local,
+        Remote
+    }
+    
     public sealed class FirebaseRemoteConfigProvider : IRemoteConfigProvider
     {
         private const string DefaultJsonResourcePath = "RemoteConfig/numeric_config_default";
@@ -14,17 +20,18 @@ namespace _Project.Runtime.RemoteConfig
         private readonly NumericConfigParser _parser;
         private Dictionary<string, object> _configMap = new();
         private bool _initialized;
+        private ConfigSource _source;
 
         public FirebaseRemoteConfigProvider(NumericConfigParser parser)
         {
             _parser = parser;
         }
 
-        public async UniTask InitializeAsync()
+        public async UniTask<ConfigSource> InitializeAsync()
         {
             if (_initialized)
             {
-                return;
+                return _source;
             }
 
             _initialized = true;
@@ -32,6 +39,7 @@ namespace _Project.Runtime.RemoteConfig
             string defaultsJson = LoadDefaultsJson();
             _configMap = _parser.Parse(defaultsJson);
 
+            _source = ConfigSource.Local;
             try
             {
                 var remote = FirebaseRemoteConfig.DefaultInstance;
@@ -43,12 +51,15 @@ namespace _Project.Runtime.RemoteConfig
                 {
                     var remoteMap = _parser.Parse(json);
                     MergeConfigs(remoteMap);
+                    _source = ConfigSource.Remote;
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogWarning($"[RemoteConfig] Failed to fetch/activate config, using defaults. {ex}");
             }
+            
+            return _source;
         }
 
         public bool TryGet<T>(string key, out T value)

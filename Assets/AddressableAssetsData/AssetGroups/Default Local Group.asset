@@ -40,11 +40,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5437bc3d26a26fa44b7390e7978f3953
-    m_Address: Configs/Movement/Ufo
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5cbc4340fdb8c1545853f19aee8916da
     m_Address: Configs/Attacks/BlasterPulse
     m_ReadOnly: 0
@@ -55,23 +50,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 60dd05d0b0ae48146b8fc9de5fe48e15
-    m_Address: Configs/Movement/Ship
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 658e4e9b2befbec45bc300551c69e11f
-    m_Address: Configs/Movement/Asteroid
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 6b59baf2cb78bb6459efc39ceccaa7f5
     m_Address: Views/BackgroundView
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 6b83cb5c852640f4f82a7939e3e191e2
-    m_Address: Configs/Movement/UfoChasing
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -82,11 +62,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 853fa93e5fe07c44cac56ca9ef3ee80b
     m_Address: Configs/Attacks/LaserAttack
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 85aac8b8975e77948b838d99eb01fb7c
-    m_Address: Configs/General/BackgroundJitter
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -137,11 +112,6 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: efe598da038e46e4fa78090d4c31e36a
     m_Address: Configs/General/AsteroidsSpawn
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: f068a982eb4603d40826818999956a8a
-    m_Address: Configs/General/Score
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

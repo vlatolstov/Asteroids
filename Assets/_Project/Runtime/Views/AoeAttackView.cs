@@ -1,6 +1,7 @@
 using System;
 using _Project.Runtime.Abstract.MVP;
 using _Project.Runtime.Data;
+using _Project.Runtime.RemoteConfig;
 using _Project.Runtime.Weapons;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ namespace _Project.Runtime.Views
         private Collider2D _collider;
 
         private AoeAttackConfig _conf;
+        private AoeAttackData _attackData;
+        private AoeWeaponData _weaponData;
 
         private Source _source;
         private float _life;
@@ -56,22 +59,24 @@ namespace _Project.Runtime.Views
         private void OnTriggerEnter2D(Collider2D other)
         {
             var target = other.transform;
-            var hit = new AoeHit(_conf, target.position, target.rotation, Vector2.one, _source);
+            var hit = new AoeHit(_conf, _attackData, target.position, target.rotation, Vector2.one, _source);
             AoeHit?.Invoke(hit);
         }
 
-        private void Reinitialize(Transform par, AoeWeaponConfig aoe, Source source)
+        private void Reinitialize(AoeAttackReleased attack)
         {
-            _conf = aoe.Attack;
-            _life = _conf.Duration;
-            _follow = aoe.Attack.Mode == AoeAttackConfig.AttachMode.FollowEmitter;
-            _emitter = par;
+            _conf = attack.Weapon.Attack;
+            _attackData = attack.AttackData ?? new AoeAttackData();
+            _weaponData = attack.WeaponData ?? new AoeWeaponData();
+            _life = _attackData.Duration;
+            _follow = _attackData.AttachMode == (int)AoeAttackConfig.AttachMode.FollowEmitter;
+            _emitter = attack.Emitter;
             _collider.enabled = true;
-            _source = source;
-            gameObject.layer = par.gameObject.layer;
+            _source = attack.Source;
+            gameObject.layer = attack.Emitter.gameObject.layer;
 
-            _centerOffset = aoe.MuzzleOffset + _conf.Length / 2;
-            var worldPos = par.TransformPoint(0f, _centerOffset, 0f);
+            _centerOffset = _weaponData.MuzzleOffset + _attackData.Length / 2f;
+            var worldPos = attack.Emitter.TransformPoint(0f, _centerOffset, 0f);
             transform.SetPositionAndRotation(worldPos, _emitter.rotation);
 
             if (!_conf.AttackAnimation)
@@ -87,7 +92,7 @@ namespace _Project.Runtime.Views
 
             if (_sr.sprite)
             {
-                transform.localScale = new Vector3(_conf.Width, _conf.Length, 1f);
+                transform.localScale = new Vector3(_attackData.Width, _attackData.Length, 1f);
                 _sr.size = Vector2.one;
             }
             else
@@ -98,17 +103,16 @@ namespace _Project.Runtime.Views
             Physics2D.SyncTransforms();
         }
 
-        public class Pool : ViewPool<Transform, AoeWeaponConfig, Source, AoeAttackView>
+        public class Pool : ViewPool<AoeAttackReleased, AoeAttackView>
         {
             public Pool(Func<AoeAttackView> factory, Transform parent, int warmup)
                 : base(factory, parent, warmup)
             {
             }
 
-            protected override void Reinitialize(Transform par, AoeWeaponConfig aoe, 
-                Source source, AoeAttackView item)
+            protected override void Reinitialize(AoeAttackReleased attack, AoeAttackView item)
             {
-                item.Reinitialize(par, aoe, source);
+                item.Reinitialize(attack);
             }
 
             protected override void OnDespawned(AoeAttackView item)

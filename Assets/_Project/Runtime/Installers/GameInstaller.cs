@@ -39,15 +39,8 @@ namespace _Project.Runtime.Installers
 
             Container.Bind<IConfigLoader>().To<AsteroidsSpawnConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<UfoSpawnConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<ScoreConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<GeneralSoundsConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<GeneralVisualsConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<BackgroundJitterConfigLoader>().AsSingle();
-
-            Container.Bind<IConfigLoader>().To<ShipMovementConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<AsteroidMovementConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<UfoMovementConfigLoader>().AsSingle();
-            Container.Bind<IConfigLoader>().To<UfoChasingConfigLoader>().AsSingle();
 
             Container.Bind<IConfigLoader>().To<ShipGunConfigLoader>().AsSingle();
             Container.Bind<IConfigLoader>().To<ShipLaserConfigLoader>().AsSingle();

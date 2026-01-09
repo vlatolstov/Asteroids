@@ -9,6 +9,7 @@ using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using _Project.Runtime.Views;
+using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -103,7 +104,8 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            var view = _pool.Spawn(hit.Projectile.HitAnimation, hit.Position, hit.Rotation, hit.Projectile.Size);
+            var size = hit.AttackData != null ? hit.AttackData.Size.ToVector2() : Vector2.one;
+            var view = _pool.Spawn(hit.Projectile.HitAnimation, hit.Position, hit.Rotation, size);
             RegisterView(view);
         }
 

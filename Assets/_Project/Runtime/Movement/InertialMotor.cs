@@ -1,12 +1,13 @@
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Abstract.Movement;
+using _Project.Runtime.RemoteConfig;
 using UnityEngine;
 
 namespace _Project.Runtime.Movement
 {
     public class InertialMotor : BaseMotor2D
     {
-        public InertialMotor(MovementConfig config, IWorldConfig world) : base(config, world)
+        public InertialMotor(MovementConfigData config, IWorldConfig world) : base(config, world)
         {
             SetThrust(1f);
         }
