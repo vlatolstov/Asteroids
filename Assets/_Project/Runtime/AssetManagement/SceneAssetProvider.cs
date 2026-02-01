@@ -31,6 +31,7 @@ namespace _Project.Runtime.AssetManagement
 
         public async UniTask LoadAllAsync()
         {
+            var tasks = new List<UniTask<GameObject>>();
             foreach (var loader in _loaders)
             {
                 if (_loadedGameObjects.ContainsKey(loader.Type))
@@ -39,8 +40,29 @@ namespace _Project.Runtime.AssetManagement
                     continue;
                 }
 
-                var asset = await loader.LoadAsync();
-                _loadedGameObjects.Add(loader.Type, asset);
+                var task = loader.LoadAsync();
+                tasks.Add(task);
+            }
+
+            var result = new GameObject[tasks.Count];
+            try
+            {
+                result = await UniTask.WhenAll(tasks);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+
+            if (result.Length != _loaders.Count)
+            {
+                Debug.LogError($"There were {result.Length} GameObjects loaded");
+                return;
+            }
+            
+            for (var i = 0; i < result.Length; i++)
+            {
+                _loadedGameObjects.Add(_loaders[i].Type, result[i]);
             }
         }
 
