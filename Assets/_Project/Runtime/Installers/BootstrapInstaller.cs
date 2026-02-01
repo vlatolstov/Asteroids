@@ -1,5 +1,3 @@
-using _Project.Runtime.Abstract.Ads;
-using _Project.Runtime.Ads;
 using _Project.Runtime.LoadingServices;
 using UnityEngine;
 using Zenject;
@@ -13,8 +11,7 @@ namespace _Project.Runtime.Installers
         {
             Container
                 .BindInterfacesAndSelfTo<BootstrapLoadingTasksProcessor>()
-                .AsCached()
-                .NonLazy();
+                .AsCached();
         }
     }
 }

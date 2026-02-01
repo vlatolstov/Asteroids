@@ -23,7 +23,7 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .Bind<IRemoteConfigProvider>()
+                .Bind(typeof(IRemoteConfigProvider), typeof(IInitializable))
                 .To<FirebaseRemoteConfigProvider>()
                 .AsSingle();
 
