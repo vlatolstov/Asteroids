@@ -2,39 +2,65 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Constants;
 using Cysharp.Threading.Tasks;
+using Firebase;
 using Firebase.RemoteConfig;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Runtime.RemoteConfig
 {
-    public enum ConfigSource
-    {
-        Local,
-        Remote
-    }
-
-    public sealed class FirebaseRemoteConfigProvider : IRemoteConfigProvider
+    public sealed class FirebaseRemoteConfigProvider : IInitializable, IRemoteConfigProvider
     {
         private const string DefaultJsonResourcePath = "RemoteConfig/numeric_config_default";
 
         private readonly NumericConfigParser _parser;
         private Dictionary<string, object> _configMap = new();
-        private bool _initialized;
-        private ConfigSource _source;
+
+        public ConfigSource Source { get; private set; }
+
+        public bool IsInitialized { get; private set; }
 
         public FirebaseRemoteConfigProvider(NumericConfigParser parser)
         {
             _parser = parser;
         }
 
-        public async UniTask<ConfigSource> InitializeAsync()
+        public async void Initialize()
         {
-            if (_initialized)
+            try
             {
-                return _source;
+                var status = await FirebaseApp.CheckAndFixDependenciesAsync();
+
+                if (status != DependencyStatus.Available)
+                {
+                    Debug.LogError($"Firebase init failed: {status}");
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
             }
 
-            _initialized = true;
+            try
+            {
+                Source = await InitializeAsyncInternal();
+                Debug.Log("Numeric configs loaded from source: " + Source);
+            }
+            catch (Exception e)
+            {
+                Debug.LogException(e);
+            }
+        }
+
+        private async UniTask<ConfigSource> InitializeAsyncInternal()
+        {
+            if (IsInitialized)
+            {
+                return Source;
+            }
+
+            IsInitialized = true;
 
             string defaultsJson = LoadDefaultsJson();
             var remote = FirebaseRemoteConfig.DefaultInstance;
@@ -44,8 +70,8 @@ namespace _Project.Runtime.RemoteConfig
             });
 
             _configMap = _parser.Parse(defaultsJson);
-            _source = ConfigSource.Local;
-            
+            Source = ConfigSource.Local;
+
             await remote.FetchAsync(TimeSpan.Zero);
             await remote.ActivateAsync();
             string json = remote.GetValue(RemoteConfigKeys.NumericConfigJson).StringValue;
@@ -54,11 +80,12 @@ namespace _Project.Runtime.RemoteConfig
             {
                 var remoteMap = _parser.Parse(json);
                 MergeConfigs(remoteMap);
-                _source = ConfigSource.Remote;
+                Source = ConfigSource.Remote;
             }
 
-            return _source;
+            return Source;
         }
+
 
         public bool TryGet<T>(string key, out T value)
         {
