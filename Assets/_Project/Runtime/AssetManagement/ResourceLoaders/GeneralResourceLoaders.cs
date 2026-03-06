@@ -1,6 +1,7 @@
 using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.Asteroid;
 using _Project.Runtime.Constants;
+using _Project.Runtime.InAppPurchase;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ufo;
 
@@ -24,6 +25,11 @@ namespace _Project.Runtime.AssetManagement.ResourceLoaders
     public class GeneralVisualsResourceLoader : LocalResourceLoader<GeneralVisualsResource>
     {
         protected override string AssetPath => AddressablesResourcePaths.General.GeneralVisuals;
+    }
+
+    public class ShopVisualCatalogResourceLoader : LocalResourceLoader<ShopVisualCatalog>
+    {
+        protected override string AssetPath => AddressablesResourcePaths.Iap.ShopVisualCatalog;
     }
 
 }

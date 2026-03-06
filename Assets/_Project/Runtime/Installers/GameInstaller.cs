@@ -148,10 +148,6 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<BestScoreService>()
-                .AsSingle();
-            
-            Container
                 .BindInterfacesAndSelfTo<GameLoadingTasksProcessor>()
                 .AsSingle();
             
