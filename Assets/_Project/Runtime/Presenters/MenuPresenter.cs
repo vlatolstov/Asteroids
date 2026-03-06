@@ -20,17 +20,21 @@ namespace _Project.Runtime.Presenters
         private readonly BestScoreService _bestScoreService;
         private readonly MenuLoadingTasksProcessor _menuLoadingTasksProcessor;
         private readonly SceneAssetProvider _assetProvider;
+        private readonly ShopPresenter _shopPresenter;
 
         private MenuView _menuView;
 
         public MenuPresenter(SceneLoader sceneLoader,
             BestScoreService bestScoreService,
-            MenuLoadingTasksProcessor menuLoadingTasksProcessor, SceneAssetProvider assetProvider)
+            MenuLoadingTasksProcessor menuLoadingTasksProcessor,
+            SceneAssetProvider assetProvider,
+            ShopPresenter shopPresenter)
         {
             _sceneLoader = sceneLoader;
             _bestScoreService = bestScoreService;
             _menuLoadingTasksProcessor = menuLoadingTasksProcessor;
             _assetProvider = assetProvider;
+            _shopPresenter = shopPresenter;
         }
 
         public void Initialize()
@@ -50,6 +54,7 @@ namespace _Project.Runtime.Presenters
             if (_menuView)
             {
                 _menuView.StartButtonClicked -= OnStartClicked;
+                _menuView.ShopButtonClicked -= OnShopClicked;
                 _menuView.ExitButtonClicked -= OnExitClicked;
             }
         }
@@ -64,6 +69,7 @@ namespace _Project.Runtime.Presenters
             }
 
             _menuView.StartButtonClicked += OnStartClicked;
+            _menuView.ShopButtonClicked += OnShopClicked;
             _menuView.ExitButtonClicked += OnExitClicked;
             _menuView.SetBestScore(_bestScoreService.Value);
 
@@ -73,6 +79,11 @@ namespace _Project.Runtime.Presenters
         private void OnStartClicked()
         {
             UniTask.Void(async () => { await _sceneLoader.LoadSceneAsync(Scenes.Game); });
+        }
+
+        private void OnShopClicked()
+        {
+            _shopPresenter.OpenShop();
         }
 
         private void OnExitClicked()

@@ -1,0 +1,8 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/USS/MenuSS.uss?fileID=7433441132597879392&amp;guid=ad96e0fd719344a4b4fbff82b0950028&amp;type=3#MenuSS" />
+    <ui:VisualElement name="shop-overlay-background" class="shop-overlay-background">
+        <ui:VisualElement name="shop-window" class="shop-window">
+            <ui:ListView binding-source-selection-mode="Manual" name="shop-items" class="shop-items" item-template="project://database/Assets/_Project/UI/ItemCard.uxml?fileID=9197481963319205126&amp;guid=b2053cb023cb24043994c0ddb5e39446&amp;type=3#ItemCard" header-title="Available products" show-add-remove-footer="false" allow-add="false" allow-remove="false" reorder-mode="Animated" show-border="true" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

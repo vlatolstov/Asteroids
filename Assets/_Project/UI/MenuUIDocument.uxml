@@ -11,6 +11,7 @@
             <ui:Label name="menu-subtitle-label" text="Classic arcade survival" class="menu-subtitle hud-text" />
             <ui:VisualElement name="menu-actions" class="menu-actions">
                 <ui:Button name="start-game-btn" text="Start Game" class="menu-button hud-button" />
+                <ui:Button name="shop-btn" text="Shop" class="menu-button hud-button" />
                 <ui:Button name="exit-game-btn" text="Exit Game" class="menu-button hud-button" />
             </ui:VisualElement>
         </ui:VisualElement>

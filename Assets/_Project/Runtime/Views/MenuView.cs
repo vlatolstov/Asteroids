@@ -11,10 +11,12 @@ namespace _Project.Runtime.Views
         private UIDocument _doc;
         private VisualElement _root;
         private Button _startButton;
+        private Button _shopButton;
         private Button _exitButton;
         private Label _bestScoreLabel;
 
         public event Action StartButtonClicked;
+        public event Action ShopButtonClicked;
         public event Action ExitButtonClicked;
 
         private void Awake()
@@ -29,12 +31,18 @@ namespace _Project.Runtime.Views
             }
 
             _startButton = _root.Q<Button>("start-game-btn");
+            _shopButton = _root.Q<Button>("shop-btn");
             _exitButton = _root.Q<Button>("exit-game-btn");
             _bestScoreLabel = _root.Q<Label>("best-score-label");
 
             if (_startButton != null)
             {
                 _startButton.clicked += OnStartButtonClicked;
+            }
+
+            if (_shopButton != null)
+            {
+                _shopButton.clicked += OnShopButtonClicked;
             }
 
             if (_exitButton != null)
@@ -48,6 +56,11 @@ namespace _Project.Runtime.Views
             if (_startButton != null)
             {
                 _startButton.clicked -= OnStartButtonClicked;
+            }
+
+            if (_shopButton != null)
+            {
+                _shopButton.clicked -= OnShopButtonClicked;
             }
 
             if (_exitButton != null)
@@ -69,6 +82,11 @@ namespace _Project.Runtime.Views
         private void OnStartButtonClicked()
         {
             StartButtonClicked?.Invoke();
+        }
+
+        private void OnShopButtonClicked()
+        {
+            ShopButtonClicked?.Invoke();
         }
 
         private void OnExitButtonClicked()

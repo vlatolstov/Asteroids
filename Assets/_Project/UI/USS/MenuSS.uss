@@ -70,3 +70,31 @@
 .menu-actions > {
     margin-top: 0;
 }
+
+.shop-overlay-background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.68);
+}
+
+.shop-window {
+    width: 70%;
+    max-width: 920px;
+    height: 80%;
+    max-height: 900px;
+    padding: 16px;
+    border-width: 1px;
+    border-color: var(--hud-border);
+    border-radius: var(--panel-radius);
+    background-color: rgba(8, 8, 8, 0.92);
+}
+
+.shop-items {
+    flex-grow: 1;
+}
