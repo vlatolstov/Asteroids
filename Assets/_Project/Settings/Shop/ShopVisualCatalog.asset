@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b382050cf2740d6814675899dd53470, type: 3}
   m_Name: ShopVisualCatalog
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Runtime.InAppPurchase.ShopVisualCatalog
-  _defaultIcon: {fileID: -8192790150348668540, guid: f0233ea947ed3694eb17d7e5143c38d6, type: 3}
-  _entries:
-  - _productId: RemoveAds
-    _icon: {fileID: 9199860725323990666, guid: f0233ea947ed3694eb17d7e5143c38d6, type: 3}
+  entries:
+  - <ProductId>k__BackingField: RemoveAds
+    <Icon>k__BackingField: {fileID: 9199860725323990666, guid: f0233ea947ed3694eb17d7e5143c38d6, type: 3}
+  <DefaultIcon>k__BackingField: {fileID: -8192790150348668540, guid: f0233ea947ed3694eb17d7e5143c38d6, type: 3}

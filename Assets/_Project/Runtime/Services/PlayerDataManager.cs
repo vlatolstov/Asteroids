@@ -113,6 +113,13 @@ namespace _Project.Runtime.Services
             return Commit(next);
         }
 
+        public void ClearPlayerPrefs()
+        {
+            _saveService.ClearAll();
+            _playerData = new PlayerData();
+            Commit(_playerData, forceSave: true);
+        }
+
         private bool AddUniqueProductId(string productId, Func<PlayerData, List<string>> listSelector)
         {
             var next = Clone(_playerData);

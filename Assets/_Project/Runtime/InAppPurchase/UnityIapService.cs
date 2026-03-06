@@ -220,6 +220,13 @@ namespace _Project.Runtime.InAppPurchase
                 }
             }
 
+            
+            if (nonConsumableProductIds.Count == 0 && activeSubscriptionProductIds.Count == 0)
+            {
+                Debug.Log("[IAP] Store returned no entitlement orders. Keeping local entitlements.");
+                return false;
+            }
+
             return _playerDataManager.SyncEntitlements(nonConsumableProductIds, activeSubscriptionProductIds);
         }
 

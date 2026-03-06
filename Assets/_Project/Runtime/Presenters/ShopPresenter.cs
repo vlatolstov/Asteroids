@@ -17,6 +17,7 @@ namespace _Project.Runtime.Presenters
         private readonly MenuLoadingTasksProcessor _menuLoadingTasksProcessor;
         private readonly IResourcesService _resourcesService;
         private readonly IIapService _iapService;
+        private readonly PlayerDataManager _playerDataManager;
         private ShopVisualCatalog _shopVisualCatalog;
 
         private readonly List<ShopProductCardData> _productsData = new();
@@ -26,12 +27,14 @@ namespace _Project.Runtime.Presenters
         public ShopPresenter(SceneAssetProvider assetProvider,
             MenuLoadingTasksProcessor menuLoadingTasksProcessor,
             IResourcesService resourcesService,
-            IIapService iapService)
+            IIapService iapService,
+            PlayerDataManager playerDataManager)
         {
             _assetProvider = assetProvider;
             _menuLoadingTasksProcessor = menuLoadingTasksProcessor;
             _resourcesService = resourcesService;
             _iapService = iapService;
+            _playerDataManager = playerDataManager;
         }
 
         public void Initialize()
@@ -57,6 +60,7 @@ namespace _Project.Runtime.Presenters
                 _shopView.PurchaseConfirmed -= OnPurchaseConfirmed;
                 _shopView.RestorePurchasesRequested -= OnRestorePurchasesRequested;
                 _shopView.CloseRequested -= OnCloseRequested;
+                _shopView.ClearPlayerPrefsRequested -= OnClearPlayerPrefsRequested;
             }
         }
 
@@ -96,6 +100,7 @@ namespace _Project.Runtime.Presenters
             _shopView.PurchaseConfirmed += OnPurchaseConfirmed;
             _shopView.RestorePurchasesRequested += OnRestorePurchasesRequested;
             _shopView.CloseRequested += OnCloseRequested;
+            _shopView.ClearPlayerPrefsRequested += OnClearPlayerPrefsRequested;
             _shopView.Hide();
             TryResolveVisualCatalog();
             FillProducts();
@@ -184,6 +189,12 @@ namespace _Project.Runtime.Presenters
         private void OnCloseRequested()
         {
             CloseShop();
+        }
+
+        private void OnClearPlayerPrefsRequested()
+        {
+            _playerDataManager.ClearPlayerPrefs();
+            FillProducts();
         }
     }
 }

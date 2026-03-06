@@ -8,6 +8,7 @@ namespace _Project.Runtime.Services
         bool TryLoad<T>(string key, out T data) where T : class;
         bool Save<T>(string key, T data) where T : class;
         bool Delete(string key);
+        void ClearAll();
     }
 
     public sealed class LocalSaveService : ISaveService
@@ -75,6 +76,12 @@ namespace _Project.Runtime.Services
             PlayerPrefs.DeleteKey(key);
             PlayerPrefs.Save();
             return true;
+        }
+
+        public void ClearAll()
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
         }
     }
 }
