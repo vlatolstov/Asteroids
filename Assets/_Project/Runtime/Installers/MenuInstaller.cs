@@ -1,8 +1,9 @@
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.Abstract.AssetManagement;
+using _Project.Runtime.AssetManagement.ResourceLoaders;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Presenters;
-using _Project.Runtime.Score;
-using _Project.Runtime.Views;
+using _Project.Runtime.Services;
 using UnityEngine;
 using Zenject;
 
@@ -23,12 +24,12 @@ namespace _Project.Runtime.Installers
             Container.BindInterfacesAndSelfTo<SceneAssetProvider>().AsSingle();
 
             Container
-                .Bind<ShopView>()
-                .FromComponentInHierarchy()
+                .Bind<IResourceLoader>()
+                .To<ShopVisualCatalogResourceLoader>()
                 .AsSingle();
-            
+
             Container
-                .BindInterfacesAndSelfTo<BestScoreService>()
+                .BindInterfacesAndSelfTo<GameResourcesService>()
                 .AsSingle();
         }
 

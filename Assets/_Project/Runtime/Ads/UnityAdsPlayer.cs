@@ -1,5 +1,6 @@
 using System;
 using _Project.Runtime.Abstract.Ads;
+using _Project.Runtime.Models;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
@@ -7,14 +8,17 @@ namespace _Project.Runtime.Ads
 {
     public class UnityAdsPlayer : IAdsPlayer, IUnityAdsLoadListener, IUnityAdsShowListener
     {
+        private const string RemoveAdsProductId = "RemoveAds";
         private readonly IAdsSettings _adsSettings;
+        private readonly PlayerModel _playerModel;
 
         private int _loadAttemptsCount;
         private int _showAttemptsCount;
 
-        public UnityAdsPlayer(IAdsSettings adsSettings)
+        public UnityAdsPlayer(IAdsSettings adsSettings, PlayerModel playerModel)
         {
             _adsSettings = adsSettings;
+            _playerModel = playerModel;
         }
 
         public event Action<AdCompletionStatus> InterstitialAdPlayed;
@@ -22,6 +26,13 @@ namespace _Project.Runtime.Ads
 
         public void PlayInterstitialAd()
         {
+            if (_playerModel.HasNonConsumable(RemoveAdsProductId))
+            {
+                Debug.Log("[Ads] Interstitial ad skipped because Remove Ads is purchased.");
+                InterstitialAdPlayed?.Invoke(AdCompletionStatus.Completed);
+                return;
+            }
+
             ClearCounters();
             Debug.Log("Loading interstitial ad: " + _adsSettings.InterstitialAdId);
             Advertisement.Load(_adsSettings.InterstitialAdId, this);

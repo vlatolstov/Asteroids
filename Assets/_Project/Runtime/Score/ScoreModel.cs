@@ -1,27 +1,28 @@
 using System;
 using _Project.Runtime.Data;
 using _Project.Runtime.RemoteConfig;
+using _Project.Runtime.Services;
 
 namespace _Project.Runtime.Score
 {
     public class ScoreModel
     {
-        private readonly BestScoreService _bestScoreService;
+        private readonly PlayerDataManager _playerDataManager;
 
         private int _totalScore;
         private ScoreData _scoreConfig;
         private GameState _previousGameState;
         private bool _hasGameState;
-        public int BestScore => _bestScoreService.Value;
+        public int BestScore => _playerDataManager.BestScore;
         public bool IsNewRecord { get; private set; }
 
         public event Action<int> TotalScoreChanged;
         public event Action<int> BestScoreChanged;
         public event Action<bool> NewRecordChanged;
 
-        public ScoreModel(BestScoreService bestScoreService)
+        public ScoreModel(PlayerDataManager playerDataManager)
         {
-            _bestScoreService = bestScoreService;
+            _playerDataManager = playerDataManager;
         }
 
         public void ApplyConfig(ScoreData scoreConfig)
@@ -116,7 +117,11 @@ namespace _Project.Runtime.Score
                 return;
             }
 
-            _bestScoreService.SetBestScore(candidate);
+            if (!_playerDataManager.SetBestScore(candidate))
+            {
+                return;
+            }
+
             BestScoreChanged?.Invoke(BestScore);
             SetNewRecord(true);
         }

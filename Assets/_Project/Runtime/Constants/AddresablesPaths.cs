@@ -13,6 +13,7 @@ namespace _Project.Runtime.Constants
         public const string BGMView = "Views/BGMView";
         public const string HudView = "UI/HudView";
         public const string MenuView = "UI/MenuView";
+        public const string ShopView = "UI/ShopView";
     }
     
     public static class AddressablesResourcePaths
@@ -42,6 +43,11 @@ namespace _Project.Runtime.Constants
             public const string BlasterPulse = "Resources/Attacks/BlasterPulse";
             public const string Rocket = "Resources/Attacks/Rocket";
             public const string LaserAttack = "Resources/Attacks/LaserAttack";
+        }
+
+        public static class Iap
+        {
+            public const string ShopVisualCatalog = "Resources/IAP/ShopVisualCatalog";
         }
     }
 }
