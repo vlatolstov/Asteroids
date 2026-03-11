@@ -2,6 +2,7 @@ using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.InAppPurchase;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
+using Unity.Services.Core;
 
 namespace _Project.Runtime.LoadingServices
 {
@@ -23,8 +24,9 @@ namespace _Project.Runtime.LoadingServices
         protected override async UniTask GetTasks()
         {
             await _unityIapService.Connect();
+            await UnityServices.InitializeAsync();
             _unityIapService.FetchProducts();
-            await _sceneLoader.LoadSceneAsync(Constants.Scenes.Menu);
+            await _sceneLoader.LoadSceneAsync(Constants.Scenes.Authentication);
         }
     }
 }

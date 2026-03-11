@@ -1,0 +1,15 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/USS/MenuSS.uss?fileID=7433441132597879392&amp;guid=ad96e0fd719344a4b4fbff82b0950028&amp;type=3#MenuSS" />
+    <ui:VisualElement name="auth-root" style="flex-grow: 1; justify-content: center; align-items: center;">
+        <ui:Button name="sign-in-btn" text="Sign In" class="button-hoverable" style="min-width: 220px; height: 64px; font-size: 24px;">
+            <ui:VisualElement style="flex-grow: 1;" />
+        </ui:Button>
+        <ui:VisualElement name="select-save-window" style="display: none; position: absolute; width: 420px; padding: 24px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; background-color: rgba(20, 20, 20, 0.92);">
+            <ui:Label name="select-save-title" text="Select Save" style="font-size: 30px; color: rgb(255, 255, 255); unity-text-align: middle-center; margin-bottom: 16px;" />
+            <ui:VisualElement name="select-save-buttons-row" style="flex-direction: row; justify-content: space-between; gap: 12px;">
+                <ui:Button name="select-save-local-btn" text="Local" class="button-hoverable" style="flex-grow: 1; height: 52px; font-size: 20px;" />
+                <ui:Button name="select-save-cloud-btn" text="Cloud" class="button-hoverable" style="flex-grow: 1; height: 52px; font-size: 20px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

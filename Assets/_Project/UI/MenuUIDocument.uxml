@@ -10,9 +10,9 @@
             <ui:Label name="menu-title-label" text="ASTEROIDS" class="menu-title hud-title" />
             <ui:Label name="menu-subtitle-label" text="Classic arcade survival" class="menu-subtitle hud-text" />
             <ui:VisualElement name="menu-actions" class="menu-actions">
-                <ui:Button name="start-game-btn" text="Start Game" class="menu-button hud-button" />
-                <ui:Button name="shop-btn" text="Shop" class="menu-button hud-button" />
-                <ui:Button name="exit-game-btn" text="Exit Game" class="menu-button hud-button" />
+                <ui:Button name="start-game-btn" text="Start Game" class="menu-button hud-button button-hoverable" />
+                <ui:Button name="shop-btn" text="Shop" class="menu-button hud-button button-hoverable" />
+                <ui:Button name="exit-game-btn" text="Exit Game" class="menu-button hud-button button-hoverable" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

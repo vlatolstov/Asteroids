@@ -3,12 +3,12 @@
     <ui:VisualElement name="shop-overlay-background" class="shop-overlay-background">
         <ui:VisualElement name="shop-window" class="shop-window">
             <ui:GroupBox style="height: 10%; flex-direction: row; align-items: center; justify-content: flex-end;">
-                <ui:Button text="Restore Purchases" name="RestorePurchases" />
+                <ui:Button text="Restore Purchases" name="RestorePurchases" class="button-hoverable" />
             </ui:GroupBox>
             <ui:ListView binding-source-selection-mode="Manual" name="shop-items" header-title="Available products" show-add-remove-footer="false" allow-add="false" allow-remove="false" reorderable="false" show-border="true" item-template="project://database/Assets/_Project/UI/ItemCard.uxml?fileID=9197481963319205126&amp;guid=b2053cb023cb24043994c0ddb5e39446&amp;type=3#ItemCard" class="shop-items" />
             <ui:GroupBox style="height: 10%; flex-direction: row; align-items: center; justify-content: space-between;">
-                <ui:Button text="Close" name="Close" />
-                <ui:Button text="ClearPlayerPrefs" name="ClearPlayerPrefs" class="shop-clear-prefs-btn" />
+                <ui:Button text="Close" name="Close" class="button-hoverable" />
+                <ui:Button text="ClearPlayerPrefs" name="ClearPlayerPrefs" class="shop-clear-prefs-btn button-hoverable" />
             </ui:GroupBox>
         </ui:VisualElement>
     </ui:VisualElement>

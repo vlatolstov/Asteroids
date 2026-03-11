@@ -110,6 +110,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d60f4159f3f8695498ac73a81062e269
+    m_Address: UI/AuthView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e76034862717b6042ac9d4bdd3be94df
     m_Address: Views/AnimationView
     m_ReadOnly: 0

@@ -11,6 +11,7 @@ namespace _Project.Runtime.Constants
         public const string AudioSourceView = "Views/AudioSourceView";
         public const string BackgroundView = "Views/BackgroundView";
         public const string BGMView = "Views/BGMView";
+        public const string AuthView = "UI/AuthView";
         public const string HudView = "UI/HudView";
         public const string MenuView = "UI/MenuView";
         public const string ShopView = "UI/ShopView";

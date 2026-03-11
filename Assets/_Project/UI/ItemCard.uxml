@@ -1,4 +1,5 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/_Project/UI/USS/HudSS.uss?fileID=7433441132597879392&amp;guid=431b3f400c10cda43b558970d5acec00&amp;type=3#HudSS" />
     <ui:VisualElement name="ItemCard" class="shop-item-card" style="background-color: rgba(0, 0, 0, 0.6);">
         <ui:VisualElement name="shop-item-icon" class="shop-item-icon" />
         <ui:VisualElement name="shop-item-content" class="shop-item-content">
@@ -7,7 +8,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="shop-item-right-column" class="shop-item-right-column">
             <ui:Label name="shop-item-price" text="$0.00" class="shop-item-price" />
-            <ui:Button name="shop-item-buy-btn" text="Buy" class="shop-item-buy-btn" />
+            <ui:Button name="shop-item-buy-btn" text="Buy" class="shop-item-buy-btn hud-button button-hoverable" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
