@@ -54,51 +54,51 @@ namespace _Project.Runtime.Installers
         private void PresentersBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<HudPresenter>()
+                .BindInterfacesTo<HudPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<InputPresenter>()
+                .BindInterfacesTo<InputPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<ShipPresenter>()
+                .BindInterfacesTo<ShipPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<UfoPresenter>()
+                .BindInterfacesTo<UfoPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<AsteroidsPresenter>()
+                .BindInterfacesTo<AsteroidsPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<CombatPresenter>()
+                .BindInterfacesTo<CombatPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<BackgroundPresenter>()
+                .BindInterfacesTo<BackgroundPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameStatePresenter>()
+                .BindInterfacesTo<GameStatePresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<ScorePresenter>()
+                .BindInterfacesTo<ScorePresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameAudioPresenter>()
+                .BindInterfacesTo<GameAudioPresenter>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<AnimationPresenter>()
+                .BindInterfacesTo<AnimationPresenter>()
                 .AsSingle();
             
             Container
-                .BindInterfacesAndSelfTo<StatisticsPresenter>()
+                .BindInterfacesTo<StatisticsPresenter>()
                 .AsSingle();
         }
 
@@ -140,11 +140,11 @@ namespace _Project.Runtime.Installers
         private void ServicesBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<GameViewPoolsService>()
+                .BindInterfacesTo<GameViewPoolsService>()
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameResourcesService>()
+                .BindInterfacesTo<GameResourcesService>()
                 .AsSingle();
 
             Container
@@ -157,7 +157,7 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<AnalyticsEventHandler>()
+                .BindInterfacesTo<AnalyticsEventHandler>()
                 .AsSingle();
         }
     }

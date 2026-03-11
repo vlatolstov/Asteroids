@@ -1,12 +1,9 @@
 using System;
-using System.Collections.Generic;
 using _Project.Runtime.AssetManagement;
-using _Project.Runtime.InAppPurchase;
 using _Project.Runtime.LoadingServices;
-using _Project.Runtime.Services;
+using _Project.Runtime.Models;
 using _Project.Runtime.Views;
 using UnityEngine;
-using UnityEngine.Purchasing;
 using Zenject;
 
 namespace _Project.Runtime.Presenters
@@ -15,26 +12,17 @@ namespace _Project.Runtime.Presenters
     {
         private readonly SceneAssetProvider _assetProvider;
         private readonly MenuLoadingTasksProcessor _menuLoadingTasksProcessor;
-        private readonly IResourcesService _resourcesService;
-        private readonly IIapService _iapService;
-        private readonly PlayerDataManager _playerDataManager;
-        private ShopVisualCatalog _shopVisualCatalog;
-
-        private readonly List<ShopProductCardData> _productsData = new();
+        private readonly ShopModel _shopModel;
 
         private ShopView _shopView;
 
         public ShopPresenter(SceneAssetProvider assetProvider,
             MenuLoadingTasksProcessor menuLoadingTasksProcessor,
-            IResourcesService resourcesService,
-            IIapService iapService,
-            PlayerDataManager playerDataManager)
+            ShopModel shopModel)
         {
             _assetProvider = assetProvider;
             _menuLoadingTasksProcessor = menuLoadingTasksProcessor;
-            _resourcesService = resourcesService;
-            _iapService = iapService;
-            _playerDataManager = playerDataManager;
+            _shopModel = shopModel;
         }
 
         public void Initialize()
@@ -52,7 +40,8 @@ namespace _Project.Runtime.Presenters
         public void Dispose()
         {
             _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTasksFinished;
-            _iapService.PurchasesChanged -= OnPurchasesChanged;
+            _shopModel.ProductsChanged -= OnProductsChanged;
+            _shopModel.Dispose();
 
             if (_shopView)
             {
@@ -72,7 +61,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            FillProducts();
+            OnProductsChanged();
             _shopView.Show();
         }
 
@@ -87,8 +76,6 @@ namespace _Project.Runtime.Presenters
         private void OnLoadingTasksFinished()
         {
             _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTasksFinished;
-            _iapService.PurchasesChanged -= OnPurchasesChanged;
-            _iapService.PurchasesChanged += OnPurchasesChanged;
 
             if (!_assetProvider.TryGetLoadedComponent(out _shopView) || !_shopView)
             {
@@ -101,9 +88,9 @@ namespace _Project.Runtime.Presenters
             _shopView.RestorePurchasesRequested += OnRestorePurchasesRequested;
             _shopView.CloseRequested += OnCloseRequested;
             _shopView.ClearPlayerPrefsRequested += OnClearPlayerPrefsRequested;
+            _shopModel.ProductsChanged += OnProductsChanged;
             _shopView.Hide();
-            TryResolveVisualCatalog();
-            FillProducts();
+            _shopModel.Initialize();
         }
 
         private void OnBackgroundClicked()
@@ -111,79 +98,24 @@ namespace _Project.Runtime.Presenters
             CloseShop();
         }
 
-        private void FillProducts()
+        private void OnProductsChanged()
         {
             if (!_shopView)
             {
                 return;
             }
 
-            _productsData.Clear();
-
-            var products = _iapService.Products;
-            if (products != null)
-            {
-                for (var i = 0; i < products.Count; i++)
-                {
-                    var product = products[i];
-                    if (product == null)
-                    {
-                        continue;
-                    }
-
-                    _productsData.Add(BuildCardData(product));
-                }
-            }
-
-            _shopView.SetProducts(_productsData);
-        }
-
-        private ShopProductCardData BuildCardData(Product product)
-        {
-            var productId = product.definition?.id ?? string.Empty;
-            var metadata = product.metadata;
-
-            var title = !string.IsNullOrWhiteSpace(metadata?.localizedTitle)
-                ? metadata.localizedTitle
-                : productId;
-            var description = metadata?.localizedDescription ?? string.Empty;
-            var price = metadata?.localizedPriceString ?? string.Empty;
-            var icon = _shopVisualCatalog ? _shopVisualCatalog.GetIconOrDefault(productId) : null;
-            var isPurchased = _iapService.CheckEntitlement(productId);
-
-            return new ShopProductCardData(productId, title, description, price, icon, isPurchased);
-        }
-
-        private void TryResolveVisualCatalog()
-        {
-            try
-            {
-                _shopVisualCatalog = _resourcesService.Get<ShopVisualCatalog>();
-            }
-            catch (Exception ex)
-            {
-                _shopVisualCatalog = null;
-                Debug.LogWarning($"[ShopPresenter] Failed to resolve ShopVisualCatalog from IResourcesService. {ex.Message}");
-            }
+            _shopView.SetProducts(_shopModel.Products);
         }
 
         private void OnPurchaseConfirmed(string productId)
         {
-            _iapService.Purchase(productId);
-            FillProducts();
-        }
-
-        private void OnPurchasesChanged()
-        {
-            FillProducts();
+            _shopModel.Purchase(productId);
         }
 
         private void OnRestorePurchasesRequested()
         {
-            if (!_iapService.RestoreTransactions())
-            {
-                Debug.LogWarning("[ShopPresenter] Failed to start restore transactions.");
-            }
+            _shopModel.RestorePurchases();
         }
 
         private void OnCloseRequested()
@@ -193,8 +125,7 @@ namespace _Project.Runtime.Presenters
 
         private void OnClearPlayerPrefsRequested()
         {
-            _playerDataManager.ClearPlayerPrefs();
-            FillProducts();
+            _shopModel.ClearPlayerPrefs();
         }
     }
 }

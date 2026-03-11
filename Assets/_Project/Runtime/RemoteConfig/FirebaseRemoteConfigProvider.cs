@@ -16,10 +16,6 @@ namespace _Project.Runtime.RemoteConfig
         private readonly NumericConfigParser _parser;
         private Dictionary<string, object> _configMap = new();
 
-        public ConfigSource Source { get; private set; }
-
-        public bool IsInitialized { get; private set; }
-
         public FirebaseRemoteConfigProvider(NumericConfigParser parser)
         {
             _parser = parser;
@@ -44,8 +40,8 @@ namespace _Project.Runtime.RemoteConfig
 
             try
             {
-                Source = await InitializeAsyncInternal();
-                Debug.Log("Numeric configs loaded from source: " + Source);
+                var source = await InitializeAsyncInternal();
+                Debug.Log("Numeric configs loaded from source: " + source);
             }
             catch (Exception e)
             {
@@ -55,13 +51,6 @@ namespace _Project.Runtime.RemoteConfig
 
         private async UniTask<ConfigSource> InitializeAsyncInternal()
         {
-            if (IsInitialized)
-            {
-                return Source;
-            }
-
-            IsInitialized = true;
-
             string defaultsJson = LoadDefaultsJson();
             var remote = FirebaseRemoteConfig.DefaultInstance;
             await remote.SetDefaultsAsync(new Dictionary<string, object>
@@ -70,7 +59,7 @@ namespace _Project.Runtime.RemoteConfig
             });
 
             _configMap = _parser.Parse(defaultsJson);
-            Source = ConfigSource.Local;
+            var source = ConfigSource.Local;
 
             await remote.FetchAsync(TimeSpan.Zero);
             await remote.ActivateAsync();
@@ -80,10 +69,10 @@ namespace _Project.Runtime.RemoteConfig
             {
                 var remoteMap = _parser.Parse(json);
                 MergeConfigs(remoteMap);
-                Source = ConfigSource.Remote;
+                source = ConfigSource.Remote;
             }
 
-            return Source;
+            return source;
         }
 
 

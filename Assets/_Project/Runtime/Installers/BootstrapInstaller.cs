@@ -10,7 +10,7 @@ namespace _Project.Runtime.Installers
         public override void InstallBindings()
         {
             Container
-                .BindInterfacesAndSelfTo<BootstrapLoadingTasksProcessor>()
+                .BindInterfacesTo<BootstrapLoadingTasksProcessor>()
                 .AsCached();
         }
     }

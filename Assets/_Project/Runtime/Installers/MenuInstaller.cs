@@ -2,6 +2,7 @@ using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Abstract.AssetManagement;
 using _Project.Runtime.AssetManagement.ResourceLoaders;
 using _Project.Runtime.LoadingServices;
+using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Services;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace _Project.Runtime.Installers
         {
             BindLoadingTasks();
             BindServices();
+            BindModels();
             BindPresenters();
         }
 
@@ -29,18 +31,25 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .BindInterfacesAndSelfTo<GameResourcesService>()
+                .BindInterfacesTo<GameResourcesService>()
                 .AsSingle();
         }
 
         private void BindPresenters()
         {
             Container
-                .BindInterfacesAndSelfTo<MenuPresenter>()
+                .BindInterfacesTo<MenuPresenter>()
                 .AsSingle();
 
             Container
                 .BindInterfacesAndSelfTo<ShopPresenter>()
+                .AsSingle();
+        }
+
+        private void BindModels()
+        {
+            Container
+                .BindInterfacesAndSelfTo<ShopModel>()
                 .AsSingle();
         }
 
