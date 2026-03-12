@@ -13,11 +13,9 @@ namespace _Project.Runtime.Score
         private ScoreData _scoreConfig;
         private GameState _previousGameState;
         private bool _hasGameState;
-        public int BestScore => _playerDataManager.BestScore;
         public bool IsNewRecord { get; private set; }
 
         public event Action<int> TotalScoreChanged;
-        public event Action<int> BestScoreChanged;
         public event Action<bool> NewRecordChanged;
 
         public ScoreModel(PlayerDataManager playerDataManager)
@@ -112,17 +110,11 @@ namespace _Project.Runtime.Score
 
         private void TryUpdateBestScore(int candidate)
         {
-            if (candidate <= BestScore)
-            {
-                return;
-            }
-
             if (!_playerDataManager.SetBestScore(candidate))
             {
                 return;
             }
 
-            BestScoreChanged?.Invoke(BestScore);
             SetNewRecord(true);
         }
 

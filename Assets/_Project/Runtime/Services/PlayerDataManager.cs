@@ -30,8 +30,7 @@ namespace _Project.Runtime.Services
             _playerModel.Apply(_playerData);
         }
 
-        public int BestScore => _playerModel.BestScore;
-        public bool IsInitialized => !string.IsNullOrWhiteSpace(_playerId);
+        private bool IsInitialized => !string.IsNullOrWhiteSpace(_playerId);
 
         public void InitializeForPlayer(string playerId, PlayerData initialData)
         {
@@ -142,23 +141,7 @@ namespace _Project.Runtime.Services
 
         public void ClearLocalPlayerData()
         {
-            if (IsInitialized)
-            {
-                _localSaveService.Delete(_playerId);
-            }
-
-            _playerData = Normalize(new PlayerData());
-            if (IsInitialized)
-            {
-                if (!_localSaveService.Save(_playerId, _playerData))
-                {
-                    Debug.LogWarning("[PlayerData] Failed to re-save cleared data locally.");
-                }
-
-                UniTask.Void(() => SaveCloudSilentlyAsync(_playerId, _playerData));
-            }
-
-            _playerModel.Apply(_playerData);
+            Commit(new PlayerData(), forceSave: true);
         }
 
         private bool AddUniqueProductId(string productId, Func<PlayerData, List<string>> listSelector)

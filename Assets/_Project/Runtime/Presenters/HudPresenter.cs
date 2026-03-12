@@ -18,6 +18,7 @@ namespace _Project.Runtime.Presenters
     public class HudPresenter : IInitializable, IDisposable
     {
         private readonly GameModel _gameModel;
+        private readonly PlayerModel _playerModel;
         private readonly ScoreModel _scoreModel;
         private readonly StatisticsModel _statisticsModel;
         private readonly ShipModel _shipModel;
@@ -31,6 +32,7 @@ namespace _Project.Runtime.Presenters
         private bool _hudReady;
 
         public HudPresenter(GameModel gameModel,
+            PlayerModel playerModel,
             ShipModel shipModel,
             ScoreModel scoreModel,
             StatisticsModel statisticsModel,
@@ -40,6 +42,7 @@ namespace _Project.Runtime.Presenters
             IAdsPlayer adsPlayer)
         {
             _gameModel = gameModel;
+            _playerModel = playerModel;
             _shipModel = shipModel;
             _scoreModel = scoreModel;
             _statisticsModel = statisticsModel;
@@ -79,8 +82,8 @@ namespace _Project.Runtime.Presenters
             _gameModel.GameStateChanged -= OnGameStateChanged;
 
             _scoreModel.TotalScoreChanged -= OnScoreChanged;
-            _scoreModel.BestScoreChanged -= OnBestScoreChanged;
             _scoreModel.NewRecordChanged -= OnNewRecordChanged;
+            _playerModel.BestScoreChanged -= OnBestScoreChanged;
         }
 
         private void OnLoadingTaskFinished()
@@ -115,12 +118,12 @@ namespace _Project.Runtime.Presenters
             _gameModel.GameStateChanged += OnGameStateChanged;
 
             _scoreModel.TotalScoreChanged += OnScoreChanged;
-            _scoreModel.BestScoreChanged += OnBestScoreChanged;
             _scoreModel.NewRecordChanged += OnNewRecordChanged;
+            _playerModel.BestScoreChanged += OnBestScoreChanged;
 
             _hud.SetProjectileWeaponIcon(_visuals.ShipProjectileWeaponIcon);
             _hud.SetAoeWeaponIcon(_visuals.ShipAoeWeaponIcon);
-            _hud.UpdateBestScore(_scoreModel.BestScore);
+            _hud.UpdateBestScore(_playerModel.BestScore);
             _hud.SetNewRecordAchieved(_scoreModel.IsNewRecord);
 
             _hudReady = true;

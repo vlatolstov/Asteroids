@@ -51,6 +51,8 @@ namespace _Project.Runtime.Presenters
 
         public void Dispose()
         {
+            _playerModel.BestScoreChanged -= OnBestScoreChanged;
+
             if (_menuView)
             {
                 _menuView.StartButtonClicked -= OnStartClicked;
@@ -71,9 +73,15 @@ namespace _Project.Runtime.Presenters
             _menuView.StartButtonClicked += OnStartClicked;
             _menuView.ShopButtonClicked += OnShopClicked;
             _menuView.ExitButtonClicked += OnExitClicked;
+            _playerModel.BestScoreChanged += OnBestScoreChanged;
             _menuView.SetBestScore(_playerModel.BestScore);
 
             _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
+        }
+
+        private void OnBestScoreChanged(int bestScore)
+        {
+            _menuView?.SetBestScore(bestScore);
         }
 
         private void OnStartClicked()
