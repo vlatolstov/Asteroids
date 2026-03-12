@@ -27,7 +27,7 @@ namespace _Project.Runtime.Views
         private ListView _shopItemsView;
         private Button _restorePurchasesButton;
         private Button _closeButton;
-        private Button _clearPlayerPrefsButton;
+        private Button _clearPlayerDataButton;
 
         private readonly List<ShopProductCardData> _products = new();
 
@@ -35,7 +35,7 @@ namespace _Project.Runtime.Views
         public event Action<string> PurchaseConfirmed;
         public event Action RestorePurchasesRequested;
         public event Action CloseRequested;
-        public event Action ClearPlayerPrefsRequested;
+        public event Action ClearPlayerDataRequested;
 
         private void Awake()
         {
@@ -53,7 +53,7 @@ namespace _Project.Runtime.Views
             _shopItemsView = _root.Q<ListView>("shop-items");
             _restorePurchasesButton = _root.Q<Button>("RestorePurchases");
             _closeButton = _root.Q<Button>("Close");
-            _clearPlayerPrefsButton = _root.Q<Button>("ClearPlayerPrefs");
+            _clearPlayerDataButton = _root.Q<Button>("ClearPlayerData");
 
             if (_closingBackground == null)
             {
@@ -86,13 +86,13 @@ namespace _Project.Runtime.Views
                 Debug.LogError("[ShopView] Missing Close button.");
             }
 
-            if (_clearPlayerPrefsButton != null)
+            if (_clearPlayerDataButton != null)
             {
-                _clearPlayerPrefsButton.clicked += OnClearPlayerPrefsButtonClicked;
+                _clearPlayerDataButton.clicked += OnClearPlayerDataButtonClicked;
             }
             else
             {
-                Debug.LogError("[ShopView] Missing ClearPlayerPrefs button.");
+                Debug.LogError("[ShopView] Missing ClearPlayerData button.");
             }
 
             if (_shopItemsView != null)
@@ -133,9 +133,9 @@ namespace _Project.Runtime.Views
                 _closeButton.clicked -= OnCloseButtonClicked;
             }
 
-            if (_clearPlayerPrefsButton != null)
+            if (_clearPlayerDataButton != null)
             {
-                _clearPlayerPrefsButton.clicked -= OnClearPlayerPrefsButtonClicked;
+                _clearPlayerDataButton.clicked -= OnClearPlayerDataButtonClicked;
             }
         }
 
@@ -200,9 +200,9 @@ namespace _Project.Runtime.Views
             CloseRequested?.Invoke();
         }
 
-        private void OnClearPlayerPrefsButtonClicked()
+        private void OnClearPlayerDataButtonClicked()
         {
-            ClearPlayerPrefsRequested?.Invoke();
+            ClearPlayerDataRequested?.Invoke();
         }
 
         private void BindItem(VisualElement element, int index)

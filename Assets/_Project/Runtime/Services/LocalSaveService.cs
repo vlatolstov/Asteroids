@@ -3,40 +3,39 @@ using UnityEngine;
 
 namespace _Project.Runtime.Services
 {
-    public interface ISaveService
+    public interface ILocalSaveService
     {
-        bool TryLoad<T>(string key, out T data) where T : class;
+        LoadResult<T> TryLoad<T>(string key) where T : class;
         bool Save<T>(string key, T data) where T : class;
-        bool Delete(string key);
-        void ClearAll();
+        void Delete(string key);
     }
 
-    public sealed class LocalSaveService : ISaveService
+    public sealed class LocalSaveService : ILocalSaveService
     {
-        public bool TryLoad<T>(string key, out T data) where T : class
+        public LoadResult<T> TryLoad<T>(string key) where T : class
         {
-            data = null;
-
             if (string.IsNullOrWhiteSpace(key))
             {
-                return false;
+                return LoadResult<T>.NotFound();
             }
 
             var json = PlayerPrefs.GetString(key, string.Empty);
             if (string.IsNullOrWhiteSpace(json))
             {
-                return false;
+                return LoadResult<T>.NotFound();
             }
 
             try
             {
-                data = JsonUtility.FromJson<T>(json);
-                return data != null;
+                var data = JsonUtility.FromJson<T>(json);
+                return data == null
+                    ? LoadResult<T>.NotFound()
+                    : LoadResult<T>.Success(data);
             }
             catch (Exception exception)
             {
                 Debug.LogWarning($"[Save] Failed to load key '{key}'. {exception.Message}");
-                return false;
+                return LoadResult<T>.NotFound();
             }
         }
 
@@ -61,26 +60,14 @@ namespace _Project.Runtime.Services
             }
         }
 
-        public bool Delete(string key)
+        public void Delete(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
-                return false;
-            }
-
-            if (!PlayerPrefs.HasKey(key))
-            {
-                return false;
+                return;
             }
 
             PlayerPrefs.DeleteKey(key);
-            PlayerPrefs.Save();
-            return true;
-        }
-
-        public void ClearAll()
-        {
-            PlayerPrefs.DeleteAll();
             PlayerPrefs.Save();
         }
     }

@@ -11,6 +11,7 @@ namespace _Project.Runtime.Models
         private readonly HashSet<string> _activeSubscriptionProductIds = new(StringComparer.Ordinal);
         private readonly Dictionary<string, int> _consumablesByProductId = new(StringComparer.Ordinal);
 
+        public long LastSavedAtUnixMs { get; private set; }
         public int BestScore { get; private set; }
 
         public event Action Changed;
@@ -19,6 +20,7 @@ namespace _Project.Runtime.Models
         {
             data ??= new PlayerData();
 
+            LastSavedAtUnixMs = Math.Max(0, data.LastSavedAtUnixMs);
             BestScore = Math.Max(0, data.BestScore);
 
             _nonConsumableProductIds.Clear();
@@ -30,9 +32,8 @@ namespace _Project.Runtime.Models
             _consumablesByProductId.Clear();
             if (data.Consumables != null)
             {
-                for (var i = 0; i < data.Consumables.Count; i++)
+                foreach (var item in data.Consumables)
                 {
-                    var item = data.Consumables[i];
                     if (item == null || string.IsNullOrWhiteSpace(item.ProductId) || item.Amount <= 0)
                     {
                         continue;
@@ -62,16 +63,6 @@ namespace _Project.Runtime.Models
             return !string.IsNullOrWhiteSpace(productId) && _activeSubscriptionProductIds.Contains(productId);
         }
 
-        public int GetConsumableAmount(string productId)
-        {
-            if (string.IsNullOrWhiteSpace(productId))
-            {
-                return 0;
-            }
-
-            return _consumablesByProductId.TryGetValue(productId, out var amount) ? amount : 0;
-        }
-
         public PlayerData Snapshot()
         {
             var nonConsumables = _nonConsumableProductIds.ToList();
@@ -99,6 +90,7 @@ namespace _Project.Runtime.Models
 
             return new PlayerData
             {
+                LastSavedAtUnixMs = LastSavedAtUnixMs,
                 BestScore = BestScore,
                 NonConsumableProductIds = nonConsumables,
                 ActiveSubscriptionProductIds = subscriptions,
@@ -113,9 +105,8 @@ namespace _Project.Runtime.Models
                 return;
             }
 
-            for (var i = 0; i < source.Count; i++)
+            foreach (var productId in source)
             {
-                var productId = source[i];
                 if (string.IsNullOrWhiteSpace(productId))
                 {
                     continue;

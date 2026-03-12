@@ -53,8 +53,13 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .Bind<ISaveService>()
+                .Bind<ILocalSaveService>()
                 .To<LocalSaveService>()
+                .AsSingle();
+
+            Container
+                .Bind<ICloudSaveService>()
+                .To<UnityCloudSaveService>()
                 .AsSingle();
 
             Container
@@ -63,6 +68,10 @@ namespace _Project.Runtime.Installers
 
             Container
                 .Bind<PlayerDataManager>()
+                .AsSingle();
+
+            Container
+                .Bind<PlayerDataSyncService>()
                 .AsSingle();
 
             Container.Bind(typeof(IIapService))

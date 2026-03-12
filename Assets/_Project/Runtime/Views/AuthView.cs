@@ -1,5 +1,7 @@
 using System;
 using _Project.Runtime.Abstract.MVP;
+using _Project.Runtime.Services;
+using _Project.Runtime.Utils;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +13,7 @@ namespace _Project.Runtime.Views
         private UIDocument _doc;
         private VisualElement _root;
         private VisualElement _selectSaveWindow;
+        private Label _saveSelectionInfoField;
         private Button _signInButton;
         private Button _selectLocalButton;
         private Button _selectCloudButton;
@@ -34,6 +37,7 @@ namespace _Project.Runtime.Views
 
             _signInButton = _root.Q<Button>("sign-in-btn");
             _selectSaveWindow = _root.Q<VisualElement>("select-save-window");
+            _saveSelectionInfoField = _root.Q<Label>("select-save-info-field");
             _selectLocalButton = _root.Q<Button>("select-save-local-btn");
             _selectCloudButton = _root.Q<Button>("select-save-cloud-btn");
 
@@ -81,6 +85,14 @@ namespace _Project.Runtime.Views
         public void HideSaveSelectionWindow()
         {
             SetSaveSelectionWindowVisible(false);
+            SetSaveSelectionInfoText(string.Empty);
+        }
+
+        public void SetSaveSelectionInfo(SaveSelectionInfo selectionInfo)
+        {
+            var localText = TimeHelpers.FormatTimestamp(selectionInfo.LocalLastSavedAtUnixMs);
+            var cloudText = TimeHelpers.FormatTimestamp(selectionInfo.CloudLastSavedAtUnixMs);
+            SetSaveSelectionInfoText($"Local: {localText}\nCloud: {cloudText}");
         }
 
         private void SetSaveSelectionWindowVisible(bool visible)
@@ -102,6 +114,11 @@ namespace _Project.Runtime.Views
 
         public void RestoreSignInButton()
         {
+            if (_signInButton == null)
+            {
+                return;
+            }
+
             _signInButton.text = SingInText;
             _signInButton.SetEnabled(true);
         }
@@ -114,6 +131,16 @@ namespace _Project.Runtime.Views
         private void OnSelectCloudButtonClicked()
         {
             CloudSaveSelected?.Invoke();
+        }
+
+        private void SetSaveSelectionInfoText(string text)
+        {
+            if (_saveSelectionInfoField == null)
+            {
+                return;
+            }
+
+            _saveSelectionInfoField.text = text ?? string.Empty;
         }
     }
 }

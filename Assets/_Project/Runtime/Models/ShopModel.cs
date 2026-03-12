@@ -52,9 +52,9 @@ namespace _Project.Runtime.Models
             }
         }
 
-        public void ClearPlayerPrefs()
+        public void ClearPlayerData()
         {
-            _playerDataManager.ClearPlayerPrefs();
+            _playerDataManager.ClearLocalPlayerData();
             RefreshProducts();
         }
 

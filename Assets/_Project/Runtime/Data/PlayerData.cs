@@ -6,6 +6,7 @@ namespace _Project.Runtime.Data
     [Serializable]
     public class PlayerData
     {
+        public long LastSavedAtUnixMs;
         public int BestScore;
         public List<string> NonConsumableProductIds = new();
         public List<string> ActiveSubscriptionProductIds = new();

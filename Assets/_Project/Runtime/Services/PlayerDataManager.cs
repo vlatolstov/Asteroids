@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.Models;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -11,20 +11,47 @@ namespace _Project.Runtime.Services
 {
     public sealed class PlayerDataManager
     {
-        private readonly ISaveService _saveService;
+        private readonly ILocalSaveService _localSaveService;
+        private readonly ICloudSaveService _cloudSaveService;
         private readonly PlayerModel _playerModel;
-        private PlayerData _playerData;
 
-        public PlayerDataManager(ISaveService saveService, PlayerModel playerModel)
+        private PlayerData _playerData;
+        private string _playerId;
+        private bool _missingPlayerIdLogged;
+
+        public PlayerDataManager(ILocalSaveService localSaveService, ICloudSaveService cloudSaveService,
+            PlayerModel playerModel)
         {
-            _saveService = saveService;
+            _localSaveService = localSaveService;
+            _cloudSaveService = cloudSaveService;
             _playerModel = playerModel;
 
-            _playerData = LoadPlayerData();
-            Commit(_playerData, forceSave: true);
+            _playerData = Normalize(new PlayerData());
+            _playerModel.Apply(_playerData);
         }
 
         public int BestScore => _playerModel.BestScore;
+        public bool IsInitialized => !string.IsNullOrWhiteSpace(_playerId);
+
+        public void InitializeForPlayer(string playerId, PlayerData initialData)
+        {
+            if (string.IsNullOrWhiteSpace(playerId))
+            {
+                throw new ArgumentException("PlayerId is null or empty.", nameof(playerId));
+            }
+
+            _playerId = playerId;
+            _missingPlayerIdLogged = false;
+
+            var normalized = Normalize(initialData ?? new PlayerData());
+            _playerData = Clone(normalized);
+            _playerModel.Apply(_playerData);
+
+            if (!_localSaveService.Save(_playerId, _playerData))
+            {
+                Debug.LogWarning("[PlayerData] Failed to persist initialized player data locally.");
+            }
+        }
 
         public bool CheckEntitlement(string productId, ProductType productType)
         {
@@ -113,11 +140,25 @@ namespace _Project.Runtime.Services
             return Commit(next);
         }
 
-        public void ClearPlayerPrefs()
+        public void ClearLocalPlayerData()
         {
-            _saveService.ClearAll();
-            _playerData = new PlayerData();
-            Commit(_playerData, forceSave: true);
+            if (IsInitialized)
+            {
+                _localSaveService.Delete(_playerId);
+            }
+
+            _playerData = Normalize(new PlayerData());
+            if (IsInitialized)
+            {
+                if (!_localSaveService.Save(_playerId, _playerData))
+                {
+                    Debug.LogWarning("[PlayerData] Failed to re-save cleared data locally.");
+                }
+
+                UniTask.Void(() => SaveCloudSilentlyAsync(_playerId, _playerData));
+            }
+
+            _playerModel.Apply(_playerData);
         }
 
         private bool AddUniqueProductId(string productId, Func<PlayerData, List<string>> listSelector)
@@ -133,28 +174,30 @@ namespace _Project.Runtime.Services
             return Commit(next);
         }
 
-        private PlayerData LoadPlayerData()
-        {
-            if (_saveService.TryLoad(DataKeys.PLAYER_DATA_KEY, out PlayerData loadedData) && loadedData != null)
-            {
-                return Normalize(loadedData);
-            }
-
-            return Normalize(new PlayerData());
-        }
-
         private bool Commit(PlayerData next, bool forceSave = false)
         {
             var normalized = Normalize(next);
-            var changed = forceSave || !IsSame(_playerData, normalized);
+            var changed = forceSave || !IsSamePayload(_playerData, normalized);
             if (!changed)
             {
                 return false;
             }
 
-            if (!_saveService.Save(DataKeys.PLAYER_DATA_KEY, normalized))
+            normalized.LastSavedAtUnixMs = NextTimestamp(_playerData?.LastSavedAtUnixMs ?? 0);
+
+            if (IsInitialized)
             {
-                Debug.LogWarning("[PlayerData] Failed to persist player data.");
+                if (!_localSaveService.Save(_playerId, normalized))
+                {
+                    Debug.LogWarning("[PlayerData] Failed to persist player data locally.");
+                }
+
+                UniTask.Void(() => SaveCloudSilentlyAsync(_playerId, normalized));
+            }
+            else if (!_missingPlayerIdLogged)
+            {
+                Debug.LogWarning("[PlayerData] PlayerId is not initialized yet, data changes are in-memory only.");
+                _missingPlayerIdLogged = true;
             }
 
             _playerData = Clone(normalized);
@@ -162,7 +205,17 @@ namespace _Project.Runtime.Services
             return true;
         }
 
-        private static bool IsSame(PlayerData left, PlayerData right)
+        private async UniTaskVoid SaveCloudSilentlyAsync(string playerId, PlayerData data)
+        {
+            if (string.IsNullOrWhiteSpace(playerId) || data == null)
+            {
+                return;
+            }
+
+            await _cloudSaveService.Save(playerId, Clone(data));
+        }
+
+        private static bool IsSamePayload(PlayerData left, PlayerData right)
         {
             left ??= new PlayerData();
             right ??= new PlayerData();
@@ -206,6 +259,7 @@ namespace _Project.Runtime.Services
 
             var clone = new PlayerData
             {
+                LastSavedAtUnixMs = Math.Max(0, source.LastSavedAtUnixMs),
                 BestScore = source.BestScore,
                 NonConsumableProductIds = new List<string>(source.NonConsumableProductIds ?? new List<string>()),
                 ActiveSubscriptionProductIds = new List<string>(source.ActiveSubscriptionProductIds ?? new List<string>()),
@@ -236,12 +290,19 @@ namespace _Project.Runtime.Services
             data ??= new PlayerData();
 
             var normalized = Clone(data);
+            normalized.LastSavedAtUnixMs = Math.Max(0, normalized.LastSavedAtUnixMs);
             normalized.BestScore = Math.Max(0, normalized.BestScore);
             normalized.NonConsumableProductIds = NormalizeProductIds(normalized.NonConsumableProductIds);
             normalized.ActiveSubscriptionProductIds = NormalizeProductIds(normalized.ActiveSubscriptionProductIds);
             normalized.Consumables = NormalizeConsumables(normalized.Consumables);
 
             return normalized;
+        }
+
+        private static long NextTimestamp(long previousTimestamp)
+        {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            return now > previousTimestamp ? now : previousTimestamp + 1;
         }
 
         private static List<string> NormalizeProductIds(IEnumerable<string> source)

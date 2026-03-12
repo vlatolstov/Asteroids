@@ -4,6 +4,7 @@ using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.SceneManagement;
+using _Project.Runtime.Services;
 using _Project.Runtime.Views;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -34,6 +35,7 @@ namespace _Project.Runtime.Presenters
         {
             _authenticationModel.AuthenticationCompleted += OnAuthenticationCompleted;
             _authenticationModel.AuthenticationFailed += OnAuthenticationFailed;
+            _authenticationModel.SaveSelectionRequired += OnSaveSelectionRequired;
 
             if (_loadingTasksProcessor.IsFinished)
             {
@@ -50,10 +52,13 @@ namespace _Project.Runtime.Presenters
             _loadingTasksProcessor.OnTasksFinished -= OnLoadingTasksFinished;
             _authenticationModel.AuthenticationCompleted -= OnAuthenticationCompleted;
             _authenticationModel.AuthenticationFailed -= OnAuthenticationFailed;
+            _authenticationModel.SaveSelectionRequired -= OnSaveSelectionRequired;
 
             if (_authView)
             {
                 _authView.SignInClicked -= OnSignInClicked;
+                _authView.LocalSaveSelected -= OnLocalSaveSelected;
+                _authView.CloudSaveSelected -= OnCloudSaveSelected;
             }
         }
 
@@ -68,15 +73,20 @@ namespace _Project.Runtime.Presenters
             }
 
             _authView.SignInClicked += OnSignInClicked;
+            _authView.LocalSaveSelected += OnLocalSaveSelected;
+            _authView.CloudSaveSelected += OnCloudSaveSelected;
+            _authView.HideSaveSelectionWindow();
         }
 
         private void OnSignInClicked()
         {
+            _authView.HideSaveSelectionWindow();
             _authenticationModel.StartAuthentication();
         }
 
         private void OnAuthenticationFailed()
         {
+            _authView.HideSaveSelectionWindow();
             _authView.RestoreSignInButton();
         }
 
@@ -87,9 +97,28 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
+            _authView.HideSaveSelectionWindow();
             _authView.RestoreSignInButton();
             _navigationStarted = true;
             UniTask.Void(GoToMenuAsync);
+        }
+
+        private void OnSaveSelectionRequired(SaveSelectionInfo selectionInfo)
+        {
+            _authView.SetSaveSelectionInfo(selectionInfo);
+            _authView.ShowSaveSelectionWindow();
+        }
+
+        private void OnLocalSaveSelected()
+        {
+            _authView.HideSaveSelectionWindow();
+            _authenticationModel.SelectLocalSave();
+        }
+
+        private void OnCloudSaveSelected()
+        {
+            _authView.HideSaveSelectionWindow();
+            _authenticationModel.SelectCloudSave();
         }
 
         private async UniTaskVoid GoToMenuAsync()

@@ -49,7 +49,7 @@ namespace _Project.Runtime.Presenters
                 _shopView.PurchaseConfirmed -= OnPurchaseConfirmed;
                 _shopView.RestorePurchasesRequested -= OnRestorePurchasesRequested;
                 _shopView.CloseRequested -= OnCloseRequested;
-                _shopView.ClearPlayerPrefsRequested -= OnClearPlayerPrefsRequested;
+                _shopView.ClearPlayerDataRequested -= OnClearPlayerDataRequested;
             }
         }
 
@@ -87,7 +87,7 @@ namespace _Project.Runtime.Presenters
             _shopView.PurchaseConfirmed += OnPurchaseConfirmed;
             _shopView.RestorePurchasesRequested += OnRestorePurchasesRequested;
             _shopView.CloseRequested += OnCloseRequested;
-            _shopView.ClearPlayerPrefsRequested += OnClearPlayerPrefsRequested;
+            _shopView.ClearPlayerDataRequested += OnClearPlayerDataRequested;
             _shopModel.ProductsChanged += OnProductsChanged;
             _shopView.Hide();
             _shopModel.Initialize();
@@ -123,9 +123,9 @@ namespace _Project.Runtime.Presenters
             CloseShop();
         }
 
-        private void OnClearPlayerPrefsRequested()
+        private void OnClearPlayerDataRequested()
         {
-            _shopModel.ClearPlayerPrefs();
+            _shopModel.ClearPlayerData();
         }
     }
 }
