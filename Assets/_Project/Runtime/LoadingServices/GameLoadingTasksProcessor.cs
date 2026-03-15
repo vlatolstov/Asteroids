@@ -28,18 +28,18 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<HudView>(AddressablesPrefabsPaths.HudView, true));
+            _assetProvider.RegisterLoader(new GameObjectLoader<HudView>(AddressablesPrefabsPaths.HudView, true));
             _assetProvider.RegisterLoader(
-                new LocalGameObjectLoader<BackgroundView>(AddressablesPrefabsPaths.BackgroundView, true));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<BGMView>(AddressablesPrefabsPaths.BGMView, true));
+                new GameObjectLoader<BackgroundView>(AddressablesPrefabsPaths.BackgroundView, true));
+            _assetProvider.RegisterLoader(new GameObjectLoader<BGMView>(AddressablesPrefabsPaths.BGMView, true));
 
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<ShipView>(AddressablesPrefabsPaths.ShipView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<UfoView>(AddressablesPrefabsPaths.UfoView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AsteroidView>(AddressablesPrefabsPaths.AsteroidView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<ProjectileView>(AddressablesPrefabsPaths.ProjectileView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AoeAttackView>(AddressablesPrefabsPaths.AoeAttackView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AudioSourceView>(AddressablesPrefabsPaths.AudioSourceView));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AnimationView>(AddressablesPrefabsPaths.AnimationView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<ShipView>(AddressablesPrefabsPaths.ShipView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<UfoView>(AddressablesPrefabsPaths.UfoView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<AsteroidView>(AddressablesPrefabsPaths.AsteroidView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<ProjectileView>(AddressablesPrefabsPaths.ProjectileView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<AoeAttackView>(AddressablesPrefabsPaths.AoeAttackView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<AudioSourceView>(AddressablesPrefabsPaths.AudioSourceView));
+            _assetProvider.RegisterLoader(new GameObjectLoader<AnimationView>(AddressablesPrefabsPaths.AnimationView));
             
             await _assetProvider.LoadAllAsync();
 

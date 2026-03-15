@@ -15,9 +15,9 @@ MonoBehaviour:
   m_DefaultGroup: ca1950fe4e18f784c98300ca59ec4d54
   m_currentHash:
     serializedVersion: 2
-    Hash: 6abf7731915ab744b8850b6ee2ae50bf
+    Hash: 118bbaa0829bb521e03f470f8cd11cb9
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_InternalIdNamingMode: 0
@@ -60,6 +60,7 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 8e03e87d0ffe1f242b7705ffdb791e12, type: 2}
   - {fileID: 11400000, guid: d9b67b1cf2ec97e4897e188a3850908b, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
@@ -79,7 +80,21 @@ MonoBehaviour:
       - m_Id: f2e2bb2a55b6150498421db2a1a82eb0
         m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
       - m_Id: ff46c0622dc0e4040b0518be47cf449a
-        m_Value: <undefined>
+        m_Value: 
+    - m_InheritedParent: 
+      m_Id: 5bce7e0194e439942937c62578dbcacc
+      m_ProfileName: Remote
+      m_Values:
+      - m_Id: 370db7c8059ba0c4287dbe1768cde266
+        m_Value: 'ServerData/[BuildTarget]'
+      - m_Id: 51093e04a4bb42a48b822ed58de86778
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 9800d99ae953379459259c4c53b69243
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: f2e2bb2a55b6150498421db2a1a82eb0
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: ff46c0622dc0e4040b0518be47cf449a
+        m_Value: 'https://storage.googleapis.com/asteroids_core_game/[BuildTarget]'
     m_ProfileEntryNames:
     - m_Id: 370db7c8059ba0c4287dbe1768cde266
       m_Name: Remote.BuildPath
@@ -112,4 +127,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d6ccca2461323e649891b92444a3f9f6, type: 2}
   - {fileID: 11400000, guid: 46e33bc55b0cc6c45bbe2aa5b4fa8356, type: 2}
   - {fileID: 11400000, guid: ba454b355626daa488cc337c5397da6d, type: 2}
-  m_ActiveProfileId: e4833a1a5fe6e96499ed0f6f22df9cb5
+  m_ActiveProfileId: 5bce7e0194e439942937c62578dbcacc

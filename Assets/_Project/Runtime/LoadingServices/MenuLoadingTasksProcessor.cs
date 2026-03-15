@@ -26,8 +26,8 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<MenuView>(AddressablesPrefabsPaths.MenuView, true));
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<ShopView>(AddressablesPrefabsPaths.ShopView, true));
+            _assetProvider.RegisterLoader(new GameObjectLoader<MenuView>(AddressablesPrefabsPaths.MenuView, true));
+            _assetProvider.RegisterLoader(new GameObjectLoader<ShopView>(AddressablesPrefabsPaths.ShopView, true));
             await _assetProvider.LoadAllAsync();
             await _resourcesService.LoadAllAsync();
             Debug.Log("Menu loaded.");

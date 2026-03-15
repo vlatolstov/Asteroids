@@ -22,7 +22,7 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-            _assetProvider.RegisterLoader(new LocalGameObjectLoader<AuthView>(AddressablesPrefabsPaths.AuthView, true));
+            _assetProvider.RegisterLoader(new GameObjectLoader<AuthView>(AddressablesPrefabsPaths.AuthView, true));
             await _assetProvider.LoadAllAsync();
             Debug.Log("Authentication loaded.");
         }

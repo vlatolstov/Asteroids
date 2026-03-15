@@ -14,7 +14,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="hud-middle" class="hud-middle">
-            <ui:VisualElement name="main-container" enabled="true" class="overlay-panel" style="display: flex; flex-wrap: nowrap; justify-content: space-around;">
+            <ui:VisualElement name="main-container" enabled="true" class="overlay-panel" style="display: none; flex-wrap: nowrap; justify-content: space-around;">
                 <ui:Label name="gameover-label" text="GAME OVER" class="hud-title overlay-item" />
                 <ui:Label name="final-score-label" text="final score" class="hud-text overlay-item overlay-score" />
                 <ui:Label name="best-score-label" text="best score" class="hud-text overlay-item overlay-score" />

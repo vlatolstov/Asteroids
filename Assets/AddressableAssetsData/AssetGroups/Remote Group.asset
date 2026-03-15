@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Remote Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Remote Group
+  m_GUID: 63cf91bf2227d4a438b7ed4d8d3f9fdc
+  m_SerializeEntries:
+  - m_GUID: 072f5e4fdfa57ad42b430675d6ede473
+    m_Address: Resources/Weapons/ShipLaser
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ea96ea7bd2318741a9817c77dc4a11a
+    m_Address: Views/UfoView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 39e42b9372e5b7348beb6e79a7cbc351
+    m_Address: Resources/IAP/ShopVisualCatalog
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a95a417f3550284eafde565848c4029
+    m_Address: Views/AoeAttackView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f1e2ee2279b3d84289289210243b144
+    m_Address: Resources/Weapons/ShipGun
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5cbc4340fdb8c1545853f19aee8916da
+    m_Address: Resources/Attacks/BlasterPulse
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5cf0b98c3e2391644a2d9bcee93ecccd
+    m_Address: Resources/General/UfoSpawn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b59baf2cb78bb6459efc39ceccaa7f5
+    m_Address: Views/BackgroundView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6bc5979aea5da33489e383d4d08de30f
+    m_Address: Views/AsteroidView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 853fa93e5fe07c44cac56ca9ef3ee80b
+    m_Address: Resources/Attacks/LaserAttack
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97e7da8bdb2aae440b4eae32c36c5798
+    m_Address: UI/HudView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ba627481552a3741bf4b2d14471e1aa
+    m_Address: Views/ProjectileView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a103538ca2a9c534496cd6efe1d950d7
+    m_Address: Resources/General/GeneralSounds
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ab688df7655faff47a2df1a7d0df26a2
+    m_Address: Resources/Attacks/Rocket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b8118449f9506d943a13fd36809cd97f
+    m_Address: Resources/General/GeneralVisuals
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c98d7168a96d7e04db80f76cad42536c
+    m_Address: Views/BGMView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d40a1825267e6194a9a71be152fa5b51
+    m_Address: Views/ShipView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e76034862717b6042ac9d4bdd3be94df
+    m_Address: Views/AnimationView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e9a0aca1123923944972f0daa8dcff81
+    m_Address: Resources/Weapons/UfoBlaster
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: efe598da038e46e4fa78090d4c31e36a
+    m_Address: Resources/General/AsteroidsSpawn
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fc241df9852e94c43bd5cddad6075056
+    m_Address: Views/AudioSourceView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 150bbb8d6f343bf4d86a2e858f7aefcf, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7230681edb611a84199285efb6fe2328, type: 2}
+    - {fileID: 11400000, guid: b4397073fe60c2c4e9059b0c87e27695, type: 2}

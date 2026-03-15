@@ -1,8 +1,12 @@
+using System;
+using System.IO;
 using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.InAppPurchase;
 using _Project.Runtime.SceneManagement;
 using Cysharp.Threading.Tasks;
 using Unity.Services.Core;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace _Project.Runtime.LoadingServices
 {
@@ -11,7 +15,7 @@ namespace _Project.Runtime.LoadingServices
         private readonly SceneLoader _sceneLoader;
         private readonly IIapService _unityIapService;
 
-        public BootstrapLoadingTasksProcessor(SceneLoader sceneLoader, 
+        public BootstrapLoadingTasksProcessor(SceneLoader sceneLoader,
             IIapService unityIapService)
             : base(sceneLoader)
         {
@@ -23,9 +27,31 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-            await _unityIapService.Connect();
+#if DEVELOPMENT_BUILD || UNITY_EDITOR
+            if (!Caching.ClearCache())
+            {
+                Debug.LogWarning("Unity cache was not fully cleared.");
+            }
+
+            var path = Path.Combine(Application.persistentDataPath, "com.unity.addressables");
+            try
+            {
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"Failed to delete Addressables cache folder: {e.Message}");
+            }
+#endif
+
+            await Addressables.InitializeAsync();
+            
             await UnityServices.InitializeAsync();
+            
+            await _unityIapService.Connect();
             _unityIapService.FetchProducts();
+            
             await _sceneLoader.LoadSceneAsync(Constants.Scenes.Authentication);
         }
     }
