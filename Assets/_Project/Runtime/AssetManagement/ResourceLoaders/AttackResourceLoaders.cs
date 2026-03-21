@@ -18,4 +18,9 @@ namespace _Project.Runtime.AssetManagement.ResourceLoaders
     {
         protected override string AssetPath => AddressablesResourcePaths.Attacks.LaserAttack;
     }
+
+    public class PowerShieldAttackResourceLoader : LocalResourceLoader<AoeAttackResource>
+    {
+        protected override string AssetPath => AddressablesResourcePaths.Attacks.PowerShieldAttack;
+    }
 }

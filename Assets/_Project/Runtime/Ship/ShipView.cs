@@ -27,14 +27,20 @@ namespace _Project.Runtime.Ship
         private AoeWeaponResource _aoeWeaponResource;
         private AoeWeaponData _aoeData;
         private AoeAttackData _aoeAttackData;
+        private AoeWeaponResource _powerShieldResource;
+        private AoeWeaponData _powerShieldData;
+        private AoeAttackData _powerShieldAttackData;
 
         private ProjectileWeapon _gun;
         private ProjectileWeaponState _projState;
 
-        private AoeWeapon _aoeWeapon;
-        private AoeWeaponState _aoeState;
+        private AoeWeapon _aoeLaserWeapon;
+        private AoeWeaponState _aoeLaserState;
+
+        private AoeWeapon _powerShieldWeapon;
 
         private bool _weaponsReady;
+        private bool _isInvulnerableBeforeShieldActivation;
 
         public event Action<ProjectileShot> ProjectileFired;
         public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
@@ -53,7 +59,8 @@ namespace _Project.Runtime.Ship
             if (_weaponsReady)
             {
                 _gun.FixedTick();
-                _aoeWeapon.FixedTick();
+                _aoeLaserWeapon.FixedTick();
+                _powerShieldWeapon?.FixedTick();
             }
         }
 
@@ -77,8 +84,8 @@ namespace _Project.Runtime.Ship
                 ProjectileWeaponStateChanged?.Invoke(projState);
             }
 
-            var aoeState = _aoeWeapon.ProvideAoeWeaponState();
-            if (aoeState != _aoeState)
+            var aoeState = _aoeLaserWeapon.ProvideAoeWeaponState();
+            if (aoeState != _aoeLaserState)
             {
                 AoeWeaponStateChanged?.Invoke(aoeState);
             }
@@ -91,7 +98,8 @@ namespace _Project.Runtime.Ship
 
         public void Configure(PlayerMotor motor, ProjectileWeaponResource gunResource, ProjectileWeaponData gunData,
             ProjectileAttackData gunAttackData, AoeWeaponResource aoeWeaponResource, AoeWeaponData aoeData,
-            AoeAttackData aoeAttackData)
+            AoeAttackData aoeAttackData, AoeWeaponResource powerShieldResource, AoeWeaponData powerShieldData,
+            AoeAttackData powerShieldAttackData)
         {
             SetMotor(motor);
             _gunResource = gunResource;
@@ -100,6 +108,9 @@ namespace _Project.Runtime.Ship
             _aoeWeaponResource = aoeWeaponResource;
             _aoeData = aoeData;
             _aoeAttackData = aoeAttackData;
+            _powerShieldResource = powerShieldResource;
+            _powerShieldData = powerShieldData;
+            _powerShieldAttackData = powerShieldAttackData;
             InitializeWeapons();
         }
 
@@ -113,10 +124,15 @@ namespace _Project.Runtime.Ship
             }
 
             _gun = new ProjectileWeapon(_gunResource, _gunData, _gunAttackData, this);
-            _aoeWeapon = new AoeWeapon(_aoeWeaponResource, _aoeData, _aoeAttackData, this);
+            _aoeLaserWeapon = new AoeWeapon(_aoeWeaponResource, _aoeData, _aoeAttackData, this);
+            if (_powerShieldResource)
+            {
+                _powerShieldWeapon = new AoeWeapon(_powerShieldResource, _powerShieldData, _powerShieldAttackData, this);
+            }
 
             _gun.ProjectileFired += OnProjectileAttack;
-            _aoeWeapon.AttackReleased += OnAoeAttack;
+            _aoeLaserWeapon.AttackReleased += OnAoeLaserAttack;
+            _powerShieldWeapon.AttackReleased += OnPowerShieldAttack;
             _weaponsReady = true;
         }
 
@@ -128,10 +144,16 @@ namespace _Project.Runtime.Ship
                 _gun = null;
             }
 
-            if (_aoeWeapon != null)
+            if (_aoeLaserWeapon != null)
             {
-                _aoeWeapon.AttackReleased -= OnAoeAttack;
-                _aoeWeapon = null;
+                _aoeLaserWeapon.AttackReleased -= OnAoeLaserAttack;
+                _aoeLaserWeapon = null;
+            }
+
+            if (_powerShieldWeapon != null)
+            {
+                _powerShieldWeapon.AttackReleased -= OnPowerShieldAttack;
+                _powerShieldWeapon = null;
             }
 
             _weaponsReady = false;
@@ -139,6 +161,11 @@ namespace _Project.Runtime.Ship
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            if (_isInvulnerableBeforeShieldActivation)
+            {
+                return;
+            }
+
             if (other.gameObject.layer != gameObject.layer && !_destroyed)
             {
                 Destroyed?.Invoke(new ShipDestroyed(transform.position, transform.rotation, transform.localScale));
@@ -147,6 +174,11 @@ namespace _Project.Runtime.Ship
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (_isInvulnerableBeforeShieldActivation)
+            {
+                return;
+            }
+
             if (gameObject.layer != other.gameObject.layer
                 && other.CompareTag("Attack")
                 && !_destroyed)
@@ -167,7 +199,7 @@ namespace _Project.Runtime.Ship
         {
             if (_weaponsReady)
             {
-                _aoeWeapon.Attack();
+                _aoeLaserWeapon.Attack();
             }
         }
 
@@ -198,18 +230,36 @@ namespace _Project.Runtime.Ship
             ProjectileFired?.Invoke(proj);
         }
 
-        private void OnAoeAttack(AoeAttackReleased aoe)
+        private void OnAoeLaserAttack(AoeAttackReleased aoe)
         {
+            AoeAttacked?.Invoke(aoe);
+        }
+
+        private void OnPowerShieldAttack(AoeAttackReleased aoe)
+        {
+            _isInvulnerableBeforeShieldActivation = false;
             AoeAttacked?.Invoke(aoe);
         }
 
         private void Reinitialize(Vector2 position)
         {
             _destroyed = false;
+            _isInvulnerableBeforeShieldActivation = true;
             Motor?.SetWrapMode(true);
 
             transform.position = position;
             Motor?.SetPose(position, Vector2.zero, 0f);
+        }
+
+        public void ActivateShield()
+        {
+            if (!_weaponsReady || _powerShieldWeapon == null)
+            {
+                return;
+            }
+
+            _powerShieldWeapon.Reinforce();
+            _powerShieldWeapon.Attack();
         }
 
         public readonly struct SpawnArgs
@@ -222,10 +272,14 @@ namespace _Project.Runtime.Ship
             public readonly AoeWeaponResource Aoe;
             public readonly AoeWeaponData AoeData;
             public readonly AoeAttackData AoeAttackData;
+            public readonly AoeWeaponResource PowerShield;
+            public readonly AoeWeaponData PowerShieldData;
+            public readonly AoeAttackData PowerShieldAttackData;
 
             public SpawnArgs(Vector2 position, PlayerMotor motor, ProjectileWeaponResource gun,
                 ProjectileWeaponData gunData, ProjectileAttackData gunAttackData, AoeWeaponResource aoe,
-                AoeWeaponData aoeData, AoeAttackData aoeAttackData)
+                AoeWeaponData aoeData, AoeAttackData aoeAttackData, AoeWeaponResource powerShield,
+                AoeWeaponData powerShieldData, AoeAttackData powerShieldAttackData)
             {
                 Position = position;
                 Motor = motor;
@@ -235,6 +289,9 @@ namespace _Project.Runtime.Ship
                 Aoe = aoe;
                 AoeData = aoeData;
                 AoeAttackData = aoeAttackData;
+                PowerShield = powerShield;
+                PowerShieldData = powerShieldData;
+                PowerShieldAttackData = powerShieldAttackData;
             }
         }
 
@@ -247,7 +304,7 @@ namespace _Project.Runtime.Ship
             protected override void Reinitialize(SpawnArgs args, ShipView item)
             {
                 item.Configure(args.Motor, args.Gun, args.GunData, args.GunAttackData, args.Aoe, args.AoeData,
-                    args.AoeAttackData);
+                    args.AoeAttackData, args.PowerShield, args.PowerShieldData, args.PowerShieldAttackData);
                 item.Reinitialize(args.Position);
             }
 
@@ -259,10 +316,12 @@ namespace _Project.Runtime.Ship
                 item.Motor?.SetThrust(0f);
                 item.Motor?.SetTurnAxis(0f);
 
-                item._aoeWeapon?.Reinforce();
+                item._aoeLaserWeapon?.Reinforce();
+                item._powerShieldWeapon?.Reinforce();
                 item.DisposeWeapons();
                 item._pose = default;
                 item._destroyed = true;
+                item._isInvulnerableBeforeShieldActivation = false;
             }
         }
     }

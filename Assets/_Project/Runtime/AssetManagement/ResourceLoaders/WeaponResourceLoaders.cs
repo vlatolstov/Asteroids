@@ -14,6 +14,11 @@ namespace _Project.Runtime.AssetManagement.ResourceLoaders
         protected override string AssetPath => AddressablesResourcePaths.Weapons.ShipLaser;
     }
 
+    public class ShipPowerShieldResourceLoader : LocalResourceLoader<AoeWeaponResource>
+    {
+        protected override string AssetPath => AddressablesResourcePaths.Weapons.ShipPowerShield;
+    }
+
     public class UfoBlasterResourceLoader : LocalResourceLoader<ProjectileWeaponResource>
     {
         protected override string AssetPath => AddressablesResourcePaths.Weapons.UfoBlaster;

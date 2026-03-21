@@ -47,10 +47,12 @@ namespace _Project.Runtime.RemoteConfig
             TryAdd(map, Config.Score, root.Score);
             TryAdd(map, Config.Weapon.ShipGun, root.Weapons?.ShipGun);
             TryAdd(map, Config.Weapon.ShipLaser, root.Weapons?.ShipLaser);
+            TryAdd(map, Config.Weapon.ShipPowerShield, root.Weapons?.ShipPowerShield);
             TryAdd(map, Config.Weapon.UfoBlaster, root.Weapons?.UfoBlaster);
             TryAdd(map, Config.Attack.BlasterPulse, root.Weapons?.Attacks?.BlasterPulse);
             TryAdd(map, Config.Attack.Rocket, root.Weapons?.Attacks?.Rocket);
             TryAdd(map, Config.Attack.LaserAttack, root.Weapons?.Attacks?.LaserAttack);
+            TryAdd(map, Config.Attack.PowerShieldAttack, root.Weapons?.Attacks?.PowerShieldAttack);
 
             return map;
         }

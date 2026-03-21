@@ -86,6 +86,12 @@
                                       "Charges":  2,
                                       "ChargeRate":  8.0
                                   },
+                    "ShipPowerShield":  {
+                                             "WeaponCooldown":  0.0,
+                                             "MuzzleOffset":  -1.25,
+                                             "Charges":  1,
+                                             "ChargeRate":  1000.0
+                                         },
                     "UfoBlaster":  {
                                        "WeaponCooldown":  1.0,
                                        "MuzzleOffset":  0.6,
@@ -115,6 +121,12 @@
                                                         "Width":  0.5,
                                                         "Duration":  0.4,
                                                         "AttachMode":  0
+                                                    },
+                                    "PowerShieldAttack":  {
+                                                               "Length":  2.5,
+                                                               "Width":  2.5,
+                                                               "Duration":  3.0,
+                                                               "AttachMode":  0
                                                     }
                                 }
                 }

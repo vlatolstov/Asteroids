@@ -36,6 +36,7 @@ namespace _Project.Runtime.Constants
         {
             public const string ShipGun = "Resources/Weapons/ShipGun";
             public const string ShipLaser = "Resources/Weapons/ShipLaser";
+            public const string ShipPowerShield = "Resources/Weapons/ShipPowerShield";
             public const string UfoBlaster = "Resources/Weapons/UfoBlaster";
         }
 
@@ -44,6 +45,7 @@ namespace _Project.Runtime.Constants
             public const string BlasterPulse = "Resources/Attacks/BlasterPulse";
             public const string Rocket = "Resources/Attacks/Rocket";
             public const string LaserAttack = "Resources/Attacks/LaserAttack";
+            public const string PowerShieldAttack = "Resources/Attacks/PowerShieldAttack";
         }
 
         public static class Iap

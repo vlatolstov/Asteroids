@@ -25,6 +25,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 22a30990d773b414a88da02ae38fca84
+    m_Address: Resources/Weapons/ShipPowerShield
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 39e42b9372e5b7348beb6e79a7cbc351
     m_Address: Resources/IAP/ShopVisualCatalog
     m_ReadOnly: 0
@@ -72,6 +77,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9ba627481552a3741bf4b2d14471e1aa
     m_Address: Views/ProjectileView
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a04e2fd7a58cf9f4dab53c0177b43e8c
+    m_Address: Resources/Attacks/PowerShieldAttack
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

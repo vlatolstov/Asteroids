@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ac20010991481cb8d1e8b37c9993e9, type: 3}
+  m_Name: PowerShieldAttackResource
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Runtime.Weapons.AoeAttackResource
+  _sprites:
+  - {fileID: 8900530272691449024, guid: 18544187498205547adefaab6d5ce75f, type: 3}
+  _hitSounds:
+  - {fileID: 8300000, guid: e6e03348afd64584b872a221db642960, type: 3}
+  <AttackAnimation>k__BackingField: {fileID: 9100000, guid: 6b3c79ef569c85545816d7369cf85ba1, type: 2}
+  <HitAnimation>k__BackingField: {fileID: 0}

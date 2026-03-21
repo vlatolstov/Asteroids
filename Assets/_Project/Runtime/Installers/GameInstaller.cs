@@ -44,11 +44,13 @@ namespace _Project.Runtime.Installers
 
             Container.Bind<IResourceLoader>().To<ShipGunResourceLoader>().AsSingle();
             Container.Bind<IResourceLoader>().To<ShipLaserResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<ShipPowerShieldResourceLoader>().AsSingle();
             Container.Bind<IResourceLoader>().To<UfoBlasterResourceLoader>().AsSingle();
 
             Container.Bind<IResourceLoader>().To<BlasterPulseResourceLoader>().AsSingle();
             Container.Bind<IResourceLoader>().To<RocketResourceLoader>().AsSingle();
             Container.Bind<IResourceLoader>().To<LaserAttackResourceLoader>().AsSingle();
+            Container.Bind<IResourceLoader>().To<PowerShieldAttackResourceLoader>().AsSingle();
         }
 
         private void PresentersBindings()

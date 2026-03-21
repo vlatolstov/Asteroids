@@ -103,6 +103,7 @@ namespace _Project.Runtime.RemoteConfig
     {
         public ProjectileWeaponData ShipGun;
         public AoeWeaponData ShipLaser;
+        public AoeWeaponData ShipPowerShield;
         public ProjectileWeaponData UfoBlaster;
         public AttacksGroup Attacks;
     }
@@ -132,6 +133,7 @@ namespace _Project.Runtime.RemoteConfig
         public ProjectileAttackData BlasterPulse;
         public ProjectileAttackData Rocket;
         public AoeAttackData LaserAttack;
+        public AoeAttackData PowerShieldAttack;
     }
 
     [Serializable]

@@ -34,6 +34,9 @@ namespace _Project.Runtime.Ship
         private AoeWeaponResource _shipAoeResource;
         private AoeWeaponData _shipAoeData;
         private AoeAttackData _shipAoeAttackData;
+        private AoeWeaponResource _shipPowerShieldResource;
+        private AoeWeaponData _shipPowerShieldData;
+        private AoeAttackData _shipPowerShieldAttackData;
         private bool _resourcesReady;
         private bool _initialized;
 
@@ -229,11 +232,15 @@ namespace _Project.Runtime.Ship
                 _shipGunAttackData,
                 _shipAoeResource,
                 _shipAoeData,
-                _shipAoeAttackData);
+                _shipAoeAttackData,
+                _shipPowerShieldResource,
+                _shipPowerShieldData,
+                _shipPowerShieldAttackData);
             var ship = _pool.Spawn(args);
             AttachShip(ship);
             _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
             _shipModel.UpdatePose(new ShipPose(position, Vector2.zero, 0f));
+            ship.ActivateShield();
         }
 
         private void OnShipDespawnCommand()
@@ -309,8 +316,19 @@ namespace _Project.Runtime.Ship
                 _shipAoeAttackData = new AoeAttackData();
             }
 
+            if (!_remoteConfigProvider.TryGet(Config.Weapon.ShipPowerShield, out _shipPowerShieldData))
+            {
+                _shipPowerShieldData = new AoeWeaponData();
+            }
+
+            if (!_remoteConfigProvider.TryGet(Config.Attack.PowerShieldAttack, out _shipPowerShieldAttackData))
+            {
+                _shipPowerShieldAttackData = new AoeAttackData();
+            }
+
             _shipGunResource = _resourcesService.Get<ProjectileWeaponResource>(AddressablesResourcePaths.Weapons.ShipGun);
             _shipAoeResource = _resourcesService.Get<AoeWeaponResource>(AddressablesResourcePaths.Weapons.ShipLaser);
+            _shipPowerShieldResource = _resourcesService.Get<AoeWeaponResource>(AddressablesResourcePaths.Weapons.ShipPowerShield);
             _resourcesReady = true;
         }
     }
