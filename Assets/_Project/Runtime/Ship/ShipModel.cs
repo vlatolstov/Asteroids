@@ -1,13 +1,13 @@
 using System;
 using _Project.Runtime.Abstract.Configs;
 using _Project.Runtime.Data;
-using UnityEngine;
 
 namespace _Project.Runtime.Ship
 {
     public class ShipModel
     {
         private bool _shipInGame;
+        private int _spawnCount;
         
         private readonly IWorldConfig _worldConfig;
 
@@ -16,13 +16,15 @@ namespace _Project.Runtime.Ship
             _worldConfig = worldConfig;
         }
         
-        public event Action<Vector3> ShipSpawnCommandRequested;
+        public event Action<ShipSpawnCommand> ShipSpawnCommandRequested;
         public event Action ShipDespawnCommandRequested;
         public event Action<ShipSpawned> ShipSpawned;
         public event Action<ShipDestroyed> ShipDestroyed;
         public event Action<ShipPose> ShipPoseChanged;
         public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
         public event Action<AoeWeaponState> AoeWeaponStateChanged;
+
+        public int SpawnCount => _spawnCount;
 
         public void RequestSpawn()
         {
@@ -31,7 +33,9 @@ namespace _Project.Runtime.Ship
                 return;
             }
 
-            ShipSpawnCommandRequested?.Invoke(_worldConfig.WorldRect.center);
+            var spawnNumber = _spawnCount + 1;
+            var command = new ShipSpawnCommand(_worldConfig.WorldRect.center, spawnNumber, spawnNumber > 1);
+            ShipSpawnCommandRequested?.Invoke(command);
         }
 
         public void HandleGameStateChanged(GameState state)
@@ -51,6 +55,7 @@ namespace _Project.Runtime.Ship
         public void HandleShipSpawned(ShipSpawned shipSpawned)
         {
             _shipInGame = true;
+            _spawnCount++;
             ShipSpawned?.Invoke(shipSpawned);
         }
 

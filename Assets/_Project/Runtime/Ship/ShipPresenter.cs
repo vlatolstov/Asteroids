@@ -98,8 +98,8 @@ namespace _Project.Runtime.Ship
                 _gameModel.GameStateChanged -= OnGameStateChanged;
 
                 _shipModel.ShipSpawnCommandRequested -= OnShipSpawnCommand;
-            _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
-            _subscriptionsActive = false;
+                _shipModel.ShipDespawnCommandRequested -= OnShipDespawnCommand;
+                _subscriptionsActive = false;
             }
 
             _poolsService.Ready -= OnPoolsReady;
@@ -210,7 +210,7 @@ namespace _Project.Runtime.Ship
             _activeShip.TryReleaseAoeAttack();
         }
 
-        private void OnShipSpawnCommand(Vector3 position)
+        private void OnShipSpawnCommand(ShipSpawnCommand command)
         {
             if (_activeShip)
             {
@@ -225,7 +225,7 @@ namespace _Project.Runtime.Ship
             EnsureData();
 
             var args = new ShipView.SpawnArgs(
-                position,
+                command.Position,
                 new PlayerMotor(_movementConfig, _worldConfig),
                 _shipGunResource,
                 _shipGunData,
@@ -235,12 +235,17 @@ namespace _Project.Runtime.Ship
                 _shipAoeAttackData,
                 _shipPowerShieldResource,
                 _shipPowerShieldData,
-                _shipPowerShieldAttackData);
+                _shipPowerShieldAttackData,
+                command.ShouldActivateShield);
             var ship = _pool.Spawn(args);
             AttachShip(ship);
             _shipModel.HandleShipSpawned(new ShipSpawned(ship.transform.position, ship.transform.localScale));
-            _shipModel.UpdatePose(new ShipPose(position, Vector2.zero, 0f));
-            ship.ActivateShield();
+            _shipModel.UpdatePose(new ShipPose(command.Position, Vector2.zero, 0f));
+
+            if (command.ShouldActivateShield)
+            {
+                ship.ActivateShield();
+            }
         }
 
         private void OnShipDespawnCommand()

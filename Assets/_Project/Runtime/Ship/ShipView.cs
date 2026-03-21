@@ -40,7 +40,8 @@ namespace _Project.Runtime.Ship
         private AoeWeapon _powerShieldWeapon;
 
         private bool _weaponsReady;
-        private bool _isInvulnerableBeforeShieldActivation;
+        private bool _isInvulnerable;
+        private float _invulnerableTimer;
 
         public event Action<ProjectileShot> ProjectileFired;
         public event Action<ProjectileWeaponState> ProjectileWeaponStateChanged;
@@ -66,6 +67,16 @@ namespace _Project.Runtime.Ship
 
         private void Update()
         {
+            if (_isInvulnerable)
+            {
+                _invulnerableTimer -= Time.deltaTime;
+                if (_invulnerableTimer <= 0f)
+                {
+                    _invulnerableTimer = 0f;
+                    _isInvulnerable = false;
+                }
+            }
+
             if (Motor == null || !_weaponsReady)
             {
                 return;
@@ -161,7 +172,7 @@ namespace _Project.Runtime.Ship
 
         private void OnCollisionEnter2D(Collision2D other)
         {
-            if (_isInvulnerableBeforeShieldActivation)
+            if (_isInvulnerable)
             {
                 return;
             }
@@ -174,7 +185,7 @@ namespace _Project.Runtime.Ship
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (_isInvulnerableBeforeShieldActivation)
+            if (_isInvulnerable)
             {
                 return;
             }
@@ -237,14 +248,18 @@ namespace _Project.Runtime.Ship
 
         private void OnPowerShieldAttack(AoeAttackReleased aoe)
         {
-            _isInvulnerableBeforeShieldActivation = false;
             AoeAttacked?.Invoke(aoe);
         }
 
-        private void Reinitialize(Vector2 position)
+        private void Reinitialize(Vector2 position, bool shouldActivateShield)
         {
+            const float invulnerabilityDurationSeconds = 0.5f;
+
             _destroyed = false;
-            _isInvulnerableBeforeShieldActivation = true;
+            _isInvulnerable = shouldActivateShield && _powerShieldWeapon != null;
+            _invulnerableTimer = _isInvulnerable
+                ? invulnerabilityDurationSeconds
+                : 0f;
             Motor?.SetWrapMode(true);
 
             transform.position = position;
@@ -275,11 +290,12 @@ namespace _Project.Runtime.Ship
             public readonly AoeWeaponResource PowerShield;
             public readonly AoeWeaponData PowerShieldData;
             public readonly AoeAttackData PowerShieldAttackData;
+            public readonly bool ShouldActivateShield;
 
             public SpawnArgs(Vector2 position, PlayerMotor motor, ProjectileWeaponResource gun,
                 ProjectileWeaponData gunData, ProjectileAttackData gunAttackData, AoeWeaponResource aoe,
                 AoeWeaponData aoeData, AoeAttackData aoeAttackData, AoeWeaponResource powerShield,
-                AoeWeaponData powerShieldData, AoeAttackData powerShieldAttackData)
+                AoeWeaponData powerShieldData, AoeAttackData powerShieldAttackData, bool shouldActivateShield)
             {
                 Position = position;
                 Motor = motor;
@@ -292,6 +308,7 @@ namespace _Project.Runtime.Ship
                 PowerShield = powerShield;
                 PowerShieldData = powerShieldData;
                 PowerShieldAttackData = powerShieldAttackData;
+                ShouldActivateShield = shouldActivateShield;
             }
         }
 
@@ -305,7 +322,7 @@ namespace _Project.Runtime.Ship
             {
                 item.Configure(args.Motor, args.Gun, args.GunData, args.GunAttackData, args.Aoe, args.AoeData,
                     args.AoeAttackData, args.PowerShield, args.PowerShieldData, args.PowerShieldAttackData);
-                item.Reinitialize(args.Position);
+                item.Reinitialize(args.Position, args.ShouldActivateShield);
             }
 
             protected override void OnDespawned(ShipView item)
@@ -321,7 +338,8 @@ namespace _Project.Runtime.Ship
                 item.DisposeWeapons();
                 item._pose = default;
                 item._destroyed = true;
-                item._isInvulnerableBeforeShieldActivation = false;
+                item._isInvulnerable = false;
+                item._invulnerableTimer = 0f;
             }
         }
     }
