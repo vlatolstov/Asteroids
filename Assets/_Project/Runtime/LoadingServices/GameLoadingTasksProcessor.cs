@@ -28,6 +28,8 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
+            await _resourcesService.LoadAllAsync();
+            
             _assetProvider.RegisterLoader(new GameObjectLoader<HudView>(AddressablesPrefabsPaths.HudView, true));
             _assetProvider.RegisterLoader(
                 new GameObjectLoader<BackgroundView>(AddressablesPrefabsPaths.BackgroundView, true));
@@ -42,11 +44,8 @@ namespace _Project.Runtime.LoadingServices
             _assetProvider.RegisterLoader(new GameObjectLoader<AnimationView>(AddressablesPrefabsPaths.AnimationView));
             
             await _assetProvider.LoadAllAsync();
-
-            await _resourcesService.LoadAllAsync();
-
+            
             Debug.Log("Game loaded");
-            await UniTask.NextFrame();
         }
     }
 }

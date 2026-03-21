@@ -49,6 +49,8 @@ namespace _Project.Runtime.Views
             {
                 _exitButton.clicked += OnExitButtonClicked;
             }
+
+            Hide();
         }
 
         private void OnDestroy()
@@ -77,6 +79,26 @@ namespace _Project.Runtime.Views
             }
 
             _bestScoreLabel.text = $"Best score: {score}";
+        }
+
+        public void Show()
+        {
+            if (_root == null)
+            {
+                return;
+            }
+
+            _root.style.display = DisplayStyle.Flex;
+        }
+
+        public void Hide()
+        {
+            if (_root == null)
+            {
+                return;
+            }
+
+            _root.style.display = DisplayStyle.None;
         }
 
         private void OnStartButtonClicked()

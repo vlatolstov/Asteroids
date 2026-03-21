@@ -75,6 +75,7 @@ namespace _Project.Runtime.Presenters
             _menuView.ExitButtonClicked += OnExitClicked;
             _playerModel.BestScoreChanged += OnBestScoreChanged;
             _menuView.SetBestScore(_playerModel.BestScore);
+            _menuView.Show();
 
             _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTaskFinished;
         }
