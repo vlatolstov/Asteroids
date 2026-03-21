@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.Data;
 using Cysharp.Threading.Tasks;
+using Unity.Services.Authentication;
 using Unity.Services.CloudSave;
 using Unity.Services.CloudSave.Models.Data.Player;
 using UnityEngine;
@@ -9,16 +10,23 @@ using SaveOptions = Unity.Services.CloudSave.Models.Data.Player.SaveOptions;
 
 namespace _Project.Runtime.Services
 {
-    public interface ICloudSaveService
+    public enum SaveServiceId
     {
-        UniTask<LoadResult<PlayerData>> TryLoad(string key);
-        UniTask<bool> Save(string key, PlayerData data);
+        Local,
+        Cloud
     }
 
-    public sealed class UnityCloudSaveService : ICloudSaveService
+    public interface ISaveService
     {
-        public async UniTask<LoadResult<PlayerData>> TryLoad(string key)
+        UniTask<LoadResult<PlayerData>> TryLoad();
+        UniTask<bool> Save(PlayerData data);
+    }
+
+    public sealed class UnitySaveService : ISaveService
+    {
+        public async UniTask<LoadResult<PlayerData>> TryLoad()
         {
+            var key = AuthenticationService.Instance.PlayerId;
             if (string.IsNullOrWhiteSpace(key))
             {
                 return LoadResult<PlayerData>.NotFound();
@@ -58,8 +66,9 @@ namespace _Project.Runtime.Services
             }
         }
 
-        public async UniTask<bool> Save(string key, PlayerData data)
+        public async UniTask<bool> Save(PlayerData data)
         {
+            var key = AuthenticationService.Instance.PlayerId;
             if (string.IsNullOrWhiteSpace(key) || data == null)
             {
                 return false;

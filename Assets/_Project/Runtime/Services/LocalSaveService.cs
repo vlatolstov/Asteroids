@@ -1,49 +1,48 @@
 using System;
+using _Project.Runtime.Data;
+using Cysharp.Threading.Tasks;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 namespace _Project.Runtime.Services
 {
-    public interface ILocalSaveService
+    public sealed class LocalSaveService : ISaveService
     {
-        LoadResult<T> TryLoad<T>(string key) where T : class;
-        bool Save<T>(string key, T data) where T : class;
-        void Delete(string key);
-    }
-
-    public sealed class LocalSaveService : ILocalSaveService
-    {
-        public LoadResult<T> TryLoad<T>(string key) where T : class
+        public UniTask<LoadResult<PlayerData>> TryLoad()
         {
+            var key = AuthenticationService.Instance.PlayerId;
             if (string.IsNullOrWhiteSpace(key))
             {
-                return LoadResult<T>.NotFound();
+                return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
             }
 
             var json = PlayerPrefs.GetString(key, string.Empty);
             if (string.IsNullOrWhiteSpace(json))
             {
-                return LoadResult<T>.NotFound();
+                return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
             }
 
             try
             {
-                var data = JsonUtility.FromJson<T>(json);
-                return data == null
-                    ? LoadResult<T>.NotFound()
-                    : LoadResult<T>.Success(data);
+                var data = JsonUtility.FromJson<PlayerData>(json);
+                var result = data == null
+                    ? LoadResult<PlayerData>.NotFound()
+                    : LoadResult<PlayerData>.Success(data);
+                return UniTask.FromResult(result);
             }
             catch (Exception exception)
             {
                 Debug.LogWarning($"[Save] Failed to load key '{key}'. {exception.Message}");
-                return LoadResult<T>.NotFound();
+                return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
             }
         }
 
-        public bool Save<T>(string key, T data) where T : class
+        public UniTask<bool> Save(PlayerData data)
         {
+            var key = AuthenticationService.Instance.PlayerId;
             if (string.IsNullOrWhiteSpace(key) || data == null)
             {
-                return false;
+                return UniTask.FromResult(false);
             }
 
             try
@@ -51,24 +50,13 @@ namespace _Project.Runtime.Services
                 var json = JsonUtility.ToJson(data);
                 PlayerPrefs.SetString(key, json);
                 PlayerPrefs.Save();
-                return true;
+                return UniTask.FromResult(true);
             }
             catch (Exception exception)
             {
                 Debug.LogWarning($"[Save] Failed to save key '{key}'. {exception.Message}");
-                return false;
+                return UniTask.FromResult(false);
             }
-        }
-
-        public void Delete(string key)
-        {
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                return;
-            }
-
-            PlayerPrefs.DeleteKey(key);
-            PlayerPrefs.Save();
         }
     }
 }

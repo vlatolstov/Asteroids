@@ -53,14 +53,24 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .Bind<ILocalSaveService>()
-                .To<LocalSaveService>()
+                .Bind<LocalSaveService>()
                 .AsSingle();
 
             Container
-                .Bind<ICloudSaveService>()
-                .To<UnityCloudSaveService>()
+                .Bind<UnitySaveService>()
                 .AsSingle();
+
+            Container
+                .Bind<ISaveService>()
+                .WithId(SaveServiceId.Local)
+                .To<LocalSaveService>()
+                .FromResolve();
+
+            Container
+                .Bind<ISaveService>()
+                .WithId(SaveServiceId.Cloud)
+                .To<UnitySaveService>()
+                .FromResolve();
 
             Container
                 .Bind<PlayerModel>()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Runtime.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Runtime.Services
 {
@@ -62,14 +63,16 @@ namespace _Project.Runtime.Services
 
     public sealed class PlayerDataSyncService
     {
-        private readonly ILocalSaveService _localSaveService;
-        private readonly ICloudSaveService _cloudSaveService;
+        private readonly ISaveService _localSaveService;
+        private readonly ISaveService _cloudSaveService;
         private readonly PlayerDataManager _playerDataManager;
         private string _pendingPlayerId;
         private PlayerData _pendingLocalData;
         private PlayerData _pendingCloudData;
 
-        public PlayerDataSyncService(ILocalSaveService localSaveService, ICloudSaveService cloudSaveService,
+        public PlayerDataSyncService(
+            [Inject(Id = SaveServiceId.Local)] ISaveService localSaveService,
+            [Inject(Id = SaveServiceId.Cloud)] ISaveService cloudSaveService,
             PlayerDataManager playerDataManager)
         {
             _localSaveService = localSaveService;
@@ -84,7 +87,7 @@ namespace _Project.Runtime.Services
                 return PlayerDataSyncResult.Failed("PlayerId is empty.");
             }
 
-            var localResult = TryLoadLocal(playerId);
+            var localResult = await TryLoadLocalAsync();
             if (!HasInternetConnection())
             {
                 var selectedOfflineData = PickDataForOfflineFlow(localResult);
@@ -93,7 +96,7 @@ namespace _Project.Runtime.Services
                 return PlayerDataSyncResult.Completed();
             }
 
-            var cloudResult = await _cloudSaveService.TryLoad(playerId);
+            var cloudResult = await _cloudSaveService.TryLoad();
             if (localResult.Found && cloudResult.Found && IsLocalNewer(localResult.Data, cloudResult.Data))
             {
                 StorePendingSelection(playerId, localResult.Data, cloudResult.Data);
@@ -104,7 +107,7 @@ namespace _Project.Runtime.Services
 
             var selectedOnlineData = PickDataForOnlineFlow(localResult, cloudResult);
             _playerDataManager.InitializeForPlayer(playerId, selectedOnlineData);
-            await _cloudSaveService.Save(playerId, selectedOnlineData);
+            await _cloudSaveService.Save(selectedOnlineData);
             ClearPendingSelection();
             return PlayerDataSyncResult.Completed();
         }
@@ -132,13 +135,13 @@ namespace _Project.Runtime.Services
             ClearPendingSelection();
 
             _playerDataManager.InitializeForPlayer(playerId, selectedData);
-            await _cloudSaveService.Save(playerId, selectedData);
+            await _cloudSaveService.Save(selectedData);
             return PlayerDataSyncResult.Completed();
         }
 
-        private LoadResult<PlayerData> TryLoadLocal(string playerId)
+        private UniTask<LoadResult<PlayerData>> TryLoadLocalAsync()
         {
-            return _localSaveService.TryLoad<PlayerData>(playerId);
+            return _localSaveService.TryLoad();
         }
 
         private void StorePendingSelection(string playerId, PlayerData localData, PlayerData cloudData)

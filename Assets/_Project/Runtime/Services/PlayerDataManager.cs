@@ -6,20 +6,23 @@ using _Project.Runtime.Models;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
+using Zenject;
 
 namespace _Project.Runtime.Services
 {
     public sealed class PlayerDataManager
     {
-        private readonly ILocalSaveService _localSaveService;
-        private readonly ICloudSaveService _cloudSaveService;
+        private readonly ISaveService _localSaveService;
+        private readonly ISaveService _cloudSaveService;
         private readonly PlayerModel _playerModel;
 
         private PlayerData _playerData;
         private string _playerId;
         private bool _missingPlayerIdLogged;
 
-        public PlayerDataManager(ILocalSaveService localSaveService, ICloudSaveService cloudSaveService,
+        public PlayerDataManager(
+            [Inject(Id = SaveServiceId.Local)] ISaveService localSaveService,
+            [Inject(Id = SaveServiceId.Cloud)] ISaveService cloudSaveService,
             PlayerModel playerModel)
         {
             _localSaveService = localSaveService;
@@ -46,10 +49,7 @@ namespace _Project.Runtime.Services
             _playerData = Clone(normalized);
             _playerModel.Apply(_playerData);
 
-            if (!_localSaveService.Save(_playerId, _playerData))
-            {
-                Debug.LogWarning("[PlayerData] Failed to persist initialized player data locally.");
-            }
+            UniTask.Void(() => SaveLocalSilentlyAsync(_playerData));
         }
 
         public bool CheckEntitlement(string productId, ProductType productType)
@@ -170,12 +170,8 @@ namespace _Project.Runtime.Services
 
             if (IsInitialized)
             {
-                if (!_localSaveService.Save(_playerId, normalized))
-                {
-                    Debug.LogWarning("[PlayerData] Failed to persist player data locally.");
-                }
-
-                UniTask.Void(() => SaveCloudSilentlyAsync(_playerId, normalized));
+                UniTask.Void(() => SaveLocalSilentlyAsync(normalized));
+                UniTask.Void(() => SaveCloudSilentlyAsync(normalized));
             }
             else if (!_missingPlayerIdLogged)
             {
@@ -188,14 +184,27 @@ namespace _Project.Runtime.Services
             return true;
         }
 
-        private async UniTaskVoid SaveCloudSilentlyAsync(string playerId, PlayerData data)
+        private async UniTaskVoid SaveLocalSilentlyAsync(PlayerData data)
         {
-            if (string.IsNullOrWhiteSpace(playerId) || data == null)
+            if (data == null)
             {
                 return;
             }
 
-            await _cloudSaveService.Save(playerId, Clone(data));
+            if (!await _localSaveService.Save(Clone(data)))
+            {
+                Debug.LogWarning("[PlayerData] Failed to persist player data locally.");
+            }
+        }
+
+        private async UniTaskVoid SaveCloudSilentlyAsync(PlayerData data)
+        {
+            if (data == null)
+            {
+                return;
+            }
+
+            await _cloudSaveService.Save(Clone(data));
         }
 
         private static bool IsSamePayload(PlayerData left, PlayerData right)
