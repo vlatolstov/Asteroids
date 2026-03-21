@@ -6,7 +6,6 @@ namespace _Project.Runtime.Abstract.Configs
     {
         Rect WorldRect { get; }
         float WrapOffset { get; }
-        Vector2 OffscreenPosition { get; }
 
         Rect ExpandedRect(float? customOffset = null)
         {

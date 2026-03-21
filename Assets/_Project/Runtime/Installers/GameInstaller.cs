@@ -10,6 +10,7 @@ using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Score;
 using _Project.Runtime.Services;
+using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
 using UnityEngine;
@@ -29,8 +30,9 @@ namespace _Project.Runtime.Installers
 
             Container
                 .Bind<IWorldConfig>()
-                .FromComponentInHierarchy()
-                .AsSingle();
+                .To<CameraWorldBounds>()
+                .AsSingle()
+                .NonLazy();
         }
 
         private void AssetProvidersBindings()

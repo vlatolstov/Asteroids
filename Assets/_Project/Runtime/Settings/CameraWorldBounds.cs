@@ -3,24 +3,15 @@ using UnityEngine;
 
 namespace _Project.Runtime.Settings
 {
-    [RequireComponent(typeof(Camera))]
-    public class CameraWorldBounds : MonoBehaviour, IWorldConfig
+    public class CameraWorldBounds : IWorldConfig
     {
-        [SerializeField]
-        private float _wrapOffset = 0.5f;
+        private readonly Camera _camera;
 
-        private Camera _camera;
-
-        private void Awake()
+        public CameraWorldBounds()
         {
-            _camera = GetComponent<Camera>();
-
-            if (!_camera)
-            {
-                throw new MissingComponentException("Missing camera component");
-            }
+            _camera = Camera.main;
         }
-
+        
         public Rect WorldRect
         {
             get
@@ -32,7 +23,7 @@ namespace _Project.Runtime.Settings
             }
         }
 
-        public float WrapOffset => Mathf.Max(0f, _wrapOffset);
+        public float WrapOffset => 0.5f;
         public Vector2 OffscreenPosition => new(WorldRect.min.x - 10f, WorldRect.min.y - 10f);
     }
 }

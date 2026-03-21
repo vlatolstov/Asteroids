@@ -13,6 +13,7 @@ namespace _Project.Runtime.Score
         private ScoreData _scoreConfig;
         private GameState _previousGameState;
         private bool _hasGameState;
+        private bool _preserveScoreOnNextGameplay;
         public bool IsNewRecord { get; private set; }
 
         public event Action<int> TotalScoreChanged;
@@ -48,10 +49,22 @@ namespace _Project.Runtime.Score
                 return;
             }
 
+            if (state == GameState.Preparing && _previousGameState == GameState.GameOver)
+            {
+                _preserveScoreOnNextGameplay = true;
+            }
+
             if (state == GameState.Gameplay &&
                 _previousGameState is GameState.Preparing or GameState.Gameplay)
             {
-                ChangeTotalScore(0);
+                if (_preserveScoreOnNextGameplay)
+                {
+                    _preserveScoreOnNextGameplay = false;
+                }
+                else
+                {
+                    ChangeTotalScore(0);
+                }
             }
 
             if (state is GameState.Preparing or GameState.Gameplay)
