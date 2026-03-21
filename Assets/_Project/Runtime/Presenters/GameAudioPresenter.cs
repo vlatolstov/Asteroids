@@ -125,7 +125,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedComponent(out _bgmView))
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.BGMView, out _bgmView))
             {
                 Debug.LogError("BGMView not provided");
                 return;

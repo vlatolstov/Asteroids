@@ -66,7 +66,7 @@ namespace _Project.Runtime.Presenters
         {
             _loadingTasksProcessor.OnTasksFinished -= OnLoadingTasksFinished;
 
-            if (!_assetProvider.TryGetLoadedComponent(out _authView) || !_authView)
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.AuthView, out _authView) || !_authView)
             {
                 Debug.LogError("[AuthenticationPresenter] AuthView not provided by SceneAssetProvider.");
                 return;

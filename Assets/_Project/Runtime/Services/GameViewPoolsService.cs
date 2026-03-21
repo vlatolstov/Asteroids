@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using _Project.Runtime.AssetManagement;
 using _Project.Runtime.Asteroid;
+using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
@@ -101,37 +102,42 @@ namespace _Project.Runtime.Services
                     _root = new GameObject("[ViewPools]").transform;
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out ShipView shipPrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.ShipView, out ShipView shipPrefab))
                 {
                     RegisterPool(CreateShipPool(shipPrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out UfoView ufoPrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.UfoView, out UfoView ufoPrefab))
                 {
                     RegisterPool(CreateUfoPool(ufoPrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out AsteroidView asteroidPrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.AsteroidView,
+                        out AsteroidView asteroidPrefab))
                 {
                     RegisterPool(CreateAsteroidPool(asteroidPrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out ProjectileView projectilePrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.ProjectileView,
+                        out ProjectileView projectilePrefab))
                 {
                     RegisterPool(CreateProjectilePool(projectilePrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out AoeAttackView aoePrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.AoeAttackView,
+                        out AoeAttackView aoePrefab))
                 {
                     RegisterPool(CreateAoePool(aoePrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out AudioSourceView audioPrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.AudioSourceView,
+                        out AudioSourceView audioPrefab))
                 {
                     RegisterPool(CreateAudioPool(audioPrefab.gameObject));
                 }
 
-                if (_assetProvider.TryGetLoadedComponent(out AnimationView animationPrefab))
+                if (_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.AnimationView,
+                        out AnimationView animationPrefab))
                 {
                     RegisterPool(CreateAnimationPool(animationPrefab.gameObject));
                 }

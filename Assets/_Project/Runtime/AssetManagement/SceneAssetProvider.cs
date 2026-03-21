@@ -8,21 +8,29 @@ namespace _Project.Runtime.AssetManagement
     public class SceneAssetProvider : IDisposable
     {
         private List<IGameObjectLoader> _loaders = new();
-        private Dictionary<Type, GameObject> _loadedGameObjects = new();
+        private Dictionary<string, GameObject> _loadedGameObjects = new();
 
-        public bool TryGetLoadedComponent<T>(out T component) where T : Component
+        public bool TryGetLoadedComponent<T>(string assetKey, out T component) where T : Component
         {
-            if (!_loadedGameObjects.TryGetValue(typeof(T), out var gameObject))
+            if (string.IsNullOrWhiteSpace(assetKey))
             {
                 component = default;
-                Debug.LogError($"Unable to get component of type {typeof(T)}");
+                Debug.LogError("Asset key is null or empty.");
+                return false;
+            }
+
+            if (!_loadedGameObjects.TryGetValue(assetKey, out var gameObject))
+            {
+                component = default;
+                Debug.LogError($"Unable to get asset with key '{assetKey}' and component type {typeof(T)}");
                 return false;
             }
 
             if (!gameObject.TryGetComponent(out component))
             {
                 component = default;
-                Debug.LogError($"Cashed game object doesn't contains component of type {typeof(T)}");
+                Debug.LogError(
+                    $"Cached game object for key '{assetKey}' does not contain component of type {typeof(T)}");
                 return false;
             }
 
@@ -32,19 +40,28 @@ namespace _Project.Runtime.AssetManagement
         public async UniTask LoadAllAsync()
         {
             var tasks = new List<UniTask<GameObject>>();
+            var loadingLoaders = new List<IGameObjectLoader>();
+            var loadingKeys = new HashSet<string>(StringComparer.Ordinal);
             foreach (var loader in _loaders)
             {
-                if (_loadedGameObjects.ContainsKey(loader.Type))
+                if (_loadedGameObjects.ContainsKey(loader.AssetKey))
                 {
-                    Debug.LogError($"Loader {loader.Type} has already been loaded");
+                    Debug.LogError($"Loader '{loader.AssetKey}' has already been loaded");
+                    continue;
+                }
+
+                if (!loadingKeys.Add(loader.AssetKey))
+                {
+                    Debug.LogError($"Loader '{loader.AssetKey}' has already been scheduled for loading");
                     continue;
                 }
 
                 var task = loader.LoadAsync();
                 tasks.Add(task);
+                loadingLoaders.Add(loader);
             }
 
-            var result = new GameObject[tasks.Count];
+            GameObject[] result;
             try
             {
                 result = await UniTask.WhenAll(tasks);
@@ -52,9 +69,10 @@ namespace _Project.Runtime.AssetManagement
             catch (Exception e)
             {
                 Debug.LogException(e);
+                return;
             }
 
-            if (result.Length != _loaders.Count)
+            if (result.Length != loadingLoaders.Count)
             {
                 Debug.LogError($"There were {result.Length} GameObjects loaded");
                 return;
@@ -62,7 +80,7 @@ namespace _Project.Runtime.AssetManagement
             
             for (var i = 0; i < result.Length; i++)
             {
-                _loadedGameObjects.Add(_loaders[i].Type, result[i]);
+                _loadedGameObjects.Add(loadingLoaders[i].AssetKey, result[i]);
             }
         }
 

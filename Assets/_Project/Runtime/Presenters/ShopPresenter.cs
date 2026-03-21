@@ -1,5 +1,6 @@
 using System;
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.Constants;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.Views;
@@ -77,7 +78,7 @@ namespace _Project.Runtime.Presenters
         {
             _menuLoadingTasksProcessor.OnTasksFinished -= OnLoadingTasksFinished;
 
-            if (!_assetProvider.TryGetLoadedComponent(out _shopView) || !_shopView)
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.ShopView, out _shopView) || !_shopView)
             {
                 Debug.LogError("[ShopPresenter] ShopView not provided by SceneAssetProvider.");
                 return;

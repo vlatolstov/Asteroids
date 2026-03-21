@@ -1,5 +1,6 @@
 using System;
 using _Project.Runtime.AssetManagement;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using _Project.Runtime.LoadingServices;
 using _Project.Runtime.RemoteConfig;
@@ -66,7 +67,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedComponent(out _bg))
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.BackgroundView, out _bg))
             {
                 Debug.LogError("BackgroundView not provided");
                 return;

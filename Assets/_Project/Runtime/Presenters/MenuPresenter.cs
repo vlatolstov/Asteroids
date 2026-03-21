@@ -63,7 +63,7 @@ namespace _Project.Runtime.Presenters
 
         private void OnLoadingTaskFinished()
         {
-            if (!_assetProvider.TryGetLoadedComponent(out _menuView) ||
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.MenuView, out _menuView) ||
                 !_menuView)
             {
                 Debug.LogError("MenuView not provided");

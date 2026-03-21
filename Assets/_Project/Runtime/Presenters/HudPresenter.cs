@@ -99,7 +99,7 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            if (!_assetProvider.TryGetLoadedComponent(out _hud) ||
+            if (!_assetProvider.TryGetLoadedComponent(AddressablesPrefabsPaths.HudView, out _hud) ||
                 !_hud)
             {
                 Debug.LogError("HudView not provided");
