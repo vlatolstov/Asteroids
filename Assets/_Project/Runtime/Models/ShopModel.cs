@@ -11,7 +11,7 @@ namespace _Project.Runtime.Models
     {
         private readonly IResourcesService _resourcesService;
         private readonly IIapService _iapService;
-        private readonly PlayerDataManager _playerDataManager;
+        private readonly PlayerModel _playerModel;
 
         private readonly List<ShopProductCardData> _productsData = new();
         private ShopVisualCatalog _shopVisualCatalog;
@@ -19,11 +19,11 @@ namespace _Project.Runtime.Models
         public event Action ProductsChanged;
         public IReadOnlyList<ShopProductCardData> Products => _productsData;
 
-        public ShopModel(IResourcesService resourcesService, IIapService iapService, PlayerDataManager playerDataManager)
+        public ShopModel(IResourcesService resourcesService, IIapService iapService, PlayerModel playerModel)
         {
             _resourcesService = resourcesService;
             _iapService = iapService;
-            _playerDataManager = playerDataManager;
+            _playerModel = playerModel;
         }
 
         public void Initialize()
@@ -54,7 +54,7 @@ namespace _Project.Runtime.Models
 
         public void ClearPlayerData()
         {
-            _playerDataManager.ClearLocalPlayerData();
+            _playerModel.Clear();
             RefreshProducts();
         }
 
@@ -96,7 +96,8 @@ namespace _Project.Runtime.Models
             var description = metadata?.localizedDescription ?? string.Empty;
             var price = metadata?.localizedPriceString ?? string.Empty;
             var icon = _shopVisualCatalog ? _shopVisualCatalog.GetIconOrDefault(productId) : null;
-            var isPurchased = _iapService.CheckEntitlement(productId);
+            var productType = product.definition?.type ?? ProductType.Unknown;
+            var isPurchased = _playerModel.CheckEntitlement(productId, productType);
 
             return new ShopProductCardData(productId, title, description, price, icon, isPurchased);
         }

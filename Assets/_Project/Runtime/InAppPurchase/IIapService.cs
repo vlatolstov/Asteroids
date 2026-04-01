@@ -11,8 +11,7 @@ namespace _Project.Runtime.InAppPurchase
         IReadOnlyList<Product> Products { get; }
         UniTask Connect();
         void FetchProducts();
-        bool Purchase(string productId);
+        void Purchase(string productId);
         bool RestoreTransactions();
-        bool CheckEntitlement(string productId);
     }
 }

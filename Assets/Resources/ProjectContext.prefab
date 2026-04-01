@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4133057290204088281}
   - component: {fileID: 8043445908438814638}
+  - component: {fileID: 2354734012167888430}
   m_Layer: 0
   m_Name: ProjectContext
   m_TagString: Untagged
@@ -44,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4e6589720da476459dc6dd71624b071, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.ProjectContext
-  _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 3e5f56dc9e5185745b8b3ec3a81e92cc, type: 2}
-  _monoInstallers: []
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 2354734012167888430}
   _installerPrefabs: []
   _parentNewObjectsUnderContext: 1
   _editorReflectionBakingCoverageMode: 0
@@ -61,3 +62,17 @@ MonoBehaviour:
       _missingHandlerDefaultResponse: 2
       _requireStrictUnsubscribe: 0
       _defaultAsyncTickPriority: 1
+--- !u!114 &2354734012167888430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6463375073099283558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61f846c43df454aad490b81f2a1aa37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Runtime.Installers.GlobalInstaller
+  androidAdsSettings: {fileID: 11400000, guid: 942979696f007a54ba0cc115b211b10c, type: 2}
+  iOsAdsSettings: {fileID: 11400000, guid: c0298d2070cae054a93a8e2891418397, type: 2}

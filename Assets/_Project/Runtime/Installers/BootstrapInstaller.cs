@@ -1,11 +1,9 @@
 using _Project.Runtime.LoadingServices;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "BootstrapInstaller", menuName = "Installers/Bootstrap Installer", order = 0)]
-    public class BootstrapInstaller : ScriptableObjectInstaller
+    public class BootstrapInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

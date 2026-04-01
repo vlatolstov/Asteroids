@@ -13,13 +13,11 @@ using _Project.Runtime.Services;
 using _Project.Runtime.Settings;
 using _Project.Runtime.Ship;
 using _Project.Runtime.Ufo;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "GameInstaller", menuName = "Installers/Game Installer")]
-    public class GameInstaller : ScriptableObjectInstaller
+    public class GameInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

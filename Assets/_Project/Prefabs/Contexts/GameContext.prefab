@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1174506149419930515}
   - component: {fileID: 5007021573369681592}
+  - component: {fileID: 1245734797074458672}
   - component: {fileID: 7407858532847754146}
   - component: {fileID: 3915274968411034696}
   m_Layer: 0
@@ -46,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89715ad69b973a14899afa2c6730b30b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Zenject::Zenject.SceneContext
-  _scriptableObjectInstallers:
-  - {fileID: 11400000, guid: 77c7d7a12e4d30b47b7f13b76060bf6b, type: 2}
-  _monoInstallers: []
+  _scriptableObjectInstallers: []
+  _monoInstallers:
+  - {fileID: 1245734797074458672}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -66,6 +67,18 @@ MonoBehaviour:
   _parentNewObjectsUnderSceneContext: 0
   _contractNames: []
   _parentContractNames: []
+--- !u!114 &1245734797074458672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8309457139586916777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 146d813025544edf95b589bd4b953b72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Runtime.Installers.GameInstaller
 --- !u!114 &7407858532847754146
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -75,18 +75,15 @@ namespace _Project.Runtime.Presenters
             _authView.SignInClicked += OnSignInClicked;
             _authView.LocalSaveSelected += OnLocalSaveSelected;
             _authView.CloudSaveSelected += OnCloudSaveSelected;
-            _authView.HideSaveSelectionWindow();
         }
 
         private void OnSignInClicked()
         {
-            _authView.HideSaveSelectionWindow();
             _authenticationModel.StartAuthentication();
         }
 
         private void OnAuthenticationFailed()
         {
-            _authView.HideSaveSelectionWindow();
             _authView.RestoreSignInButton();
         }
 
@@ -97,10 +94,8 @@ namespace _Project.Runtime.Presenters
                 return;
             }
 
-            _authView.HideSaveSelectionWindow();
-            _authView.RestoreSignInButton();
             _navigationStarted = true;
-            UniTask.Void(GoToMenuAsync);
+            UniTask.Void(async() => await _sceneLoader.LoadSceneAsync(Scenes.Menu));
         }
 
         private void OnSaveSelectionRequired(SaveSelectionInfo selectionInfo)
@@ -119,11 +114,6 @@ namespace _Project.Runtime.Presenters
         {
             _authView.HideSaveSelectionWindow();
             _authenticationModel.SelectCloudSave();
-        }
-
-        private async UniTaskVoid GoToMenuAsync()
-        {
-            await _sceneLoader.LoadSceneAsync(Scenes.Menu);
         }
     }
 }

@@ -1,22 +1,24 @@
 using System;
+using _Project.Runtime.Constants;
 using _Project.Runtime.Data;
 using Cysharp.Threading.Tasks;
-using Unity.Services.Authentication;
 using UnityEngine;
 
 namespace _Project.Runtime.Services
 {
     public sealed class LocalSaveService : ISaveService
     {
+        private const string Key = DataKeys.LocalPlayerDataKey;
+        
         public UniTask<LoadResult<PlayerData>> TryLoad()
         {
-            var key = AuthenticationService.Instance.PlayerId;
-            if (string.IsNullOrWhiteSpace(key))
+            
+            if (string.IsNullOrWhiteSpace(Key))
             {
                 return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
             }
 
-            var json = PlayerPrefs.GetString(key, string.Empty);
+            var json = PlayerPrefs.GetString(Key, string.Empty);
             if (string.IsNullOrWhiteSpace(json))
             {
                 return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
@@ -32,15 +34,14 @@ namespace _Project.Runtime.Services
             }
             catch (Exception exception)
             {
-                Debug.LogWarning($"[Save] Failed to load key '{key}'. {exception.Message}");
+                Debug.LogWarning($"[Save] Failed to load key '{Key}'. {exception.Message}");
                 return UniTask.FromResult(LoadResult<PlayerData>.NotFound());
             }
         }
 
         public UniTask<bool> Save(PlayerData data)
         {
-            var key = AuthenticationService.Instance.PlayerId;
-            if (string.IsNullOrWhiteSpace(key) || data == null)
+            if (string.IsNullOrWhiteSpace(Key) || data == null)
             {
                 return UniTask.FromResult(false);
             }
@@ -48,13 +49,13 @@ namespace _Project.Runtime.Services
             try
             {
                 var json = JsonUtility.ToJson(data);
-                PlayerPrefs.SetString(key, json);
+                PlayerPrefs.SetString(Key, json);
                 PlayerPrefs.Save();
                 return UniTask.FromResult(true);
             }
             catch (Exception exception)
             {
-                Debug.LogWarning($"[Save] Failed to save key '{key}'. {exception.Message}");
+                Debug.LogWarning($"[Save] Failed to save key '{Key}'. {exception.Message}");
                 return UniTask.FromResult(false);
             }
         }
