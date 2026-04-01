@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Runtime.Services;
+using _Project.Runtime.Models;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Purchasing;
@@ -11,15 +11,15 @@ namespace _Project.Runtime.InAppPurchase
     public class UnityIapService : IIapService
     {
         private readonly StoreController _storeController;
-        private readonly PlayerDataManager _playerDataManager;
+        private readonly PlayerModel _playerModel;
         private readonly Dictionary<string, ProductType> _catalogProductTypesById = new(StringComparer.Ordinal);
 
         public IReadOnlyList<Product> Products { get; private set; } = new List<Product>();
         public event Action PurchasesChanged;
 
-        public UnityIapService(PlayerDataManager playerDataManager)
+        public UnityIapService(PlayerModel playerModel)
         {
-            _playerDataManager = playerDataManager;
+            _playerModel = playerModel;
             LoadCatalogProductTypes();
 
             _storeController = UnityIAPServices.StoreController();
@@ -47,6 +47,7 @@ namespace _Project.Runtime.InAppPurchase
             Products = products ?? new List<Product>();
 
             Debug.Log($"Fetched {Products.Count} products: {string.Join(',', Products)}");
+            PurchasesChanged?.Invoke();
             _storeController.FetchPurchases();
         }
 
@@ -122,44 +123,38 @@ namespace _Project.Runtime.InAppPurchase
             );
         }
 
-        public bool Purchase(string productId)
+        public void Purchase(string productId)
         {
             if (string.IsNullOrWhiteSpace(productId))
             {
                 Debug.LogWarning("[IAP] Purchase was called with empty product id.");
-                return false;
             }
 
             var product = Products.FirstOrDefault(item => item.definition?.id == productId);
             if (product == null)
             {
                 Debug.LogWarning($"[IAP] Product '{productId}' not found in fetched products.");
-                return false;
-            }
 
-            var productType = ResolveProductType(productId, product);
-            if (productType != ProductType.Consumable &&
-                _playerDataManager.CheckEntitlement(productId, productType))
-            {
-                Debug.Log($"[IAP] Product '{productId}' is already owned.");
-                return false;
-            }
+                var productType = ResolveProductType(productId, product);
+                if (productType != ProductType.Consumable &&
+                    _playerModel.CheckEntitlement(productId, productType))
+                {
+                    Debug.Log($"[IAP] Product '{productId}' is already owned.");
+                }
 
-            if (!product.availableToPurchase)
-            {
-                Debug.LogWarning($"[IAP] Product '{productId}' is not available to purchase.");
-                return false;
-            }
+                if (!product.availableToPurchase)
+                {
+                    Debug.LogWarning($"[IAP] Product '{productId}' is not available to purchase.");
+                }
 
-            try
-            {
-                _storeController.PurchaseProduct(product);
-                return true;
-            }
-            catch (Exception exception)
-            {
-                Debug.LogWarning($"[IAP] Purchase failed to start for '{productId}'. {exception.Message}");
-                return false;
+                try
+                {
+                    _storeController.PurchaseProduct(product);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogWarning($"[IAP] Purchase failed to start for '{productId}'. {exception.Message}");
+                }
             }
         }
 
@@ -185,16 +180,6 @@ namespace _Project.Runtime.InAppPurchase
                 Debug.LogWarning($"[IAP] Restore transactions request failed. {exception.Message}");
                 return false;
             }
-        }
-
-        public bool CheckEntitlement(string productId)
-        {
-            if (string.IsNullOrWhiteSpace(productId))
-            {
-                return false;
-            }
-
-            return _playerDataManager.CheckEntitlement(productId, ResolveProductType(productId));
         }
 
         private bool RefreshEntitlementsFromOrders(Orders orders)
@@ -227,7 +212,7 @@ namespace _Project.Runtime.InAppPurchase
                 return false;
             }
 
-            return _playerDataManager.SyncEntitlements(nonConsumableProductIds, activeSubscriptionProductIds);
+            return _playerModel.ReplaceEntitlements(nonConsumableProductIds, activeSubscriptionProductIds);
         }
 
         private bool CachePurchasedProductsFromOrder(Order order, bool includeConsumables)
@@ -254,7 +239,7 @@ namespace _Project.Runtime.InAppPurchase
                     continue;
                 }
 
-                changed |= _playerDataManager.RegisterPurchase(productId, productType, includeConsumables);
+                changed |= _playerModel.TryRegisterPurchase(productId, productType, includeConsumables);
             }
 
             return changed;

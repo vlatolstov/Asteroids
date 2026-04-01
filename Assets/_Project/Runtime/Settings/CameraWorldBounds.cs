@@ -24,6 +24,5 @@ namespace _Project.Runtime.Settings
         }
 
         public float WrapOffset => 0.5f;
-        public Vector2 OffscreenPosition => new(WorldRect.min.x - 10f, WorldRect.min.y - 10f);
     }
 }

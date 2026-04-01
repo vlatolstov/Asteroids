@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using _Project.Runtime.Data;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -65,7 +64,7 @@ namespace _Project.Runtime.Services
     {
         private readonly ISaveService _localSaveService;
         private readonly ISaveService _cloudSaveService;
-        private readonly PlayerDataManager _playerDataManager;
+        private readonly PlayerAutoSaveService _playerAutoSaveService;
         private string _pendingPlayerId;
         private PlayerData _pendingLocalData;
         private PlayerData _pendingCloudData;
@@ -73,11 +72,11 @@ namespace _Project.Runtime.Services
         public PlayerDataSyncService(
             [Inject(Id = SaveServiceId.Local)] ISaveService localSaveService,
             [Inject(Id = SaveServiceId.Cloud)] ISaveService cloudSaveService,
-            PlayerDataManager playerDataManager)
+            PlayerAutoSaveService playerAutoSaveService)
         {
             _localSaveService = localSaveService;
             _cloudSaveService = cloudSaveService;
-            _playerDataManager = playerDataManager;
+            _playerAutoSaveService = playerAutoSaveService;
         }
 
         public async UniTask<PlayerDataSyncResult> InitializeAsync(string playerId)
@@ -87,11 +86,11 @@ namespace _Project.Runtime.Services
                 return PlayerDataSyncResult.Failed("PlayerId is empty.");
             }
 
-            var localResult = await TryLoadLocalAsync();
+            var localResult = await _localSaveService.TryLoad();
             if (!HasInternetConnection())
             {
                 var selectedOfflineData = PickDataForOfflineFlow(localResult);
-                _playerDataManager.InitializeForPlayer(playerId, selectedOfflineData);
+                _playerAutoSaveService.InitializeForPlayer(playerId, selectedOfflineData);
                 ClearPendingSelection();
                 return PlayerDataSyncResult.Completed();
             }
@@ -106,7 +105,8 @@ namespace _Project.Runtime.Services
             }
 
             var selectedOnlineData = PickDataForOnlineFlow(localResult, cloudResult);
-            _playerDataManager.InitializeForPlayer(playerId, selectedOnlineData);
+            selectedOnlineData.Normalize();
+            _playerAutoSaveService.InitializeForPlayer(playerId, selectedOnlineData);
             await _cloudSaveService.Save(selectedOnlineData);
             ClearPendingSelection();
             return PlayerDataSyncResult.Completed();
@@ -130,25 +130,21 @@ namespace _Project.Runtime.Services
             }
 
             var selectedData = source == SaveSource.Cloud
-                ? Clone(_pendingCloudData)
-                : Clone(_pendingLocalData);
+                ? _pendingCloudData.Clone()
+                : _pendingLocalData.Clone();
             ClearPendingSelection();
 
-            _playerDataManager.InitializeForPlayer(playerId, selectedData);
+            selectedData.Normalize();
+            _playerAutoSaveService.InitializeForPlayer(playerId, selectedData);
             await _cloudSaveService.Save(selectedData);
             return PlayerDataSyncResult.Completed();
-        }
-
-        private UniTask<LoadResult<PlayerData>> TryLoadLocalAsync()
-        {
-            return _localSaveService.TryLoad();
         }
 
         private void StorePendingSelection(string playerId, PlayerData localData, PlayerData cloudData)
         {
             _pendingPlayerId = playerId;
-            _pendingLocalData = Clone(localData);
-            _pendingCloudData = Clone(cloudData);
+            _pendingLocalData = localData.Clone();
+            _pendingCloudData = cloudData.Clone();
         }
 
         private void ClearPendingSelection()
@@ -160,24 +156,14 @@ namespace _Project.Runtime.Services
 
         private static PlayerData PickDataForOfflineFlow(LoadResult<PlayerData> localResult)
         {
-            return localResult.Found ? localResult.Data : CreateEmptyPlayerData();
+            return localResult.Found ? localResult.Data : new PlayerData();
         }
 
         private static PlayerData PickDataForOnlineFlow(
             LoadResult<PlayerData> localResult,
             LoadResult<PlayerData> cloudResult)
         {
-            if (cloudResult.Found)
-            {
-                return cloudResult.Data;
-            }
-
-            if (localResult.Found)
-            {
-                return localResult.Data;
-            }
-
-            return CreateEmptyPlayerData();
+            return cloudResult.Found ? cloudResult.Data : PickDataForOfflineFlow(localResult);
         }
 
         private static bool IsLocalNewer(PlayerData localData, PlayerData cloudData)
@@ -190,43 +176,6 @@ namespace _Project.Runtime.Services
         private static bool HasInternetConnection()
         {
             return Application.internetReachability != NetworkReachability.NotReachable;
-        }
-
-        private static PlayerData CreateEmptyPlayerData()
-        {
-            return new PlayerData();
-        }
-
-        private static PlayerData Clone(PlayerData source)
-        {
-            source ??= new PlayerData();
-
-            var clone = new PlayerData
-            {
-                LastSavedAtUnixMs = Math.Max(0, source.LastSavedAtUnixMs),
-                BestScore = Math.Max(0, source.BestScore),
-                NonConsumableProductIds = new List<string>(source.NonConsumableProductIds ?? new List<string>()),
-                ActiveSubscriptionProductIds = new List<string>(source.ActiveSubscriptionProductIds ?? new List<string>()),
-                Consumables = new List<ConsumableData>()
-            };
-
-            var consumables = source.Consumables ?? new List<ConsumableData>();
-            for (var i = 0; i < consumables.Count; i++)
-            {
-                var item = consumables[i];
-                if (item == null || string.IsNullOrWhiteSpace(item.ProductId) || item.Amount <= 0)
-                {
-                    continue;
-                }
-
-                clone.Consumables.Add(new ConsumableData
-                {
-                    ProductId = item.ProductId,
-                    Amount = item.Amount
-                });
-            }
-
-            return clone;
         }
     }
 }

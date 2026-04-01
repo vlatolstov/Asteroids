@@ -1,13 +1,13 @@
 using System;
 using _Project.Runtime.Data;
+using _Project.Runtime.Models;
 using _Project.Runtime.RemoteConfig;
-using _Project.Runtime.Services;
 
 namespace _Project.Runtime.Score
 {
     public class ScoreModel
     {
-        private readonly PlayerDataManager _playerDataManager;
+        private readonly PlayerModel _playerModel;
 
         private int _totalScore;
         private ScoreData _scoreConfig;
@@ -19,9 +19,9 @@ namespace _Project.Runtime.Score
         public event Action<int> TotalScoreChanged;
         public event Action<bool> NewRecordChanged;
 
-        public ScoreModel(PlayerDataManager playerDataManager)
+        public ScoreModel(PlayerModel playerModel)
         {
-            _playerDataManager = playerDataManager;
+            _playerModel = playerModel;
         }
 
         public void ApplyConfig(ScoreData scoreConfig)
@@ -123,7 +123,7 @@ namespace _Project.Runtime.Score
 
         private void TryUpdateBestScore(int candidate)
         {
-            if (!_playerDataManager.SetBestScore(candidate))
+            if (!_playerModel.TrySetBestScore(candidate))
             {
                 return;
             }

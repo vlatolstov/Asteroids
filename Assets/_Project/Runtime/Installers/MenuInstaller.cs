@@ -5,13 +5,11 @@ using _Project.Runtime.LoadingServices;
 using _Project.Runtime.Models;
 using _Project.Runtime.Presenters;
 using _Project.Runtime.Services;
-using UnityEngine;
 using Zenject;
 
 namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "MenuInstaller", menuName = "Installers/MenuInstaller")]
-    public class MenuInstaller : ScriptableObjectInstaller
+    public class MenuInstaller : MonoInstaller
     {
         public override void InstallBindings()
         {

@@ -10,14 +10,13 @@ using Zenject;
 
 namespace _Project.Runtime.Installers
 {
-    [CreateAssetMenu(fileName = "GlobalInstaller", menuName = "Installers/Global Installer")]
-    public class GlobalInstaller : ScriptableObjectInstaller
+    public class GlobalInstaller : MonoInstaller
     {
         [SerializeField]
-        private AndroidAdsSettings _androidAdsSettings;
+        private AndroidAdsSettings androidAdsSettings;
 
         [SerializeField]
-        private IOsUnityAdsSettings _iOsAdsSettings;
+        private IOsUnityAdsSettings iOsAdsSettings;
 
         public override void InstallBindings()
         {
@@ -37,9 +36,9 @@ namespace _Project.Runtime.Installers
             Container
                 .Bind<IAdsSettings>()
 #if UNITY_IOS
-                .FromInstance(_iOsAdsSettings)
+                .FromInstance(iOsAdsSettings)
 #else
-                .FromInstance(_androidAdsSettings)
+                .FromInstance(androidAdsSettings)
 #endif
                 .AsSingle();
 
@@ -77,7 +76,7 @@ namespace _Project.Runtime.Installers
                 .AsSingle();
 
             Container
-                .Bind<PlayerDataManager>()
+                .Bind<PlayerAutoSaveService>()
                 .AsSingle();
 
             Container
