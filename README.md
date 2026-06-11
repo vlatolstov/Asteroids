@@ -1,3 +1,5 @@
+demonstration: https://youtu.be/Ew8yLxdKNGw
+
 # Asteroids Demo
 
 Asteroids Demo is a showcase Unity project that combines a classic 2D arcade shooter loop with production-oriented mobile game infrastructure. It is designed as a demonstration project for architecture, runtime systems, and service integration, not just as a minimal gameplay prototype.
