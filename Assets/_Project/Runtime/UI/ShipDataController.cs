@@ -5,6 +5,7 @@ namespace _Project.Runtime.UI
 {
     public sealed class ShipDataController
     {
+        private const string ScorePrefix = "Score: ";
         private readonly VisualElement _root;
         private readonly Label _positionLabel;
         private readonly Label _speedLabel;
@@ -46,7 +47,7 @@ namespace _Project.Runtime.UI
         {
             if (_score != null)
             {
-                _score.text = score.ToString();
+                _score.text = ScorePrefix + score;
             }
         }
     }

@@ -40,6 +40,13 @@ namespace _Project.Runtime.Ads
 
         public void PlayRewardedAd()
         {
+            if (_playerModel.HasNonConsumable(RemoveAdsProductId))
+            {
+                Debug.Log("[Ads] Rewarded ad skipped because Remove Ads is purchased.");
+                RewardedAdPlayed?.Invoke(AdCompletionStatus.Completed);
+                return;
+            }
+            
             ClearCounters();
             Debug.Log("Loading rewarded ad: " + _adsSettings.RewardedAdId);
             Advertisement.Load(_adsSettings.RewardedAdId, this);

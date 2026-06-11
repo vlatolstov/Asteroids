@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using _Project.Runtime.Abstract.Services;
 using _Project.Runtime.InAppPurchase;
 using _Project.Runtime.SceneManagement;
@@ -27,24 +25,6 @@ namespace _Project.Runtime.LoadingServices
 
         protected override async UniTask GetTasks()
         {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
-            if (!Caching.ClearCache())
-            {
-                Debug.LogWarning("Unity cache was not fully cleared.");
-            }
-
-            var path = Path.Combine(Application.persistentDataPath, "com.unity.addressables");
-            try
-            {
-                if (Directory.Exists(path))
-                    Directory.Delete(path, true);
-            }
-            catch (Exception e)
-            {
-                Debug.LogWarning($"Failed to delete Addressables cache folder: {e.Message}");
-            }
-#endif
-
             await Addressables.InitializeAsync();
             
             await UnityServices.InitializeAsync();

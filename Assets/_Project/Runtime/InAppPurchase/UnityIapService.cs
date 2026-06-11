@@ -128,33 +128,37 @@ namespace _Project.Runtime.InAppPurchase
             if (string.IsNullOrWhiteSpace(productId))
             {
                 Debug.LogWarning("[IAP] Purchase was called with empty product id.");
+                return;
             }
 
             var product = Products.FirstOrDefault(item => item.definition?.id == productId);
             if (product == null)
             {
                 Debug.LogWarning($"[IAP] Product '{productId}' not found in fetched products.");
+                return;
+            }
 
-                var productType = ResolveProductType(productId, product);
-                if (productType != ProductType.Consumable &&
-                    _playerModel.CheckEntitlement(productId, productType))
-                {
-                    Debug.Log($"[IAP] Product '{productId}' is already owned.");
-                }
+            var productType = ResolveProductType(productId, product);
+            if (productType != ProductType.Consumable &&
+                _playerModel.CheckEntitlement(productId, productType))
+            {
+                Debug.Log($"[IAP] Product '{productId}' is already owned.");
+                return;
+            }
 
-                if (!product.availableToPurchase)
-                {
-                    Debug.LogWarning($"[IAP] Product '{productId}' is not available to purchase.");
-                }
+            if (!product.availableToPurchase)
+            {
+                Debug.LogWarning($"[IAP] Product '{productId}' is not available to purchase.");
+                return;
+            }
 
-                try
-                {
-                    _storeController.PurchaseProduct(product);
-                }
-                catch (Exception exception)
-                {
-                    Debug.LogWarning($"[IAP] Purchase failed to start for '{productId}'. {exception.Message}");
-                }
+            try
+            {
+                _storeController.PurchaseProduct(product);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogWarning($"[IAP] Purchase failed to start for '{productId}'. {exception.Message}");
             }
         }
 
@@ -192,7 +196,8 @@ namespace _Project.Runtime.InAppPurchase
             {
                 for (var i = 0; i < confirmedOrders.Count; i++)
                 {
-                    CollectEntitlementsFromOrder(confirmedOrders[i], nonConsumableProductIds, activeSubscriptionProductIds);
+                    CollectEntitlementsFromOrder(confirmedOrders[i], nonConsumableProductIds,
+                        activeSubscriptionProductIds);
                 }
             }
 
@@ -201,11 +206,12 @@ namespace _Project.Runtime.InAppPurchase
             {
                 for (var i = 0; i < pendingOrders.Count; i++)
                 {
-                    CollectEntitlementsFromOrder(pendingOrders[i], nonConsumableProductIds, activeSubscriptionProductIds);
+                    CollectEntitlementsFromOrder(pendingOrders[i], nonConsumableProductIds,
+                        activeSubscriptionProductIds);
                 }
             }
 
-            
+
             if (nonConsumableProductIds.Count == 0 && activeSubscriptionProductIds.Count == 0)
             {
                 Debug.Log("[IAP] Store returned no entitlement orders. Keeping local entitlements.");
